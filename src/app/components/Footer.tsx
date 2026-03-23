@@ -7,11 +7,11 @@ export function Footer() {
           <div>
             <h4 className="text-xs tracking-widest mb-6 text-gray-900">CATEGORIES</h4>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Mats & Rugs</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Decoration & Seasonal</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Kitchen & Household</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Garden & Outdoor</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Toys & Games</a></li>
+              <li><a href="/categories/kitchen-household" className="hover:text-gray-900 transition-colors">Mats & Rugs</a></li>
+              <li><a href="/categories/kitchen-household" className="hover:text-gray-900 transition-colors">Decoration & Seasonal</a></li>
+              <li><a href="/categories/kitchen-household" className="hover:text-gray-900 transition-colors">Kitchen & Household</a></li>
+              <li><a href="/categories/kitchen-household" className="hover:text-gray-900 transition-colors">Garden & Outdoor</a></li>
+              <li><a href="/categories/kitchen-household" className="hover:text-gray-900 transition-colors">Toys & Games</a></li>
             </ul>
           </div>
 

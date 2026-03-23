@@ -4,6 +4,7 @@ import { CategoryCard } from "../components/CategoryCard";
 import { ProductCard } from "../components/ProductCard";
 import { Footer } from "../components/Footer";
 import { Package, ShoppingCart, Truck, Award, UserCheck, FileText, ClipboardList, BarChart3, Users, Shield } from "lucide-react";
+import { Link } from "react-router";
 
 export default function HomePage() {
   // Hero
@@ -33,19 +34,67 @@ export default function HomePage() {
       <Hero imageUrl={heroImg} />
 
       {/* Categories */}
+      {/* <section id="categories" className="py-24 bg-white">
+        <div className="max-w-[1400px] mx-auto px-8">
+          <h2 className="text-4xl mb-16 tracking-tight">Explore Categories</h2>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <CategoryCard title="Mats & Rugs" imageUrl={shaggyRugImg} productCount={45} href="/categories/kitchen-household" b2bLabel="MOQ AVAILABLE" />
+            <CategoryCard title="Decoration & Seasonal" imageUrl={waxBurnerImg} productCount={32} href="/categories/kitchen-household" b2bLabel="BULK ORDER READY" />
+            <CategoryCard title="Kitchen & Household" imageUrl={wokPanImg} productCount={68} href="/categories/kitchen-household" b2bLabel="DROPSHIP ELIGIBLE" />
+            <CategoryCard title="Garden & Outdoor" imageUrl={plantSupportImg} productCount={28} href="/categories/kitchen-household" b2bLabel="WHOLESALE PRICING" />
+            <CategoryCard title="Toys & Games" imageUrl={hulaHoopImg} productCount={15} href="/categories/kitchen-household" b2bLabel="MOQ AVAILABLE" />
+          </div>
+        </div>
+      </section> */}
+      
+      {/* Categories */}
       <section id="categories" className="py-24 bg-white">
         <div className="max-w-[1400px] mx-auto px-8">
           <h2 className="text-4xl mb-16 tracking-tight">Explore Categories</h2>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            <CategoryCard title="Mats & Rugs" imageUrl={shaggyRugImg} productCount={45} b2bLabel="MOQ AVAILABLE" />
-            <CategoryCard title="Decoration & Seasonal" imageUrl={waxBurnerImg} productCount={32} b2bLabel="BULK ORDER READY" />
-            <CategoryCard title="Kitchen & Household" imageUrl={wokPanImg} productCount={68} href="/categories/kitchen-household" b2bLabel="DROPSHIP ELIGIBLE" />
-            <CategoryCard title="Garden & Outdoor" imageUrl={plantSupportImg} productCount={28} b2bLabel="WHOLESALE PRICING" />
-            <CategoryCard title="Toys & Games" imageUrl={hulaHoopImg} productCount={15} b2bLabel="MOQ AVAILABLE" />
+            <CategoryCard 
+              title="Mats & Rugs" 
+              imageUrl={shaggyRugImg} 
+              productCount={45} 
+              href="/categories/kitchen-household" 
+              b2bLabel="MOQ AVAILABLE" 
+            />
+            <CategoryCard 
+              title="Decoration & Seasonal" 
+              imageUrl={waxBurnerImg} 
+              productCount={32} 
+              href="/categories/kitchen-household" 
+              b2bLabel="BULK ORDER READY" 
+            />
+            <CategoryCard 
+              title="Kitchen & Household" 
+              imageUrl={wokPanImg} 
+              productCount={68} 
+              href="/categories/kitchen-household" 
+              b2bLabel="DROPSHIP ELIGIBLE" 
+            />
+            <CategoryCard 
+              title="Garden & Outdoor" 
+              imageUrl={plantSupportImg} 
+              productCount={28} 
+              href="/categories/kitchen-household" 
+              b2bLabel="WHOLESALE PRICING" 
+            />
+            <CategoryCard 
+              title="Toys & Games" 
+              imageUrl={hulaHoopImg} 
+              productCount={15} 
+              href="/categories/kitchen-household" 
+              b2bLabel="MOQ AVAILABLE" 
+            />
           </div>
         </div>
       </section>
+
+
+
 
       {/* B2B Partner Portal CTA */}
       <section className="py-32 bg-gray-900 text-white">

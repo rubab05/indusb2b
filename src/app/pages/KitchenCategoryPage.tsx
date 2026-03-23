@@ -205,6 +205,7 @@ export default function KitchenCategoryPage() {
                 imageUrl={wokPanImg}
                 description="Large capacity wok with tempered glass lid for versatile Asian and stir-fry cooking"
                 tag="Trade enquiries welcome"
+                href="/products/stock-pot-4-5l-24cm"
               />
             </div>
             <div className="px-4">
@@ -213,6 +214,7 @@ export default function KitchenCategoryPage() {
                 imageUrl={fryingPanImg}
                 description="PFOA-free non-stick coating with heat-resistant handle for everyday frying"
                 tag="Multiple variants available"
+                href="/products/stock-pot-4-5l-24cm"
               />
             </div>
             <div className="px-4">
@@ -221,6 +223,7 @@ export default function KitchenCategoryPage() {
                 imageUrl={plateRackImg}
                 description="Space-efficient corner design for plates, cutlery and draining"
                 tag="Trade enquiries welcome"
+                href="/products/stock-pot-4-5l-24cm"
               />
             </div>
             <div className="px-4">
@@ -229,6 +232,7 @@ export default function KitchenCategoryPage() {
                 imageUrl={fruitBasketImg}
                 description="Open wire design for air circulation and attractive fruit display"
                 tag="Multiple variants available"
+                href="/products/stock-pot-4-5l-24cm"
               />
             </div>
             <div className="px-4">
@@ -237,6 +241,7 @@ export default function KitchenCategoryPage() {
                 imageUrl={radiatorAirerImg}
                 description="Compact folding design that hooks over radiators for indoor drying"
                 tag="Trade enquiries welcome"
+                href="/products/stock-pot-4-5l-24cm"
               />
             </div>
           </ProductCarousel>
@@ -291,19 +296,19 @@ export default function KitchenCategoryPage() {
               <ProductCard name="Stock Pot 4.5L / 24cm" imageUrl={stockPotImg} href="/products/stock-pot-4-5l-24cm" />
             </div>
             <div className="px-4">
-              <ProductCard name="Wok Pan with Glass Lid" imageUrl={wokPanImg} />
+              <ProductCard name="Wok Pan with Glass Lid" imageUrl={wokPanImg} href="/products/stock-pot-4-5l-24cm" />
             </div>
             <div className="px-4">
-              <ProductCard name="Chip Pan with Basket" imageUrl={chipPanImg} />
+              <ProductCard name="Chip Pan with Basket" imageUrl={chipPanImg} href="/products/stock-pot-4-5l-24cm"/>
             </div>
             <div className="px-4">
-              <ProductCard name="Milk Pot 14cm" imageUrl={milkPanImg} />
+              <ProductCard name="Milk Pot 14cm" imageUrl={milkPanImg} href="/products/stock-pot-4-5l-24cm" />
             </div>
             <div className="px-4">
-              <ProductCard name="Egg Poacher Pan" imageUrl={eggPoacherImg} />
+              <ProductCard name="Egg Poacher Pan" imageUrl={eggPoacherImg} href="/products/stock-pot-4-5l-24cm" />
             </div>
             <div className="px-4">
-              <ProductCard name="Corner Plate Rack" imageUrl={plateRackImg} />
+              <ProductCard name="Corner Plate Rack" imageUrl={plateRackImg} href="/products/stock-pot-4-5l-24cm" />
             </div>
           </ProductCarousel>
         </div>
@@ -330,9 +335,9 @@ export default function KitchenCategoryPage() {
           <h2 className="text-4xl mb-16 tracking-tight">Related Categories</h2>
           
           <div className="grid md:grid-cols-3 gap-6">
-            <CategoryCard title="Mats & Rugs" imageUrl={shaggyRugImg} productCount={45} />
-            <CategoryCard title="Decoration & Seasonal Products" imageUrl={waxBurnerImg} productCount={32} />
-            <CategoryCard title="Garden & Outdoor" imageUrl={plantSupportImg} productCount={28} />
+            <CategoryCard title="Mats & Rugs" imageUrl={shaggyRugImg} productCount={45} href="/categories/kitchen-household" />
+            <CategoryCard title="Decoration & Seasonal Products" imageUrl={waxBurnerImg} productCount={32} href="/categories/kitchen-household" />
+            <CategoryCard title="Garden & Outdoor" imageUrl={plantSupportImg} productCount={28} href="/categories/kitchen-household" />
           </div>
         </div>
       </section>

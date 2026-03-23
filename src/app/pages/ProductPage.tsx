@@ -319,19 +319,19 @@ export default function ProductPage() {
           
           <ProductCarousel slidesToShow={5}>
             <div className="px-4">
-              <ProductCard name="Wok Pan with Glass Lid 32cm" imageUrl={wokPanImg} />
+              <ProductCard name="Wok Pan with Glass Lid 32cm" imageUrl={wokPanImg} href="/products/stock-pot-4-5l-24cm" />
             </div>
             <div className="px-4">
-              <ProductCard name="Non Stick Frying Pan 30cm" imageUrl={fryingPanImg} />
+              <ProductCard name="Non Stick Frying Pan 30cm" imageUrl={fryingPanImg} href="/products/stock-pot-4-5l-24cm" />
             </div>
             <div className="px-4">
-              <ProductCard name="Chip Pan with Basket" imageUrl={chipPanImg} />
+              <ProductCard name="Chip Pan with Basket" imageUrl={chipPanImg} href="/products/stock-pot-4-5l-24cm" />
             </div>
             <div className="px-4">
-              <ProductCard name="Milk Pot 14cm" imageUrl={milkPanImg} />
+              <ProductCard name="Milk Pot 14cm" imageUrl={milkPanImg} href="/products/stock-pot-4-5l-24cm" />
             </div>
             <div className="px-4">
-              <ProductCard name="Egg Poacher Pan" imageUrl={eggPoacherImg} />
+              <ProductCard name="Egg Poacher Pan" imageUrl={eggPoacherImg} href="/products/stock-pot-4-5l-24cm" />
             </div>
           </ProductCarousel>
         </div>
@@ -373,8 +373,8 @@ export default function ProductPage() {
           
           <div className="grid md:grid-cols-3 gap-6">
             <CategoryCard title="Kitchen & Household" imageUrl={wokPanImg} productCount={68} href="/categories/kitchen-household" />
-            <CategoryCard title="Fruit Baskets" imageUrl={fruitBasketImg} productCount={12} />
-            <CategoryCard title="Corner Plate Racks" imageUrl={plateRackImg} productCount={8} />
+            <CategoryCard title="Fruit Baskets" imageUrl={fruitBasketImg} productCount={12} href="/categories/kitchen-household" />
+            <CategoryCard title="Corner Plate Racks" imageUrl={plateRackImg} productCount={8} href="/categories/kitchen-household" />
           </div>
         </div>
       </section>
