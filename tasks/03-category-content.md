@@ -9,8 +9,8 @@ Add structured content for the 4 remaining categories so they render via the Cat
 3. Add complete entries in `categories.ts` for each:
    - **Mats & Rugs** (slug: `mats-and-rugs`)
    - **Decoration & Seasonal Products** (slug: `decoration-and-seasonal`)
-   - **Garden & Outdoor** (slug: `garden-and-outdoor`)
-   - **Toys & Games** (slug: `toys-and-games`)
+   - **Garden & Outdoor** (slug: `garden-outdoor`)
+   - **Toys & Games** (slug: `toys-games`)
 4. Each entry must include: hero (title, description, image), intro, subcategories, featured families, benefits, best sellers, CTA strips, related categories. Mirror the Kitchen & Household shape exactly.
 5. Update `src/content/navigation.ts` to include all 5 categories.
 6. Navigate to each new category route and confirm it renders correctly through CategoryPage.

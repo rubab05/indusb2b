@@ -7,16 +7,16 @@ export const navigation = {
     { label: "Contact", href: "/contact" },
   ],
   categories: [
-    { label: "Mats & Rugs", href: "/categories/mats-rugs" },
+    { label: "Mats & Rugs", href: "/category/mats-rugs" },
     {
       label: "Decoration & Seasonal",
-      href: "/categories/decoration-seasonal",
+      href: "/category/decoration-seasonal",
     },
     {
       label: "Kitchen & Household",
-      href: "/categories/kitchen-household",
+      href: "/category/kitchen-household",
     },
-    { label: "Garden & Outdoor", href: "/categories/garden-outdoor" },
-    { label: "Toys & Games", href: "/categories/toys-games" },
+    { label: "Garden & Outdoor", href: "/category/garden-outdoor" },
+    { label: "Toys & Games", href: "/category/toys-games" },
   ],
 };
