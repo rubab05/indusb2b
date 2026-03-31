@@ -126,6 +126,8 @@ export type CategoryContent = {
   description: string;
   seoTitle?: string;
   seoDescription?: string;
+  productCount?: number;
+  b2bLabel?: string;
   heroImages?: ImageItem[];
   subcategories: LinkCard[];
   featuredFamilies: LinkCard[];

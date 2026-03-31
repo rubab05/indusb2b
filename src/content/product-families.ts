@@ -614,9 +614,10 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "Multi-use cookware with glass lid, easy-clean surface, and compatibility with everyday kitchen routines.",
     gallery: [
-      { src: "/images/kitchen/stock-pot-1.jpg", alt: "Stock Pot front view" },
-      { src: "/images/kitchen/stock-pot-2.jpg", alt: "Stock Pot detail" },
-      { src: "/images/kitchen/stock-pot-3.jpg", alt: "Stock Pot cooking use" },
+      { src: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Stock Pot front view" },
+      { src: "https://images.unsplash.com/photo-1604414499020-f9ac575bc5ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHBvdCUyMGNvb2tpbmclMjBraXRjaGVufGVufDF8fHx8MTc3MzkwODk2OHww&ixlib=rb-4.1.0&q=80&w=1080", alt: "Stock Pot detail" },
+      { src: "https://images.unsplash.com/photo-1588279102558-dabc7b32d9b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdG9jayUyMHBvdCUyMGxpZCUyMGdsYXNzJTIwY29va3dhcmV8ZW58MXx8fHwxNzczOTA4OTY5fDA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Stock Pot cooking use" },
+      { src: "https://images.unsplash.com/photo-1548243325-bf5b90ad929f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwb3QlMjBoYW5kbGUlMjBkZXRhaWwlMjBraXRjaGVufGVufDF8fHx8MTc3MzkwODk2OXww&ixlib=rb-4.1.0&q=80&w=1080", alt: "Stock Pot handle detail" },
     ],
     features: [
       "Versatile 3-in-1 pot",
@@ -636,9 +637,9 @@ export const productFamilies: ProductFamilyContent[] = [
       "General stovetop cooking",
     ],
     variants: [
-      { title: "Stock Pot 3.0L / 20cm" },
-      { title: "Stock Pot 6.5L / 28cm" },
-      { title: "Cookware Set (3-piece)" },
+      { title: "Stock Pot 3.0L / 20cm", image: "https://images.unsplash.com/photo-1604414499020-f9ac575bc5ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHBvdCUyMGNvb2tpbmclMjBraXRjaGVufGVufDF8fHx8MTc3MzkwODk2OHww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Stock Pot 6.5L / 28cm", image: "https://images.unsplash.com/photo-1588279102558-dabc7b32d9b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdG9jayUyMHBvdCUyMGxpZCUyMGdsYXNzJTIwY29va3dhcmV8ZW58MXx8fHwxNzczOTA4OTY5fDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Cookware Set (3-piece)", image: "https://images.unsplash.com/photo-1762922425155-d03e6997e33e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb29rd2FyZSUyMHNldCUyMGtpdGNoZW4lMjBwb3RzfGVufDF8fHx8MTc3MzgzMzYwM3ww&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     specifications: [
       {
@@ -679,16 +680,16 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Wok Pan with Glass Lid 32cm", href: "/products/wok-pan-glass-lid-32cm" },
-      { title: "Non Stick Frying Pan 30cm", href: "/products/non-stick-frying-pan-30cm" },
-      { title: "Chip Pan with Basket", href: "/products/chip-pan-with-basket" },
-      { title: "Milk Pot 14cm", href: "/products/milk-pot-14cm" },
-      { title: "Egg Poacher Pan", href: "/products/egg-poacher-pan" },
+      { title: "Wok Pan with Glass Lid 32cm", href: "/category/kitchen-household/wok-pan-glass-lid-32cm", image: "https://images.unsplash.com/photo-1772385953538-2c694ad89d49?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b2slMjBwYW4lMjBjb29raW5nJTIwYXNpYW58ZW58MXx8fHwxNzczODcwOTg0fDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Non Stick Frying Pan 30cm", href: "/category/kitchen-household/non-stick-frying-pan-30cm", image: "https://images.unsplash.com/photo-1560131324-71022d71ee4f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcnlpbmclMjBwYW4lMjBza2lsbGV0JTIwa2l0Y2hlbnxlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Chip Pan with Basket", href: "/category/kitchen-household/chip-pan-with-basket", image: "https://images.unsplash.com/photo-1688940738506-acfe9334bf5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWVwJTIwZnJ5ZXIlMjBiYXNrZXQlMjBjb29raW5nfGVufDF8fHx8MTc3Mzg3MDk5MHww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Milk Pot 14cm", href: "/category/kitchen-household/milk-pot-14cm", image: "https://images.unsplash.com/photo-1734193259681-1fd359f63205?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbWFsbCUyMG1pbGslMjBwYW4lMjBzYXVjZXBhbnxlbnwxfHx8fDE3NzM4NzA5ODd8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Egg Poacher Pan", href: "/category/kitchen-household/egg-poacher-pan", image: "https://images.unsplash.com/photo-1601763969974-52eba0369424?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlZ2clMjBwb2FjaGVyJTIwcGFuJTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODd8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     relatedCategories: [
-      { title: "Kitchen & Household", href: "/categories/kitchen-household" },
-      { title: "Fruit Baskets", href: "/products/fruit-basket" },
-      { title: "Corner Plate Racks", href: "/products/corner-plate-rack" },
+      { title: "Kitchen & Household", href: "/category/kitchen-household", image: "https://images.unsplash.com/photo-1772385953538-2c694ad89d49?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b2slMjBwYW4lMjBjb29raW5nJTIwYXNpYW58ZW58MXx8fHwxNzczODcwOTg0fDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Fruit Baskets", href: "/category/kitchen-household/fruit-basket", image: "https://images.unsplash.com/photo-1709406221293-cbbe118fd94d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3aXJlJTIwZnJ1aXQlMjBiYXNrZXQlMjBraXRjaGVufGVufDF8fHx8MTc3Mzg3MDk4NXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Corner Plate Racks", href: "/category/kitchen-household/corner-plate-rack", image: "https://images.unsplash.com/photo-1688318375271-b25e13f196ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaXNoJTIwZHJ5aW5nJTIwcmFjayUyMHBsYXRlfGVufDF8fHx8MTc3Mzg3MDk4NXww&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Have a Product Question?",
