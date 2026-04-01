@@ -1,17 +1,19 @@
+import { Link } from "react-router";
+
 export function Footer() {
   return (
     <footer className="bg-gray-50 border-t border-gray-100">
       <div className="max-w-[1400px] mx-auto px-8 py-20">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-16 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-16 mb-16">
           {/* Categories */}
           <div>
             <h4 className="text-xs tracking-widest mb-6 text-gray-900">CATEGORIES</h4>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Mats & Rugs</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Decoration & Seasonal</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Kitchen & Household</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Garden & Outdoor</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Toys & Games</a></li>
+              <li><Link to="/category/mats-rugs" className="hover:text-gray-900 transition-colors">Mats &amp; Rugs</Link></li>
+              <li><Link to="/category/decoration-seasonal" className="hover:text-gray-900 transition-colors">Decoration &amp; Seasonal</Link></li>
+              <li><Link to="/category/kitchen-household" className="hover:text-gray-900 transition-colors">Kitchen &amp; Household</Link></li>
+              <li><Link to="/category/garden-outdoor" className="hover:text-gray-900 transition-colors">Garden &amp; Outdoor</Link></li>
+              <li><Link to="/category/toys-games" className="hover:text-gray-900 transition-colors">Toys &amp; Games</Link></li>
             </ul>
           </div>
 
@@ -19,9 +21,9 @@ export function Footer() {
           <div>
             <h4 className="text-xs tracking-widest mb-6 text-gray-900">TRADE</h4>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Become a Stockist</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Trade Enquiries</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Download Catalogue</a></li>
+              <li><Link to="/how-it-works" className="hover:text-gray-900 transition-colors">How It Works</Link></li>
+              <li><Link to="/contact" className="hover:text-gray-900 transition-colors">Trade Enquiries</Link></li>
+              <li><Link to="/contact" className="hover:text-gray-900 transition-colors">Download Catalogue</Link></li>
             </ul>
           </div>
 
@@ -29,9 +31,20 @@ export function Footer() {
           <div>
             <h4 className="text-xs tracking-widest mb-6 text-gray-900">ABOUT</h4>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-gray-900 transition-colors">About HOMATZ</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Contact Us</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Quality Standards</a></li>
+              <li><Link to="/about" className="hover:text-gray-900 transition-colors">About HOMATZ</Link></li>
+              <li><Link to="/contact" className="hover:text-gray-900 transition-colors">Contact Us</Link></li>
+              <li><Link to="/faq" className="hover:text-gray-900 transition-colors">FAQ</Link></li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="text-xs tracking-widest mb-6 text-gray-900">LEGAL</h4>
+            <ul className="space-y-3 text-sm text-gray-600">
+              <li><Link to="/privacy-policy" className="hover:text-gray-900 transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="hover:text-gray-900 transition-colors">Terms &amp; Conditions</Link></li>
+              <li><Link to="/shipping" className="hover:text-gray-900 transition-colors">Shipping Info</Link></li>
+              <li><Link to="/returns" className="hover:text-gray-900 transition-colors">Returns Policy</Link></li>
             </ul>
           </div>
 

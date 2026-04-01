@@ -16,8 +16,8 @@ export function Header() {
             <Link to="/" className="text-gray-900 hover:text-gray-500 transition-colors">HOME</Link>
             <a href="/#categories" className="text-gray-500 hover:text-gray-900 transition-colors">CATEGORIES</a>
             <a href="/#about" className="text-gray-500 hover:text-gray-900 transition-colors">ABOUT</a>
-            <a href="#" className="text-gray-500 hover:text-gray-900 transition-colors">TRADE</a>
-            <a href="#" className="text-gray-500 hover:text-gray-900 transition-colors">CONTACT</a>
+            <Link to="/how-it-works" className="text-gray-500 hover:text-gray-900 transition-colors">TRADE</Link>
+            <Link to="/contact" className="text-gray-500 hover:text-gray-900 transition-colors">CONTACT</Link>
           </nav>
 
           {/* Search Bar */}

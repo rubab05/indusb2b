@@ -10,15 +10,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A practical floor mat range focused on dirt trapping, absorbency, non-slip use, and everyday durability across home and commercial environments.",
     gallery: [
-      { src: "/images/mats/barrier-mats-1.jpg", alt: "Barrier mat main view" },
-      {
-        src: "/images/mats/barrier-mats-2.jpg",
-        alt: "Barrier mat lifestyle view",
-      },
-      {
-        src: "/images/mats/barrier-mats-3.jpg",
-        alt: "Barrier mat feature panel",
-      },
+      { src: "https://images.unsplash.com/photo-1678637651440-dc1c17da0a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkb29yJTIwbWF0JTIwZW50cmFuY2V8ZW58MXx8fHwxNzczMDE5NDI3fDA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Barrier mat main view" },
+      { src: "https://images.unsplash.com/photo-1678637651440-dc1c17da0a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkb29yJTIwbWF0JTIwZW50cmFuY2V8ZW58MXx8fHwxNzczMDE5NDI3fDA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Barrier mat lifestyle view" },
+      { src: "https://images.unsplash.com/photo-1678637651440-dc1c17da0a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkb29yJTIwbWF0JTIwZW50cmFuY2V8ZW58MXx8fHwxNzczMDE5NDI3fDA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Barrier mat feature panel" },
     ],
     features: [
       "Heavy duty construction",
@@ -53,20 +47,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Hallway Runner Rugs", href: "/products/hallway-runner-rugs" },
-      { title: "Shaggy Rugs", href: "/products/shaggy-rugs" },
-      { title: "Chindi Rag Rugs", href: "/products/chindi-rag-rugs" },
+      { title: "Hallway Runner Rugs", href: "/category/mats-rugs/hallway-runner-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Shaggy Rugs", href: "/category/mats-rugs/shaggy-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Chindi Rag Rugs", href: "/category/mats-rugs/chindi-rag-rugs", image: "https://images.unsplash.com/photo-1768218983339-0415a4ca932d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xvcmZ1bCUyMHJhZyUyMHJ1Z3xlbnwxfHx8fDE3NzMwMTk0MzV8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     relatedCategories: [
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
-      {
-        title: "Kitchen & Household",
-        href: "/categories/kitchen-household",
-      },
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Kitchen & Household", href: "/category/kitchen-household", image: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Have a Product Question?",
@@ -87,9 +75,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A comfort-led area rug range with plush texture, non-slip support, and soft-touch appeal for family-oriented interiors.",
     gallery: [
-      { src: "/images/mats/shaggy-rug-1.jpg", alt: "Shaggy rug main view" },
-      { src: "/images/mats/shaggy-rug-2.jpg", alt: "Shaggy rug lifestyle" },
-      { src: "/images/mats/shaggy-rug-3.jpg", alt: "Shaggy rug detail" },
+      { src: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080", alt: "Shaggy rug main view" },
+      { src: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080", alt: "Shaggy rug lifestyle" },
+      { src: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080", alt: "Shaggy rug detail" },
     ],
     features: [
       "Soft high quality surface",
@@ -121,20 +109,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Barrier Mats", href: "/products/barrier-mats" },
-      { title: "Chindi Rag Rugs", href: "/products/chindi-rag-rugs" },
-      { title: "Hallway Runner Rugs", href: "/products/hallway-runner-rugs" },
+      { title: "Barrier Mats", href: "/category/mats-rugs/barrier-mats", image: "https://images.unsplash.com/photo-1678637651440-dc1c17da0a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkb29yJTIwbWF0JTIwZW50cmFuY2V8ZW58MXx8fHwxNzczMDE5NDI3fDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Chindi Rag Rugs", href: "/category/mats-rugs/chindi-rag-rugs", image: "https://images.unsplash.com/photo-1768218983339-0415a4ca932d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xvcmZ1bCUyMHJhZyUyMHJ1Z3xlbnwxfHx8fDE3NzMwMTk0MzV8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Hallway Runner Rugs", href: "/category/mats-rugs/hallway-runner-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     relatedCategories: [
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
-      {
-        title: "Kitchen & Household",
-        href: "/categories/kitchen-household",
-      },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Kitchen & Household", href: "/category/kitchen-household", image: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need Help Choosing the Right Rug?",
@@ -155,9 +137,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A colourful recycled-cotton rug family combining craft-led appeal, decorative personality, and multi-room suitability.",
     gallery: [
-      { src: "/images/mats/chindi-rug-1.jpg", alt: "Chindi rug main view" },
-      { src: "/images/mats/chindi-rug-2.jpg", alt: "Chindi rug lifestyle" },
-      { src: "/images/mats/chindi-rug-3.jpg", alt: "Chindi rug detail" },
+      { src: "https://images.unsplash.com/photo-1768218983339-0415a4ca932d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xvcmZ1bCUyMHJhZyUyMHJ1Z3xlbnwxfHx8fDE3NzMwMTk0MzV8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Chindi rug main view" },
+      { src: "https://images.unsplash.com/photo-1768218983339-0415a4ca932d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xvcmZ1bCUyMHJhZyUyMHJ1Z3xlbnwxfHx8fDE3NzMwMTk0MzV8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Chindi rug lifestyle" },
+      { src: "https://images.unsplash.com/photo-1768218983339-0415a4ca932d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xvcmZ1bCUyMHJhZyUyMHJ1Z3xlbnwxfHx8fDE3NzMwMTk0MzV8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Chindi rug detail" },
     ],
     features: [
       "100% recycled material positioning",
@@ -190,20 +172,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Shaggy Rugs", href: "/products/shaggy-rugs" },
-      { title: "Barrier Mats", href: "/products/barrier-mats" },
-      { title: "Hallway Runner Rugs", href: "/products/hallway-runner-rugs" },
+      { title: "Shaggy Rugs", href: "/category/mats-rugs/shaggy-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Barrier Mats", href: "/category/mats-rugs/barrier-mats", image: "https://images.unsplash.com/photo-1678637651440-dc1c17da0a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkb29yJTIwbWF0JTIwZW50cmFuY2V8ZW58MXx8fHwxNzczMDE5NDI3fDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Hallway Runner Rugs", href: "/category/mats-rugs/hallway-runner-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     relatedCategories: [
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
-      {
-        title: "Kitchen & Household",
-        href: "/categories/kitchen-household",
-      },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Kitchen & Household", href: "/category/kitchen-household", image: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need More Variant Information?",
@@ -224,18 +200,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A runner-rug family focused on narrow-space floor protection, long-format utility, and everyday indoor use.",
     gallery: [
-      {
-        src: "/images/mats/hallway-runner-1.jpg",
-        alt: "Hallway runner main view",
-      },
-      {
-        src: "/images/mats/hallway-runner-2.jpg",
-        alt: "Hallway runner lifestyle",
-      },
-      {
-        src: "/images/mats/hallway-runner-3.jpg",
-        alt: "Hallway runner detail",
-      },
+      { src: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080", alt: "Hallway runner main view" },
+      { src: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080", alt: "Hallway runner lifestyle" },
+      { src: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080", alt: "Hallway runner detail" },
     ],
     features: [
       "Low profile format",
@@ -266,20 +233,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Barrier Mats", href: "/products/barrier-mats" },
-      { title: "Shaggy Rugs", href: "/products/shaggy-rugs" },
-      { title: "Chindi Rag Rugs", href: "/products/chindi-rag-rugs" },
+      { title: "Barrier Mats", href: "/category/mats-rugs/barrier-mats", image: "https://images.unsplash.com/photo-1678637651440-dc1c17da0a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkb29yJTIwbWF0JTIwZW50cmFuY2V8ZW58MXx8fHwxNzczMDE5NDI3fDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Shaggy Rugs", href: "/category/mats-rugs/shaggy-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Chindi Rag Rugs", href: "/category/mats-rugs/chindi-rag-rugs", image: "https://images.unsplash.com/photo-1768218983339-0415a4ca932d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xvcmZ1bCUyMHJhZyUyMHJ1Z3xlbnwxfHx8fDE3NzMwMTk0MzV8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     relatedCategories: [
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
-      {
-        title: "Kitchen & Household",
-        href: "/categories/kitchen-household",
-      },
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Kitchen & Household", href: "/category/kitchen-household", image: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need Help Choosing the Right Runner?",
@@ -300,9 +261,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A decorative home fragrance product family combining ceramic craft, aromatherapy use, and giftable décor styling.",
     gallery: [
-      { src: "/images/decor/wax-burner-1.jpg", alt: "Wax burner main view" },
-      { src: "/images/decor/wax-burner-2.jpg", alt: "Wax burner detail" },
-      { src: "/images/decor/wax-burner-3.jpg", alt: "Wax burner lifestyle" },
+      { src: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Wax burner main view" },
+      { src: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Wax burner detail" },
+      { src: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Wax burner lifestyle" },
     ],
     features: [
       "High-quality porcelain construction",
@@ -334,29 +295,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      {
-        title: "Christmas Candle Bridges",
-        href: "/products/christmas-candle-bridges",
-      },
-      {
-        title: "Artificial Christmas Trees",
-        href: "/products/artificial-christmas-trees",
-      },
-      {
-        title: "Pencil Slim Trees",
-        href: "/products/pencil-slim-christmas-trees",
-      },
+      { title: "Christmas Candle Bridges", href: "/category/decoration-seasonal/christmas-candle-bridges", image: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Artificial Christmas Trees", href: "/category/decoration-seasonal/artificial-christmas-trees", image: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Pencil Slim Trees", href: "/category/decoration-seasonal/pencil-slim-christmas-trees", image: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     relatedCategories: [
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
-      {
-        title: "Kitchen & Household",
-        href: "/categories/kitchen-household",
-      },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Kitchen & Household", href: "/category/kitchen-household", image: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need More Product Information?",
@@ -377,18 +323,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A seasonal tabletop lighting family blending traditional Christmas styling, safety, and decorative display value.",
     gallery: [
-      {
-        src: "/images/decor/candle-bridge-1.jpg",
-        alt: "Christmas candle bridge",
-      },
-      {
-        src: "/images/decor/candle-bridge-2.jpg",
-        alt: "Candle bridge detail",
-      },
-      {
-        src: "/images/decor/candle-bridge-3.jpg",
-        alt: "Candle bridge lifestyle",
-      },
+      { src: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Christmas candle bridge" },
+      { src: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Candle bridge detail" },
+      { src: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Candle bridge lifestyle" },
     ],
     features: [
       "Natural wooden arch design",
@@ -420,26 +357,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Wax Burners", href: "/products/wax-burners" },
-      {
-        title: "Artificial Christmas Trees",
-        href: "/products/artificial-christmas-trees",
-      },
-      {
-        title: "Pencil Slim Trees",
-        href: "/products/pencil-slim-christmas-trees",
-      },
+      { title: "Wax Burners", href: "/category/decoration-seasonal/wax-burners", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Artificial Christmas Trees", href: "/category/decoration-seasonal/artificial-christmas-trees", image: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Pencil Slim Trees", href: "/category/decoration-seasonal/pencil-slim-christmas-trees", image: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     relatedCategories: [
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
-      {
-        title: "Kitchen & Household",
-        href: "/categories/kitchen-household",
-      },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Kitchen & Household", href: "/category/kitchen-household", image: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need Seasonal Range Support?",
@@ -460,18 +385,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A festive décor family with multiple heights and formats suited to Christmas merchandising and display-led retail.",
     gallery: [
-      {
-        src: "/images/decor/christmas-tree-1.jpg",
-        alt: "Artificial Christmas tree",
-      },
-      {
-        src: "/images/decor/christmas-tree-2.jpg",
-        alt: "Christmas tree lifestyle",
-      },
-      {
-        src: "/images/decor/christmas-tree-3.jpg",
-        alt: "Christmas tree detail",
-      },
+      { src: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Artificial Christmas tree" },
+      { src: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Christmas tree lifestyle" },
+      { src: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Christmas tree detail" },
     ],
     features: [
       "Easy to assemble",
@@ -498,26 +414,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      {
-        title: "Pencil Slim Trees",
-        href: "/products/pencil-slim-christmas-trees",
-      },
-      {
-        title: "Christmas Candle Bridges",
-        href: "/products/christmas-candle-bridges",
-      },
-      { title: "Wax Burners", href: "/products/wax-burners" },
+      { title: "Pencil Slim Trees", href: "/category/decoration-seasonal/pencil-slim-christmas-trees", image: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Christmas Candle Bridges", href: "/category/decoration-seasonal/christmas-candle-bridges", image: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Wax Burners", href: "/category/decoration-seasonal/wax-burners", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     relatedCategories: [
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
-      {
-        title: "Kitchen & Household",
-        href: "/categories/kitchen-household",
-      },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Kitchen & Household", href: "/category/kitchen-household", image: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need Seasonal Planning Support?",
@@ -538,15 +442,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A slim-format Christmas tree family designed to save floor space while maintaining festive display value.",
     gallery: [
-      { src: "/images/decor/pencil-tree-1.jpg", alt: "Pencil slim tree" },
-      {
-        src: "/images/decor/pencil-tree-2.jpg",
-        alt: "Pencil tree lifestyle",
-      },
-      {
-        src: "/images/decor/pencil-tree-3.jpg",
-        alt: "Pencil tree detail",
-      },
+      { src: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Pencil slim tree" },
+      { src: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Pencil tree lifestyle" },
+      { src: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Pencil tree detail" },
     ],
     features: [
       "Space-saving slim profile",
@@ -574,26 +472,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      {
-        title: "Artificial Christmas Trees",
-        href: "/products/artificial-christmas-trees",
-      },
-      {
-        title: "Christmas Candle Bridges",
-        href: "/products/christmas-candle-bridges",
-      },
-      { title: "Wax Burners", href: "/products/wax-burners" },
+      { title: "Artificial Christmas Trees", href: "/category/decoration-seasonal/artificial-christmas-trees", image: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Christmas Candle Bridges", href: "/category/decoration-seasonal/christmas-candle-bridges", image: "https://images.unsplash.com/photo-1609620521372-e774f478d857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjB0cmVlJTIwZGVjb3JhdGlvbnxlbnwxfHx8fDE3NzMwMTk0Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Wax Burners", href: "/category/decoration-seasonal/wax-burners", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     relatedCategories: [
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
-      {
-        title: "Kitchen & Household",
-        href: "/categories/kitchen-household",
-      },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Kitchen & Household", href: "/category/kitchen-household", image: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need More Product Information?",
@@ -1274,9 +1160,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A natural-material outdoor screening family designed for privacy, décor, and flexible fence enhancement.",
     gallery: [
-      { src: "/images/garden/bamboo-fence-1.jpg", alt: "Bamboo fence screening main view" },
-      { src: "/images/garden/bamboo-fence-2.jpg", alt: "Bamboo fence detail" },
-      { src: "/images/garden/bamboo-fence-3.jpg", alt: "Bamboo fence lifestyle" },
+      { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80", alt: "Bamboo fence screening main view" },
+      { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80", alt: "Bamboo fence detail" },
+      { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80", alt: "Bamboo fence lifestyle" },
     ],
     features: [
       "Natural bamboo material",
@@ -1306,17 +1192,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Bamboo Canes", href: "/products/bamboo-canes" },
-      { title: "Green Garden Sticks", href: "/products/green-garden-sticks" },
-      { title: "Artificial Hedge Screening", href: "/products/artificial-hedge-screening" },
+      { title: "Bamboo Canes", href: "/category/garden-outdoor/bamboo-canes", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Green Garden Sticks", href: "/category/garden-outdoor/green-garden-sticks", image: "https://images.unsplash.com/photo-1563514227-cd06f6bba4e3?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Artificial Hedge Screening", href: "/category/garden-outdoor/artificial-hedge-screening", image: "https://images.unsplash.com/photo-1585974738771-84483dd9f89f?w=1080&auto=format&fit=crop&q=80" },
     ],
     relatedCategories: [
-      { title: "Garden & Outdoor", href: "/categories/garden-outdoor" },
-      { title: "Gazing Balls", href: "/products/gazing-balls" },
-      {
-        title: "Kitchen & Household",
-        href: "/categories/kitchen-household",
-      },
+      { title: "Garden & Outdoor", href: "/category/garden-outdoor", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Kitchen & Household", href: "/category/kitchen-household", image: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need Help with Screening Options?",
@@ -1337,9 +1220,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "Reusable natural bamboo support range designed for indoor and outdoor gardening.",
     gallery: [
-      { src: "/images/garden/bamboo-canes-1.jpg", alt: "Bamboo canes bundle" },
-      { src: "/images/garden/bamboo-canes-2.jpg", alt: "Bamboo canes in garden use" },
-      { src: "/images/garden/bamboo-canes-3.jpg", alt: "Bamboo canes detail" },
+      { src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80", alt: "Bamboo canes bundle" },
+      { src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80", alt: "Bamboo canes in garden use" },
+      { src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80", alt: "Bamboo canes detail" },
     ],
     features: [
       "Natural bamboo material",
@@ -1396,14 +1279,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Green Garden Sticks", href: "/products/green-garden-sticks" },
-      { title: "Wooden Garden Stakes", href: "/products/wooden-garden-stakes" },
-      { title: "Bamboo Fence Screening", href: "/products/bamboo-fence-screening" },
+      { title: "Green Garden Sticks", href: "/category/garden-outdoor/green-garden-sticks", image: "https://images.unsplash.com/photo-1563514227-cd06f6bba4e3?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Wooden Garden Stakes", href: "/category/garden-outdoor/wooden-garden-stakes", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Bamboo Fence Screening", href: "/category/garden-outdoor/bamboo-fence-screening", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80" },
     ],
     relatedCategories: [
-      { title: "Garden & Outdoor", href: "/categories/garden-outdoor" },
-      { title: "Artificial Hedge Screening", href: "/products/artificial-hedge-screening" },
-      { title: "Gazing Balls", href: "/products/gazing-balls" },
+      { title: "Garden & Outdoor", href: "/category/garden-outdoor", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need Help Choosing the Right Size?",
@@ -1424,9 +1307,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A size-rich plant support family suited for flowers, vegetables, houseplants, and general stem support.",
     gallery: [
-      { src: "/images/garden/green-sticks-1.jpg", alt: "Green garden sticks main view" },
-      { src: "/images/garden/green-sticks-2.jpg", alt: "Green sticks lifestyle" },
-      { src: "/images/garden/green-sticks-3.jpg", alt: "Green sticks detail" },
+      { src: "https://images.unsplash.com/photo-1563514227-cd06f6bba4e3?w=1080&auto=format&fit=crop&q=80", alt: "Green garden sticks main view" },
+      { src: "https://images.unsplash.com/photo-1563514227-cd06f6bba4e3?w=1080&auto=format&fit=crop&q=80", alt: "Green sticks lifestyle" },
+      { src: "https://images.unsplash.com/photo-1563514227-cd06f6bba4e3?w=1080&auto=format&fit=crop&q=80", alt: "Green sticks detail" },
     ],
     features: [
       "Reusable",
@@ -1465,14 +1348,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Bamboo Canes", href: "/products/bamboo-canes" },
-      { title: "Wooden Garden Stakes", href: "/products/wooden-garden-stakes" },
-      { title: "Bamboo Fence Screening", href: "/products/bamboo-fence-screening" },
+      { title: "Bamboo Canes", href: "/category/garden-outdoor/bamboo-canes", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Wooden Garden Stakes", href: "/category/garden-outdoor/wooden-garden-stakes", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Bamboo Fence Screening", href: "/category/garden-outdoor/bamboo-fence-screening", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80" },
     ],
     relatedCategories: [
-      { title: "Garden & Outdoor", href: "/categories/garden-outdoor" },
-      { title: "Artificial Hedge Screening", href: "/products/artificial-hedge-screening" },
-      { title: "Gazing Balls", href: "/products/gazing-balls" },
+      { title: "Garden & Outdoor", href: "/category/garden-outdoor", image: "https://images.unsplash.com/photo-1563514227-cd06f6bba4e3?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need More Product Information?",
@@ -1493,8 +1376,8 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A simple support and fencing accessory for plant, garden, and outdoor utility use.",
     gallery: [
-      { src: "/images/garden/wooden-stakes-1.jpg", alt: "Wooden stakes main view" },
-      { src: "/images/garden/wooden-stakes-2.jpg", alt: "Wooden stakes detail" },
+      { src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80", alt: "Wooden stakes main view" },
+      { src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80", alt: "Wooden stakes detail" },
     ],
     features: [
       "Pointed stake format",
@@ -1517,14 +1400,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Bamboo Canes", href: "/products/bamboo-canes" },
-      { title: "Green Garden Sticks", href: "/products/green-garden-sticks" },
-      { title: "Bamboo Fence Screening", href: "/products/bamboo-fence-screening" },
+      { title: "Bamboo Canes", href: "/category/garden-outdoor/bamboo-canes", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Green Garden Sticks", href: "/category/garden-outdoor/green-garden-sticks", image: "https://images.unsplash.com/photo-1563514227-cd06f6bba4e3?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Bamboo Fence Screening", href: "/category/garden-outdoor/bamboo-fence-screening", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80" },
     ],
     relatedCategories: [
-      { title: "Garden & Outdoor", href: "/categories/garden-outdoor" },
-      { title: "Artificial Hedge Screening", href: "/products/artificial-hedge-screening" },
-      { title: "Gazing Balls", href: "/products/gazing-balls" },
+      { title: "Garden & Outdoor", href: "/category/garden-outdoor", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need Help with Utility Product Selection?",
@@ -1545,18 +1428,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A decorative privacy product family combining realistic green conifer appearance with practical outdoor screening performance.",
     gallery: [
-      {
-        src: "/images/garden/artificial-hedge-1.jpg",
-        alt: "Artificial hedge screening main view",
-      },
-      {
-        src: "/images/garden/artificial-hedge-2.jpg",
-        alt: "Artificial hedge detail",
-      },
-      {
-        src: "/images/garden/artificial-hedge-3.jpg",
-        alt: "Artificial hedge lifestyle",
-      },
+      { src: "https://images.unsplash.com/photo-1585974738771-84483dd9f89f?w=1080&auto=format&fit=crop&q=80", alt: "Artificial hedge screening main view" },
+      { src: "https://images.unsplash.com/photo-1585974738771-84483dd9f89f?w=1080&auto=format&fit=crop&q=80", alt: "Artificial hedge detail" },
+      { src: "https://images.unsplash.com/photo-1585974738771-84483dd9f89f?w=1080&auto=format&fit=crop&q=80", alt: "Artificial hedge lifestyle" },
     ],
     features: [
       "UV protected",
@@ -1588,17 +1462,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Bamboo Fence Screening", href: "/products/bamboo-fence-screening" },
-      { title: "Bamboo Canes", href: "/products/bamboo-canes" },
-      { title: "Gazing Balls", href: "/products/gazing-balls" },
+      { title: "Bamboo Fence Screening", href: "/category/garden-outdoor/bamboo-fence-screening", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Bamboo Canes", href: "/category/garden-outdoor/bamboo-canes", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Gazing Balls", href: "/category/garden-outdoor/gazing-balls", image: "https://images.unsplash.com/photo-1597218868981-1b68e15f0065?w=1080&auto=format&fit=crop&q=80" },
     ],
     relatedCategories: [
-      { title: "Garden & Outdoor", href: "/categories/garden-outdoor" },
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
+      { title: "Garden & Outdoor", href: "/category/garden-outdoor", image: "https://images.unsplash.com/photo-1585974738771-84483dd9f89f?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need Help with Screening Options?",
@@ -1619,9 +1490,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A premium-look outdoor décor family with mirrored finish, multiple sizes, and strong gift/display appeal.",
     gallery: [
-      { src: "/images/garden/gazing-balls-1.jpg", alt: "Gazing balls main view" },
-      { src: "/images/garden/gazing-balls-2.jpg", alt: "Gazing balls detail" },
-      { src: "/images/garden/gazing-balls-3.jpg", alt: "Gazing balls lifestyle" },
+      { src: "https://images.unsplash.com/photo-1597218868981-1b68e15f0065?w=1080&auto=format&fit=crop&q=80", alt: "Gazing balls main view" },
+      { src: "https://images.unsplash.com/photo-1597218868981-1b68e15f0065?w=1080&auto=format&fit=crop&q=80", alt: "Gazing balls detail" },
+      { src: "https://images.unsplash.com/photo-1597218868981-1b68e15f0065?w=1080&auto=format&fit=crop&q=80", alt: "Gazing balls lifestyle" },
     ],
     features: [
       "Reflective mirror finish",
@@ -1649,17 +1520,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Artificial Hedge Screening", href: "/products/artificial-hedge-screening" },
-      { title: "Bamboo Fence Screening", href: "/products/bamboo-fence-screening" },
-      { title: "Bamboo Canes", href: "/products/bamboo-canes" },
+      { title: "Artificial Hedge Screening", href: "/category/garden-outdoor/artificial-hedge-screening", image: "https://images.unsplash.com/photo-1585974738771-84483dd9f89f?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Bamboo Fence Screening", href: "/category/garden-outdoor/bamboo-fence-screening", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Bamboo Canes", href: "/category/garden-outdoor/bamboo-canes", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1080&auto=format&fit=crop&q=80" },
     ],
     relatedCategories: [
-      { title: "Garden & Outdoor", href: "/categories/garden-outdoor" },
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
+      { title: "Garden & Outdoor", href: "/category/garden-outdoor", image: "https://images.unsplash.com/photo-1597218868981-1b68e15f0065?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Decoration & Seasonal", href: "/category/decoration-seasonal", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need More Product Information?",
@@ -1680,9 +1548,9 @@ export const productFamilies: ProductFamilyContent[] = [
     summary:
       "A colourful activity product family bridging toys, events, and light fitness routines.",
     gallery: [
-      { src: "/images/toys/hula-hoops-1.jpg", alt: "Hula hoops main view" },
-      { src: "/images/toys/hula-hoops-2.jpg", alt: "Hula hoops detail" },
-      { src: "/images/toys/hula-hoops-3.jpg", alt: "Hula hoops lifestyle" },
+      { src: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1080&auto=format&fit=crop&q=80", alt: "Hula hoops main view" },
+      { src: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1080&auto=format&fit=crop&q=80", alt: "Hula hoops detail" },
+      { src: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1080&auto=format&fit=crop&q=80", alt: "Hula hoops lifestyle" },
     ],
     features: [
       "Suitable for kids and adults",
@@ -1712,17 +1580,14 @@ export const productFamilies: ProductFamilyContent[] = [
       },
     ],
     relatedProducts: [
-      { title: "Garden & Outdoor", href: "/categories/garden-outdoor" },
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
-      {
-        title: "Decoration & Seasonal",
-        href: "/categories/decoration-seasonal",
-      },
+      { title: "Bamboo Fence Screening", href: "/category/garden-outdoor/bamboo-fence-screening", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Barrier Mats", href: "/category/mats-rugs/barrier-mats", image: "https://images.unsplash.com/photo-1678637651440-dc1c17da0a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkb29yJTIwbWF0JTIwZW50cmFuY2V8ZW58MXx8fHwxNzczMDE5NDI3fDA&ixlib=rb-4.1.0&q=80&w=1080" },
+      { title: "Wax Burners", href: "/category/decoration-seasonal/wax-burners", image: "https://images.unsplash.com/photo-1585641688967-c12a165291a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXglMjBidXJuZXIlMjBjYW5kbGV8ZW58MXx8fHwxNzczMDE5NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     relatedCategories: [
-      { title: "Toys & Games", href: "/categories/toys-games" },
-      { title: "Garden & Outdoor", href: "/categories/garden-outdoor" },
-      { title: "Mats & Rugs", href: "/categories/mats-rugs" },
+      { title: "Toys & Games", href: "/category/toys-games", image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Garden & Outdoor", href: "/category/garden-outdoor", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&auto=format&fit=crop&q=80" },
+      { title: "Mats & Rugs", href: "/category/mats-rugs", image: "https://images.unsplash.com/photo-1740168254713-1e8695f89ffe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGFnZ3klMjBydWclMjBob21lfGVufDF8fHx8MTc3MzAxOTQyOXww&ixlib=rb-4.1.0&q=80&w=1080" },
     ],
     support: {
       title: "Need More Product Information?",

@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { Header } from "../components/Header";
 import { Hero } from "../components/Hero";
 import { CategoryCard } from "../components/CategoryCard";
@@ -58,15 +59,15 @@ export default function HomePage() {
             {siteContent.tradeMessage}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="px-8 py-4 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide">
+            <Link to="/apply/wholesale" className="px-8 py-4 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide">
               APPLY AS WHOLESALE PARTNER
-            </button>
-            <button className="px-8 py-4 bg-white text-gray-900 hover:bg-gray-100 transition-colors text-sm tracking-wide">
+            </Link>
+            <Link to="/apply/dropship" className="px-8 py-4 bg-white text-gray-900 hover:bg-gray-100 transition-colors text-sm tracking-wide">
               APPLY AS DROPSHIP PARTNER
-            </button>
-            <button className="px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-gray-900 transition-colors text-sm tracking-wide">
+            </Link>
+            <Link to="/login" className="px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-gray-900 transition-colors text-sm tracking-wide">
               LOGIN TO VIEW PRICING
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -123,9 +124,9 @@ export default function HomePage() {
           <p className="text-lg text-gray-600 leading-relaxed mb-12">
             {siteContent.about}
           </p>
-          <button className="px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide">
+          <Link to="/contact" className="px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide">
             CONTACT US
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -138,12 +139,12 @@ export default function HomePage() {
             we're here to help with your wholesale needs.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide">
+            <Link to="/contact" className="px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide">
               REQUEST CATALOGUE
-            </button>
-            <button className="px-8 py-4 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-sm tracking-wide">
+            </Link>
+            <Link to="/apply" className="px-8 py-4 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-sm tracking-wide">
               BECOME A STOCKIST
-            </button>
+            </Link>
           </div>
         </div>
       </section>

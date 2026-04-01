@@ -1,4 +1,4 @@
-import { useParams, Navigate } from "react-router";
+import { useParams, Navigate, Link } from "react-router";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Breadcrumbs } from "../components/Breadcrumbs";
@@ -51,12 +51,12 @@ export default function CategoryPage() {
                 {category.description}
               </p>
               <div className="flex gap-4">
-                <button className="px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide">
+                <Link to="/contact" className="px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide">
                   REQUEST CATEGORY CATALOGUE
-                </button>
-                <button className="px-8 py-4 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-sm tracking-wide">
+                </Link>
+                <Link to="/contact" className="px-8 py-4 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-sm tracking-wide">
                   ENQUIRE ABOUT THIS RANGE
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -115,24 +115,24 @@ export default function CategoryPage() {
               </div>
             </div>
             <div className="flex gap-3">
-              <button className="px-6 py-3 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-xs tracking-wide flex items-center gap-2">
+              <Link to="/contact" className="px-6 py-3 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-xs tracking-wide flex items-center gap-2">
                 <Download className="w-4 h-4" />
                 REQUEST CATEGORY PRICE LIST
-              </button>
-              <button className="px-6 py-3 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-xs tracking-wide flex items-center gap-2">
+              </Link>
+              <Link to="/contact" className="px-6 py-3 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-xs tracking-wide flex items-center gap-2">
                 <HelpCircle className="w-4 h-4" />
                 ASK ABOUT MOQ
-              </button>
-              <button className="px-6 py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-xs tracking-wide flex items-center gap-2">
+              </Link>
+              <Link to="/apply" className="px-6 py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-xs tracking-wide flex items-center gap-2">
                 <FileText className="w-4 h-4" />
                 APPLY FOR TRADE ACCESS
-              </button>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Subcategory Grid */}
+      {/* Subcategory Grid
       {category.subcategories.length > 0 && (
         <section className="py-24 bg-white">
           <div className="max-w-[1400px] mx-auto px-8">
@@ -149,7 +149,7 @@ export default function CategoryPage() {
             </div>
           </div>
         </section>
-      )}
+      )} */}
 
       {/* Featured Product Families */}
       {category.featuredFamilies.length > 0 && (
@@ -218,8 +218,9 @@ export default function CategoryPage() {
             <h2 className="text-4xl mb-8 tracking-tight">{ctaSection.title}</h2>
             <div className="flex flex-wrap justify-center gap-4">
               {ctaSection.ctas.map((cta) => (
-                <button
+                <Link
                   key={cta.label}
+                  to={cta.href ?? "/contact"}
                   className={
                     cta.variant === "primary"
                       ? "px-8 py-4 bg-white text-gray-900 hover:bg-gray-100 transition-colors text-sm tracking-wide"
@@ -227,7 +228,7 @@ export default function CategoryPage() {
                   }
                 >
                   {cta.label.toUpperCase()}
-                </button>
+                </Link>
               ))}
             </div>
           </div>

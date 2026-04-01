@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 interface HeroProps {
   imageUrl: string;
 }
@@ -22,12 +23,12 @@ export function Hero({ imageUrl }: HeroProps) {
             Join our B2B partner network. Access wholesale pricing, dropship programs, and bulk ordering for quality household products.
           </p>
           <div className="flex gap-4">
-            <button className="px-8 py-4 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide">
+            <Link to= "/apply" className="px-8 py-4 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide">
               APPLY FOR B2B ACCESS
-            </button>
-            <button className="px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-gray-900 transition-colors text-sm tracking-wide">
+            </Link>
+            <Link to="/login" className="px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-gray-900 transition-colors text-sm tracking-wide">
               LOGIN TO VIEW PRICING
-            </button>
+            </Link>
           </div>
         </div>
       </div>

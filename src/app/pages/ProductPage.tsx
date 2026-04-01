@@ -1,4 +1,4 @@
-import { useParams, Navigate } from "react-router";
+import { useParams, Navigate, Link } from "react-router";
 import { useState } from "react";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -170,22 +170,22 @@ export default function ProductPage() {
 
               {/* CTAs */}
               <div className="space-y-4 mb-6">
-                <button className="w-full px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide flex items-center justify-center gap-2">
+                <Link to="/contact" className="w-full px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide flex items-center justify-center gap-2">
                   <FileText className="w-4 h-4" />
                   REQUEST QUOTE
-                </button>
-                <button className="w-full px-8 py-4 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-sm tracking-wide flex items-center justify-center gap-2">
+                </Link>
+                <Link to="/contact" className="w-full px-8 py-4 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-sm tracking-wide flex items-center justify-center gap-2">
                   <ShoppingCart className="w-4 h-4" />
                   ADD TO ENQUIRY
-                </button>
-                <button className="w-full px-8 py-4 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide flex items-center justify-center gap-2">
+                </Link>
+                <Link to="/login" className="w-full px-8 py-4 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide flex items-center justify-center gap-2">
                   <LogIn className="w-4 h-4" />
                   LOGIN TO VIEW PRICING
-                </button>
-                <button className="w-full px-8 py-4 border-2 border-gray-200 text-gray-900 hover:border-gray-400 transition-colors text-sm tracking-wide flex items-center justify-center gap-2">
+                </Link>
+                <Link to="/contact" className="w-full px-8 py-4 border-2 border-gray-200 text-gray-900 hover:border-gray-400 transition-colors text-sm tracking-wide flex items-center justify-center gap-2">
                   <Download className="w-4 h-4" />
                   DOWNLOAD SPEC SHEET
-                </button>
+                </Link>
               </div>
 
               {/* B2B Pricing Notice */}
@@ -332,8 +332,9 @@ export default function ProductPage() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 {(product.support.ctas ?? []).map((cta) => (
-                  <button
+                  <Link
                     key={cta.label}
+                    to={cta.href ?? "/contact"}
                     className={
                       cta.variant === "primary"
                         ? "px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide"
@@ -341,7 +342,7 @@ export default function ProductPage() {
                     }
                   >
                     {cta.label.toUpperCase()}
-                  </button>
+                  </Link>
                 ))}
               </div>
             </div>
