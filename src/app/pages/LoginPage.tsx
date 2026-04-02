@@ -1,16 +1,39 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { useAuth } from "../../contexts/AuthContext";
+import { ApprovalStatus } from "../../types/auth";
 
 export default function LoginPage() {
+  const { login, isAuthenticated, user, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  // Already logged in — redirect based on status
+  if (!loading && isAuthenticated && user) {
+    if (user.approvalStatus === ApprovalStatus.PENDING) return <Navigate to="/apply/pending" replace />;
+    if (user.approvalStatus === ApprovalStatus.REJECTED || user.approvalStatus === ApprovalStatus.SUSPENDED) {
+      return <Navigate to="/apply/restricted" replace />;
+    }
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // API-ready: submit credentials to auth endpoint
+    setError("");
+    setSubmitting(true);
+    try {
+      await login(email, password);
+      // useAuth state update will trigger re-render → redirect above fires
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -26,6 +49,12 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6 bg-white border border-gray-200 p-10">
+            {error && (
+              <div className="px-4 py-3 bg-red-50 border border-red-200 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+
             <div>
               <label htmlFor="email" className="block text-xs tracking-widest text-gray-700 mb-2">
                 EMAIL ADDRESS
@@ -73,9 +102,10 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide"
+              disabled={submitting}
+              className="w-full px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide disabled:opacity-50"
             >
-              SIGN IN
+              {submitting ? "SIGNING IN..." : "SIGN IN"}
             </button>
           </form>
 

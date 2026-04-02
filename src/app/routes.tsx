@@ -14,12 +14,31 @@ import ApplyPage from "./pages/ApplyPage";
 import ApplyWholesalePage from "./pages/ApplyWholesalePage";
 import ApplyDropshipPage from "./pages/ApplyDropshipPage";
 import ApplyPendingPage from "./pages/ApplyPendingPage";
+import ApplyRestrictedPage from "./pages/ApplyRestrictedPage";
 import LoginPage from "./pages/LoginPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import DashboardPage from "./pages/DashboardPage";
+import OrdersListPage from "./pages/portal/OrdersListPage";
+import OrderDetailPage from "./pages/portal/OrderDetailPage";
+import InvoicesPage from "./pages/portal/InvoicesPage";
+import TrackingPage from "./pages/portal/TrackingPage";
+import AuthGuard from "./components/guards/AuthGuard";
+import PortalLayout from "../layouts/PortalLayout";
 
 // Redirect /categories/:slug → /category/:slug
 function CategorySlugRedirect() {
   const { slug } = useParams<{ slug: string }>();
   return <Navigate to={`/category/${slug}`} replace />;
+}
+
+// Wraps the portal layout with AuthGuard
+function ProtectedPortal() {
+  return (
+    <AuthGuard>
+      <PortalLayout />
+    </AuthGuard>
+  );
 }
 
 export const router = createBrowserRouter([
@@ -29,14 +48,8 @@ export const router = createBrowserRouter([
   },
 
   // Canonical slug-based routes
-  {
-    path: "/category/:slug",
-    Component: CategoryPage,
-  },
-  {
-    path: "/category/:categorySlug/:productSlug",
-    Component: ProductPage,
-  },
+  { path: "/category/:slug", Component: CategoryPage },
+  { path: "/category/:categorySlug/:productSlug", Component: ProductPage },
 
   // Static informational pages
   { path: "/about", Component: AboutPage },
@@ -47,17 +60,34 @@ export const router = createBrowserRouter([
   { path: "/shipping", Component: ShippingPage },
   { path: "/returns", Component: ReturnsPage },
   { path: "/contact", Component: ContactPage },
+
+  // Auth pages
+  { path: "/login", Component: LoginPage },
+  { path: "/forgot-password", Component: ForgotPasswordPage },
+  { path: "/reset-password", Component: ResetPasswordPage },
+
+  // Application flow
   { path: "/apply", Component: ApplyPage },
   { path: "/apply/wholesale", Component: ApplyWholesalePage },
   { path: "/apply/dropship", Component: ApplyDropshipPage },
   { path: "/apply/pending", Component: ApplyPendingPage },
-  { path: "/login", Component: LoginPage },
+  { path: "/apply/restricted", Component: ApplyRestrictedPage },
 
-  // Legacy URL redirects — preserve existing internal links
+  // Protected partner portal — all /dashboard/* share PortalLayout
   {
-    path: "/categories/:slug",
-    Component: CategorySlugRedirect,
+    path: "/dashboard",
+    Component: ProtectedPortal,
+    children: [
+      { index: true, Component: DashboardPage },
+      { path: "orders", Component: OrdersListPage },
+      { path: "orders/:orderId", Component: OrderDetailPage },
+      { path: "invoices", Component: InvoicesPage },
+      { path: "tracking", Component: TrackingPage },
+    ],
   },
+
+  // Legacy URL redirects
+  { path: "/categories/:slug", Component: CategorySlugRedirect },
   {
     path: "/products/stock-pot-4-5l-24cm",
     element: <Navigate to="/category/kitchen-household/stock-pot-4-5l-24cm" replace />,
