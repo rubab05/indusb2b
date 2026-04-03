@@ -23,6 +23,10 @@ import OrdersListPage from "./pages/portal/OrdersListPage";
 import OrderDetailPage from "./pages/portal/OrderDetailPage";
 import InvoicesPage from "./pages/portal/InvoicesPage";
 import TrackingPage from "./pages/portal/TrackingPage";
+import SupportListPage from "./pages/portal/SupportListPage";
+import NewSupportTicketPage from "./pages/portal/NewSupportTicketPage";
+import SupportTicketDetailPage from "./pages/portal/SupportTicketDetailPage";
+import AccountSettingsPage from "./pages/portal/AccountSettingsPage";
 import AuthGuard from "./components/guards/AuthGuard";
 import PortalLayout from "../layouts/PortalLayout";
 
@@ -83,6 +87,10 @@ export const router = createBrowserRouter([
       { path: "orders/:orderId", Component: OrderDetailPage },
       { path: "invoices", Component: InvoicesPage },
       { path: "tracking", Component: TrackingPage },
+      { path: "support", Component: SupportListPage },
+      { path: "support/new", Component: NewSupportTicketPage },
+      { path: "support/:ticketId", Component: SupportTicketDetailPage },
+      { path: "account", Component: AccountSettingsPage },
     ],
   },
 
