@@ -27,7 +27,13 @@ import SupportListPage from "./pages/portal/SupportListPage";
 import NewSupportTicketPage from "./pages/portal/NewSupportTicketPage";
 import SupportTicketDetailPage from "./pages/portal/SupportTicketDetailPage";
 import AccountSettingsPage from "./pages/portal/AccountSettingsPage";
+import PriceListPage from "./pages/portal/PriceListPage";
+import MOQInfoPage from "./pages/portal/MOQInfoPage";
+import BulkOrderPage from "./pages/portal/BulkOrderPage";
+import QuickOrderPage from "./pages/portal/QuickOrderPage";
+import QuoteRequestPage from "./pages/portal/QuoteRequestPage";
 import AuthGuard from "./components/guards/AuthGuard";
+import WholesaleGuard from "./components/guards/WholesaleGuard";
 import PortalLayout from "../layouts/PortalLayout";
 
 // Redirect /categories/:slug → /category/:slug
@@ -91,6 +97,27 @@ export const router = createBrowserRouter([
       { path: "support/new", Component: NewSupportTicketPage },
       { path: "support/:ticketId", Component: SupportTicketDetailPage },
       { path: "account", Component: AccountSettingsPage },
+      // Wholesale-only routes
+      {
+        path: "price-list",
+        element: <WholesaleGuard><PriceListPage /></WholesaleGuard>,
+      },
+      {
+        path: "moq-info",
+        element: <WholesaleGuard><MOQInfoPage /></WholesaleGuard>,
+      },
+      {
+        path: "orders/new",
+        element: <WholesaleGuard><BulkOrderPage /></WholesaleGuard>,
+      },
+      {
+        path: "orders/quick",
+        element: <WholesaleGuard><QuickOrderPage /></WholesaleGuard>,
+      },
+      {
+        path: "quote-request",
+        element: <WholesaleGuard><QuoteRequestPage /></WholesaleGuard>,
+      },
     ],
   },
 

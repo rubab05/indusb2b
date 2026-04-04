@@ -14,6 +14,10 @@ import {
   X,
   LogOut,
   ChevronRight,
+  Tag,
+  Info,
+  Zap,
+  MessageSquarePlus,
 } from "lucide-react";
 
 interface NavItem {
@@ -21,11 +25,17 @@ interface NavItem {
   to: string;
   icon: React.ElementType;
   dropshipOnly?: boolean;
+  wholesaleOnly?: boolean;
 }
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   { label: "Orders", to: "/dashboard/orders", icon: ShoppingCart },
+  { label: "New Order", to: "/dashboard/orders/new", icon: Zap, wholesaleOnly: true },
+  { label: "Quick Order", to: "/dashboard/orders/quick", icon: FileText, wholesaleOnly: true },
+  { label: "Quote Request", to: "/dashboard/quote-request", icon: MessageSquarePlus, wholesaleOnly: true },
+  { label: "Price List", to: "/dashboard/price-list", icon: Tag, wholesaleOnly: true },
+  { label: "MOQ & Rules", to: "/dashboard/moq-info", icon: Info, wholesaleOnly: true },
   { label: "Invoices", to: "/dashboard/invoices", icon: FileText },
   { label: "Tracking", to: "/dashboard/tracking", icon: Truck },
   { label: "Support", to: "/dashboard/support", icon: LifeBuoy },
@@ -47,9 +57,11 @@ export default function PortalLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const visibleItems = NAV_ITEMS.filter(
-    (item) => !item.dropshipOnly || user?.accountType === AccountType.DROPSHIP,
-  );
+  const visibleItems = NAV_ITEMS.filter((item) => {
+    if (item.dropshipOnly && user?.accountType !== AccountType.DROPSHIP) return false;
+    if (item.wholesaleOnly && user?.accountType !== AccountType.WHOLESALE) return false;
+    return true;
+  });
 
   async function handleLogout() {
     await logout();
@@ -79,9 +91,7 @@ export default function PortalLayout() {
             <item.icon className="w-4 h-4 flex-shrink-0" strokeWidth={1.5} />
             {item.label}
             {item.dropshipOnly && (
-              <span className="ml-auto text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded-sm">
-                DS
-              </span>
+              <span className="ml-auto text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-sm">DS</span>
             )}
           </NavLink>
         ))}
