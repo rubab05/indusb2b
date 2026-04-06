@@ -42,3 +42,40 @@ export interface QuoteRequest {
   specialRequirements: string;
   submittedDate: string;
 }
+
+export interface DropshipBalance {
+  currentBalance: number;
+  currency: string;
+  threshold: number;
+  isLocked: boolean;
+  lastUpdated: string;
+}
+
+export type TransactionType = "top-up" | "order" | "refund" | "adjustment";
+
+export interface Transaction {
+  id: string;
+  date: string;
+  type: TransactionType;
+  reference: string;
+  description: string;
+  amount: number;
+  runningBalance: number;
+}
+
+export interface TopUpRequest {
+  amount: number;
+  method: "bank-transfer" | "card";
+  reference?: string;
+}
+
+export interface BalanceThreshold {
+  warningLevel: number;
+  lockLevel: number;
+  currency: string;
+}
+
+export interface BalanceHistoryPoint {
+  date: string;
+  balance: number;
+}

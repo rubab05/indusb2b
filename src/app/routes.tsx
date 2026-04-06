@@ -34,7 +34,16 @@ import QuickOrderPage from "./pages/portal/QuickOrderPage";
 import QuoteRequestPage from "./pages/portal/QuoteRequestPage";
 import AuthGuard from "./components/guards/AuthGuard";
 import WholesaleGuard from "./components/guards/WholesaleGuard";
+import DropshipGuard from "./components/guards/DropshipGuard";
 import PortalLayout from "../layouts/PortalLayout";
+import AdminLayout from "../layouts/AdminLayout";
+import DropshipDashboardPage from "./pages/portal/DropshipDashboardPage";
+import DropshipLedgerPage from "./pages/portal/DropshipLedgerPage";
+import TopUpPage from "./pages/portal/TopUpPage";
+import BankTransferConfirmPage from "./pages/portal/BankTransferConfirmPage";
+import DropshipStatementPage from "./pages/portal/DropshipStatementPage";
+import CategoryListPage from "./pages/admin/CategoryListPage";
+import CategoryEditPage from "./pages/admin/CategoryEditPage";
 
 // Redirect /categories/:slug → /category/:slug
 function CategorySlugRedirect() {
@@ -47,6 +56,15 @@ function ProtectedPortal() {
   return (
     <AuthGuard>
       <PortalLayout />
+    </AuthGuard>
+  );
+}
+
+// Wraps the admin layout with AuthGuard (requireAdmin)
+function ProtectedAdmin() {
+  return (
+    <AuthGuard requireAdmin>
+      <AdminLayout />
     </AuthGuard>
   );
 }
@@ -118,6 +136,39 @@ export const router = createBrowserRouter([
         path: "quote-request",
         element: <WholesaleGuard><QuoteRequestPage /></WholesaleGuard>,
       },
+      // Dropship-only routes
+      {
+        path: "dropship",
+        element: <DropshipGuard><DropshipDashboardPage /></DropshipGuard>,
+      },
+      {
+        path: "dropship/ledger",
+        element: <DropshipGuard><DropshipLedgerPage /></DropshipGuard>,
+      },
+      {
+        path: "dropship/topup",
+        element: <DropshipGuard><TopUpPage /></DropshipGuard>,
+      },
+      {
+        path: "dropship/topup/bank-confirm",
+        element: <DropshipGuard><BankTransferConfirmPage /></DropshipGuard>,
+      },
+      {
+        path: "dropship/statement",
+        element: <DropshipGuard><DropshipStatementPage /></DropshipGuard>,
+      },
+    ],
+  },
+
+  // Protected admin panel — all /admin/* share AdminLayout
+  {
+    path: "/admin",
+    Component: ProtectedAdmin,
+    children: [
+      { index: true, element: <Navigate to="/admin/categories" replace /> },
+      { path: "categories", Component: CategoryListPage },
+      { path: "categories/new/edit", Component: CategoryEditPage },
+      { path: "categories/:slug/edit", Component: CategoryEditPage },
     ],
   },
 

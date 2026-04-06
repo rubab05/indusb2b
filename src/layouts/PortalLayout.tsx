@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 import { AccountType } from "../types/auth";
+import { dropshipService } from "../services/dropship.service";
+import { DropshipBalance } from "../types/commerce";
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -18,6 +20,9 @@ import {
   Info,
   Zap,
   MessageSquarePlus,
+  PlusCircle,
+  Download,
+  AlertTriangle,
 } from "lucide-react";
 
 interface NavItem {
@@ -40,7 +45,10 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Tracking", to: "/dashboard/tracking", icon: Truck },
   { label: "Support", to: "/dashboard/support", icon: LifeBuoy },
   { label: "Account Settings", to: "/dashboard/account", icon: Settings },
-  { label: "Balance & Ledger", to: "/dashboard/dropship/ledger", icon: Wallet, dropshipOnly: true },
+  { label: "Dropship Dashboard", to: "/dashboard/dropship", icon: Wallet, dropshipOnly: true },
+  { label: "Transaction Ledger", to: "/dashboard/dropship/ledger", icon: FileText, dropshipOnly: true },
+  { label: "Top Up Funds", to: "/dashboard/dropship/topup", icon: PlusCircle, dropshipOnly: true },
+  { label: "Statement", to: "/dashboard/dropship/statement", icon: Download, dropshipOnly: true },
 ];
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
@@ -56,6 +64,15 @@ export default function PortalLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dsBalance, setDsBalance] = useState<DropshipBalance | null>(null);
+
+  const isDropship = user?.accountType === AccountType.DROPSHIP;
+
+  useEffect(() => {
+    if (isDropship) {
+      dropshipService.getBalance().then(setDsBalance);
+    }
+  }, [isDropship]);
 
   const visibleItems = NAV_ITEMS.filter((item) => {
     if (item.dropshipOnly && user?.accountType !== AccountType.DROPSHIP) return false;
@@ -182,6 +199,30 @@ export default function PortalLayout() {
             </div>
           </div>
         </header>
+
+        {/* Low balance banner */}
+        {isDropship && dsBalance && dsBalance.isLocked && (
+          <div className="bg-red-50 border-b border-red-200 px-6 py-3 flex items-center gap-3">
+            <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" strokeWidth={1.5} />
+            <p className="text-sm text-red-700 flex-1">
+              Your balance is below the minimum threshold (£{dsBalance.threshold}). Please top up to continue placing orders.
+            </p>
+            <Link to="/dashboard/dropship/topup" className="px-4 py-1.5 bg-red-600 text-white text-xs tracking-wide hover:bg-red-700 transition-colors flex-shrink-0">
+              TOP UP NOW
+            </Link>
+          </div>
+        )}
+        {isDropship && dsBalance && !dsBalance.isLocked && dsBalance.currentBalance <= 100 && (
+          <div className="bg-yellow-50 border-b border-yellow-200 px-6 py-3 flex items-center gap-3">
+            <AlertTriangle className="w-4 h-4 text-yellow-600 flex-shrink-0" strokeWidth={1.5} />
+            <p className="text-sm text-yellow-700 flex-1">
+              Your balance is running low. Top up to avoid service interruption.
+            </p>
+            <Link to="/dashboard/dropship/topup" className="px-4 py-1.5 bg-yellow-500 text-gray-900 text-xs tracking-wide hover:bg-yellow-400 transition-colors flex-shrink-0">
+              TOP UP NOW
+            </Link>
+          </div>
+        )}
 
         {/* Page content */}
         <main className="flex-1 p-6 lg:p-8">
