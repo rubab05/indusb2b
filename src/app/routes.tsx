@@ -44,6 +44,12 @@ import BankTransferConfirmPage from "./pages/portal/BankTransferConfirmPage";
 import DropshipStatementPage from "./pages/portal/DropshipStatementPage";
 import CategoryListPage from "./pages/admin/CategoryListPage";
 import CategoryEditPage from "./pages/admin/CategoryEditPage";
+import ProductListPage from "./pages/admin/ProductListPage";
+import ProductEditPage from "./pages/admin/ProductEditPage";
+import PagesListPage from "./pages/admin/PagesListPage";
+import PageEditPage from "./pages/admin/PageEditPage";
+import FAQManagementPage from "./pages/admin/FAQManagementPage";
+import MediaLibraryPage from "./pages/admin/MediaLibraryPage";
 
 // Redirect /categories/:slug → /category/:slug
 function CategorySlugRedirect() {
@@ -169,6 +175,14 @@ export const router = createBrowserRouter([
       { path: "categories", Component: CategoryListPage },
       { path: "categories/new/edit", Component: CategoryEditPage },
       { path: "categories/:slug/edit", Component: CategoryEditPage },
+      { path: "products", Component: ProductListPage },
+      { path: "products/new/edit", Component: ProductEditPage },
+      { path: "products/:slug/edit", Component: ProductEditPage },
+      { path: "pages", Component: PagesListPage },
+      { path: "pages/new/edit", Component: PageEditPage },
+      { path: "pages/:slug/edit", Component: PageEditPage },
+      { path: "faq", Component: FAQManagementPage },
+      { path: "media", Component: MediaLibraryPage },
     ],
   },
 
