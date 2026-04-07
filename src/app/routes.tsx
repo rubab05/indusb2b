@@ -8,7 +8,7 @@ import FAQPage from "./pages/FAQPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import ShippingPage from "./pages/ShippingPage";
-import ReturnsPage from "./pages/ReturnsPage";
+// import ReturnsPage from "./pages/ReturnsPage";
 import ContactPage from "./pages/ContactPage";
 import ApplyPage from "./pages/ApplyPage";
 import ApplyWholesalePage from "./pages/ApplyWholesalePage";
@@ -56,6 +56,11 @@ import RolesPermissionsPage from "./pages/admin/RolesPermissionsPage";
 import PricingAdminPage from "./pages/admin/PricingAdminPage";
 import VendorsPage from "./pages/admin/VendorsPage";
 import BrandSettingsPage from "./pages/admin/BrandSettingsPage";
+import OrderWorkflowPage from "./pages/admin/OrderWorkflowPage";
+import OpsDashboardPage from "./pages/admin/OpsDashboardPage";
+import ReturnsPage from "./pages/admin/ReturnsPage";
+import ActivityLogPage from "./pages/admin/ActivityLogPage";
+import AdminSupportPage from "./pages/admin/AdminSupportPage";
 
 // Redirect /categories/:slug → /category/:slug
 function CategorySlugRedirect() {
@@ -198,6 +203,12 @@ export const router = createBrowserRouter([
       { path: "vendors", Component: VendorsPage },
       // Platform
       { path: "brand", Component: BrandSettingsPage },
+      // Operations
+      { path: "operations/orders", Component: OrderWorkflowPage },
+      { path: "operations/dashboard", Component: OpsDashboardPage },
+      { path: "operations/returns", Component: ReturnsPage },
+      { path: "operations/logs", Component: ActivityLogPage },
+      { path: "operations/support", Component: AdminSupportPage },
     ],
   },
 
