@@ -50,6 +50,12 @@ import PagesListPage from "./pages/admin/PagesListPage";
 import PageEditPage from "./pages/admin/PageEditPage";
 import FAQManagementPage from "./pages/admin/FAQManagementPage";
 import MediaLibraryPage from "./pages/admin/MediaLibraryPage";
+import PartnerApplicationsPage from "./pages/admin/PartnerApplicationsPage";
+import PartnerListPage from "./pages/admin/PartnerListPage";
+import RolesPermissionsPage from "./pages/admin/RolesPermissionsPage";
+import PricingAdminPage from "./pages/admin/PricingAdminPage";
+import VendorsPage from "./pages/admin/VendorsPage";
+import BrandSettingsPage from "./pages/admin/BrandSettingsPage";
 
 // Redirect /categories/:slug → /category/:slug
 function CategorySlugRedirect() {
@@ -183,6 +189,15 @@ export const router = createBrowserRouter([
       { path: "pages/:slug/edit", Component: PageEditPage },
       { path: "faq", Component: FAQManagementPage },
       { path: "media", Component: MediaLibraryPage },
+      // Partners
+      { path: "partners/applications", Component: PartnerApplicationsPage },
+      { path: "partners", Component: PartnerListPage },
+      { path: "partners/roles", Component: RolesPermissionsPage },
+      // Commerce
+      { path: "pricing", Component: PricingAdminPage },
+      { path: "vendors", Component: VendorsPage },
+      // Platform
+      { path: "brand", Component: BrandSettingsPage },
     ],
   },
 

@@ -1,6 +1,8 @@
 import { Link } from "react-router";
+import { useBrand } from "../../contexts/BrandContext";
 
 export function Footer() {
+  const { brand } = useBrand();
   return (
     <footer className="bg-gray-50 border-t border-gray-100">
       <div className="max-w-[1400px] mx-auto px-8 py-20">
@@ -31,7 +33,7 @@ export function Footer() {
           <div>
             <h4 className="text-xs tracking-widest mb-6 text-gray-900">ABOUT</h4>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><Link to="/about" className="hover:text-gray-900 transition-colors">About HOMATZ</Link></li>
+              <li><Link to="/about" className="hover:text-gray-900 transition-colors">About {brand.brandName}</Link></li>
               <li><Link to="/contact" className="hover:text-gray-900 transition-colors">Contact Us</Link></li>
               <li><Link to="/faq" className="hover:text-gray-900 transition-colors">FAQ</Link></li>
             </ul>
@@ -60,7 +62,7 @@ export function Footer() {
 
         {/* Bottom */}
         <div className="pt-8 border-t border-gray-200 text-xs text-gray-500 tracking-wide">
-          <p>&copy; 2026 HOMATZ by Indusfort Limited</p>
+          <p>&copy; 2026 {brand.brandName} by Indusfort Limited</p>
         </div>
       </div>
     </footer>

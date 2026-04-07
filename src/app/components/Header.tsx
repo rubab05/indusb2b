@@ -1,14 +1,16 @@
 import { Search } from "lucide-react";
 import { Link } from "react-router";
+import { useBrand } from "../../contexts/BrandContext";
 
 export function Header() {
+  const { brand } = useBrand();
   return (
     <header className="bg-white border-b border-gray-100">
       <div className="max-w-[1400px] mx-auto px-8 py-6">
         <div className="flex items-center justify-between gap-12">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to="/" className="text-2xl tracking-tight font-light">HOMATZ</Link>
+            <Link to="/" className="text-2xl tracking-tight font-light">{brand.brandName}</Link>
           </div>
 
           {/* Navigation */}
