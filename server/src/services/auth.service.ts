@@ -7,6 +7,7 @@ import { env } from '../config/env.js';
 import { ApiError } from '../utils/api-error.js';
 import { logger } from '../utils/logger.js';
 import type { RegisterInput, LoginInput, ChangePasswordInput } from '../validators/auth.validators.js';
+import * as emailService from './email.service.js';
 
 // In-memory store for password reset tokens (dev only — replace with DB model in production)
 const resetTokens = new Map<string, { userId: string; expiresAt: Date }>();
@@ -76,6 +77,16 @@ export async function register(data: RegisterInput) {
 
   logger.info(`New partner registered: ${user.email} (${user.accountType})`);
 
+  // Send welcome email (non-blocking)
+  emailService
+    .sendWelcomeEmail({
+      to: user.email,
+      companyName: user.companyName,
+      contactName: data.contactName,
+      accountType: user.accountType,
+    })
+    .catch((err: unknown) => logger.error('Failed to send welcome email', err));
+
   return { user: safeUser(user), token };
 }
 
@@ -127,6 +138,17 @@ export async function forgotPassword(email: string) {
   const token = randomUUID();
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
   resetTokens.set(token, { userId: user.id, expiresAt });
+
+  const contactName = user.companyName;
+
+  // Send password reset email (non-blocking)
+  emailService
+    .sendPasswordReset({
+      to: user.email,
+      contactName,
+      resetToken: token,
+    })
+    .catch((err: unknown) => logger.error('Failed to send password reset email', err));
 
   if (env.isDev) {
     logger.info(`[DEV] Password reset token for ${email}: ${token}`);
