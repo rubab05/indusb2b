@@ -3,6 +3,10 @@ import cors from 'cors';
 import { corsConfig } from './middleware/cors.js';
 import { errorHandler } from './middleware/error-handler.js';
 import authRoutes from './routes/auth.js';
+import categoryRoutes from './routes/categories.js';
+import productRoutes from './routes/products.js';
+import pageRoutes from './routes/pages.js';
+import faqRoutes from './routes/faq.js';
 
 const app = express();
 
@@ -18,8 +22,13 @@ app.get('/api/health', (_req, res) => {
 
 // Auth routes
 app.use('/api/auth', authRoutes);
-// app.use('/api/categories', categoryRoutes);
-// app.use('/api/products', productRoutes);
+
+// Catalog routes
+app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/pages', pageRoutes);
+app.use('/api/faq', faqRoutes);
+
 // app.use('/api/orders', orderRoutes);
 // app.use('/api/invoices', invoiceRoutes);
 // app.use('/api/tracking', trackingRoutes);
