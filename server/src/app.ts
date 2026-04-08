@@ -28,6 +28,8 @@ const app = express();
 
 // Middleware
 app.use(cors(corsConfig));
+//app.options('/api/auth/login', cors(corsConfig));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
