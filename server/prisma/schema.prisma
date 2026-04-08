@@ -1,0 +1,505 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── AUTH & USERS ───────────────────────────────────────
+
+enum AccountType {
+  WHOLESALE
+  DROPSHIP
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum UserRole {
+  PARTNER
+  ADMIN
+}
+
+model User {
+  id              String         @id @default(cuid())
+  email           String         @unique
+  passwordHash    String
+  companyName     String
+  accountType     AccountType
+  approvalStatus  ApprovalStatus @default(PENDING)
+  role            UserRole       @default(PARTNER)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  profile         BusinessProfile?
+  applications    PartnerApplication[]
+  orders          Order[]
+  supportTickets  SupportTicket[]
+  dropshipBalance DropshipBalance?
+  activityLogs    ActivityLog[]   @relation("actor")
+}
+
+model BusinessProfile {
+  id               String  @id @default(cuid())
+  userId           String  @unique
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contactName      String
+  contactEmail     String
+  contactPhone     String
+  companyRegNumber String?
+  addressLine1     String
+  addressLine2     String?
+  city             String
+  postcode         String
+  country          String  @default("United Kingdom")
+  websiteUrl       String?
+  platform         String?
+  revenueRange     String?
+  estimatedMonthlyVolume String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model PartnerApplication {
+  id              String         @id @default(cuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountType     AccountType
+  status          ApprovalStatus @default(PENDING)
+  businessType    String?
+  categoriesOfInterest String[]
+  notes           String?
+  adminNotes      String?
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+// ─── CONTENT & CATALOG ─────────────────────────────────
+
+model Category {
+  id              String    @id @default(cuid())
+  name            String
+  slug            String    @unique
+  description     String?
+  heroTitle       String?
+  heroDescription String?
+  heroImage       String?
+  intro           String?
+  benefits        Json?     // Array of { icon, title, description }
+  ctaStrip        Json?     // { headline, description, buttonText, buttonLink }
+  seoTitle        String?
+  seoDescription  String?
+  status          String    @default("published") // published | draft
+  sortOrder       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  subcategories   Subcategory[]
+  productFamilies ProductFamily[]
+  pricingRules    PricingRule[]
+  moqRules        MOQRule[]
+}
+
+model Subcategory {
+  id          String   @id @default(cuid())
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name        String
+  slug        String
+  description String?
+  image       String?
+  sortOrder   Int      @default(0)
+}
+
+model ProductFamily {
+  id              String   @id @default(cuid())
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name            String
+  slug            String   @unique
+  summary         String?
+  longDescription String?
+  features        String[] // Array of feature strings
+  useCases        String[] // Array of use case strings
+  gallery         String[] // Array of image URLs
+  specifications  Json?    // Array of { key, value }
+  supportText     String?
+  supportContact  String?
+  seoTitle        String?
+  seoDescription  String?
+  status          String   @default("published")
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  variants        ProductVariant[]
+  priceListItems  PriceListItem[]
+  vendorMappings  VendorProductMapping[]
+  orderItems      OrderItem[]
+}
+
+model ProductVariant {
+  id              String        @id @default(cuid())
+  productFamilyId String
+  productFamily   ProductFamily @relation(fields: [productFamilyId], references: [id], onDelete: Cascade)
+  name            String
+  sku             String        @unique
+  image           String?
+  specs           Json?         // Variant-specific specs { key: value }
+  sortOrder       Int           @default(0)
+}
+
+model ContentPage {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  body           String
+  status         String   @default("published")
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model FAQItem {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String   @default("General")
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MediaItem {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  mimeType  String
+  size      Int
+  width     Int?
+  height    Int?
+  createdAt DateTime @default(now())
+}
+
+// ─── ORDERS & COMMERCE ─────────────────────────────────
+
+enum OrderStatus {
+  NEW
+  PROCESSING
+  PACKED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  status          OrderStatus @default(NEW)
+  subtotal        Decimal     @db.Decimal(10, 2)
+  shippingCost    Decimal     @db.Decimal(10, 2) @default(0)
+  total           Decimal     @db.Decimal(10, 2)
+  shippingAddress Json        // { name, company, line1, line2, city, postcode, country }
+  notes           String?
+  assignedTo      String?
+  internalNotes   Json?       // Array of { text, user, date }
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  items           OrderItem[]
+  tracking        TrackingInfo?
+  timeline        OrderTimeline[]
+  invoice         Invoice?
+  returns         ReturnRequest[]
+}
+
+model OrderItem {
+  id              String        @id @default(cuid())
+  orderId         String
+  order           Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productFamilyId String?
+  productFamily   ProductFamily? @relation(fields: [productFamilyId], references: [id])
+  productName     String
+  sku             String
+  quantity        Int
+  unitPrice       Decimal       @db.Decimal(10, 2)
+  lineTotal       Decimal       @db.Decimal(10, 2)
+}
+
+model OrderTimeline {
+  id      String   @id @default(cuid())
+  orderId String
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status  String
+  note    String?
+  userId  String?
+  date    DateTime @default(now())
+}
+
+model TrackingInfo {
+  id                 String   @id @default(cuid())
+  orderId            String   @unique
+  order              Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  carrier            String
+  trackingNumber     String
+  trackingUrl        String?
+  estimatedDelivery  DateTime?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  invoiceNumber String   @unique
+  orderId       String   @unique
+  order         Order    @relation(fields: [orderId], references: [id])
+  amount        Decimal  @db.Decimal(10, 2)
+  status        String   @default("pending") // pending | paid | overdue
+  issuedDate    DateTime @default(now())
+  dueDate       DateTime
+  paidDate      DateTime?
+}
+
+// ─── PRICING ────────────────────────────────────────────
+
+model PriceListItem {
+  id              String        @id @default(cuid())
+  productFamilyId String
+  productFamily   ProductFamily @relation(fields: [productFamilyId], references: [id], onDelete: Cascade)
+  moq             Int           @default(1)
+  unitPrice       Decimal       @db.Decimal(10, 2)
+  bulkTiers       Json?         // Array of { minQty, pricePerUnit, label }
+  stockStatus     String        @default("In Stock")
+}
+
+model PricingRule {
+  id                 String   @id @default(cuid())
+  categoryId         String?
+  category           Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  productFamilySlug  String?
+  visibleToWholesale Boolean  @default(true)
+  visibleToDropship  Boolean  @default(true)
+}
+
+model MOQRule {
+  id          String   @id @default(cuid())
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  productSlug String?
+  minQuantity Int
+  unit        String   @default("units")
+  notes       String?
+}
+
+model BulkDiscountTier {
+  id              String  @id @default(cuid())
+  tierName        String
+  minQty          Int
+  maxQty          Int?
+  discountPercent Decimal @db.Decimal(5, 2)
+}
+
+// ─── DROPSHIP ───────────────────────────────────────────
+
+model DropshipBalance {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentBalance Decimal  @db.Decimal(10, 2) @default(0)
+  currency       String   @default("GBP")
+  threshold      Decimal  @db.Decimal(10, 2) @default(50)
+  isLocked       Boolean  @default(false)
+  updatedAt      DateTime @updatedAt
+}
+
+model Transaction {
+  id             String   @id @default(cuid())
+  userId         String
+  type           String   // top-up | order | refund | adjustment
+  reference      String
+  description    String
+  amount         Decimal  @db.Decimal(10, 2) // positive = credit, negative = debit
+  runningBalance Decimal  @db.Decimal(10, 2)
+  createdAt      DateTime @default(now())
+}
+
+model TopUpRequest {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Decimal  @db.Decimal(10, 2)
+  method    String   // bank-transfer | card
+  reference String?
+  status    String   @default("pending") // pending | confirmed | failed
+  proofUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── SUPPORT ────────────────────────────────────────────
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+model SupportTicket {
+  id                String         @id @default(cuid())
+  ticketNumber      String         @unique
+  userId            String
+  user              User           @relation(fields: [userId], references: [id])
+  subject           String
+  category          String         // Order Issue, Product Query, Account, Billing, Other
+  status            TicketStatus   @default(OPEN)
+  priority          TicketPriority @default(NORMAL)
+  relatedOrderId    String?
+  assignedTo        String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  messages          TicketMessage[]
+  internalNotes     TicketInternalNote[]
+}
+
+model TicketMessage {
+  id         String        @id @default(cuid())
+  ticketId   String
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author     String        // partner | support
+  authorName String
+  body       String
+  createdAt  DateTime      @default(now())
+}
+
+model TicketInternalNote {
+  id         String        @id @default(cuid())
+  ticketId   String
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorName String
+  body       String
+  createdAt  DateTime      @default(now())
+}
+
+// ─── RETURNS ────────────────────────────────────────────
+
+enum ReturnStatus {
+  REPORTED
+  INVESTIGATING
+  RESOLVED
+  REJECTED
+}
+
+model ReturnRequest {
+  id              String       @id @default(cuid())
+  returnNumber    String       @unique
+  orderId         String
+  order           Order        @relation(fields: [orderId], references: [id])
+  partnerName     String
+  reason          String       // DAMAGED, WRONG_ITEM, MISSING_ITEM, QUALITY_ISSUE, OTHER
+  description     String
+  status          ReturnStatus @default(REPORTED)
+  resolutionType  String?      // REFUND, REPLACEMENT, CREDIT, REJECTED
+  resolutionNotes String?
+  resolvedAt      DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  notes           ReturnNote[]
+}
+
+model ReturnNote {
+  id         String        @id @default(cuid())
+  returnId   String
+  return_    ReturnRequest @relation(fields: [returnId], references: [id], onDelete: Cascade)
+  authorName String
+  body       String
+  createdAt  DateTime      @default(now())
+}
+
+// ─── VENDORS ────────────────────────────────────────────
+
+model Vendor {
+  id           String   @id @default(cuid())
+  name         String
+  contactEmail String
+  contactPhone String?
+  address      String?
+  notes        String?
+  status       String   @default("active") // active | inactive
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  productMappings VendorProductMapping[]
+}
+
+model VendorProductMapping {
+  id              String        @id @default(cuid())
+  vendorId        String
+  vendor          Vendor        @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  productFamilyId String
+  productFamily   ProductFamily @relation(fields: [productFamilyId], references: [id], onDelete: Cascade)
+
+  @@unique([vendorId, productFamilyId])
+}
+
+// ─── BRAND / WHITELABEL ─────────────────────────────────
+
+model BrandConfig {
+  id                String  @id @default(cuid())
+  brandName         String  @default("HOMATZ")
+  logoUrl           String?
+  logoSecondaryUrl  String?
+  faviconUrl        String?
+  primaryColor      String  @default("#1a1a1a")
+  secondaryColor    String  @default("#f5f5f5")
+  accentColor       String  @default("#f59e0b")
+  emailHeaderHtml   String?
+  invoiceHeaderHtml String?
+  domain            String?
+}
+
+// ─── ACTIVITY LOG ───────────────────────────────────────
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  user        User?    @relation("actor", fields: [userId], references: [id])
+  userName    String
+  actionType  String   // ORDER_UPDATE, APPROVAL, CONTENT_EDIT, PRICING_CHANGE, RETURN, LOGIN
+  description String
+  entityType  String?  // Order, Category, Product, Partner, etc.
+  entityId    String?
+  createdAt   DateTime @default(now())
+}
+
+// ─── QUOTE REQUESTS ─────────────────────────────────────
+
+model QuoteRequest {
+  id                  String   @id @default(cuid())
+  referenceNumber     String   @unique
+  userId              String
+  lines               Json     // Array of { productSlug, sku, quantity }
+  specialRequirements String?
+  status              String   @default("pending") // pending | quoted | expired
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
