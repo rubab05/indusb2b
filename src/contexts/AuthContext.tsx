@@ -1,6 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { AccountType, AuthState, User } from "../types/auth";
-import { authService, LoginRequest, RegisterRequest } from "../services/auth.service";
+import { createContext, useContext, useEffect, useState } from 'react';
+import { AccountType, AuthState, User } from '../types/auth';
+import { authService, LoginRequest, RegisterRequest } from '../services/auth.service';
+import { ApiError } from '../lib/api-client';
 
 interface AuthContextValue extends AuthState {
   login: (email: string, password: string) => Promise<void>;
@@ -10,7 +11,7 @@ interface AuthContextValue extends AuthState {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const TOKEN_KEY = "homatz_auth_token";
+const TOKEN_KEY = 'homatz_auth_token';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -23,9 +24,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     authService
-      .getCurrentUser(token)
+      .getCurrentUser()
       .then((u) => setUser(u))
-      .catch(() => localStorage.removeItem(TOKEN_KEY))
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          localStorage.removeItem(TOKEN_KEY);
+        }
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -73,7 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext);
   if (!ctx) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return ctx;
 }

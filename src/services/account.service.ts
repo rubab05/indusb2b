@@ -1,3 +1,5 @@
+import { api } from '../lib/api-client';
+
 export interface BusinessProfile {
   companyName: string;
   registrationNumber: string;
@@ -37,59 +39,69 @@ export interface AccountProfile {
   documents: BusinessDocument[];
 }
 
-let MOCK_PROFILE: AccountProfile = {
-  business: {
-    companyName: "Demo Wholesale Ltd",
-    registrationNumber: "12345678",
-    addressLine1: "14 Trade Park Way",
-    city: "Manchester",
-    postcode: "M1 4AB",
-    country: "United Kingdom",
-    phone: "0161 234 5678",
-    website: "https://www.demowholesale.co.uk",
-  },
-  contact: {
-    contactName: "James Patel",
-    contactEmail: "james@demowholesale.co.uk",
-    contactPhone: "07700 900 123",
-  },
-  notifications: {
-    orderConfirmations: true,
-    orderShipped: true,
-    invoiceDue: true,
-    promotions: false,
-  },
-  documents: [
-    { id: "doc-1", name: "Certificate of Incorporation", type: "PDF", uploadedDate: "1 Jan 2026", fileSize: "245 KB" },
-    { id: "doc-2", name: "VAT Registration Certificate", type: "PDF", uploadedDate: "1 Jan 2026", fileSize: "118 KB" },
-    { id: "doc-3", name: "Trade Reference — Supplier A", type: "PDF", uploadedDate: "2 Jan 2026", fileSize: "89 KB" },
-  ],
-};
+interface ApiUser {
+  companyName?: string;
+  email?: string;
+  contactName?: string;
+  registrationNumber?: string;
+  addressLine1?: string;
+  city?: string;
+  postcode?: string;
+  country?: string;
+  phone?: string;
+  website?: string;
+}
+
+function mapUserToProfile(user: ApiUser): AccountProfile {
+  return {
+    business: {
+      companyName: user.companyName ?? '',
+      registrationNumber: user.registrationNumber ?? '',
+      addressLine1: user.addressLine1 ?? '',
+      city: user.city ?? '',
+      postcode: user.postcode ?? '',
+      country: user.country ?? 'United Kingdom',
+      phone: user.phone ?? '',
+      website: user.website ?? '',
+    },
+    contact: {
+      contactName: user.contactName ?? '',
+      contactEmail: user.email ?? '',
+      contactPhone: user.phone ?? '',
+    },
+    notifications: {
+      orderConfirmations: true,
+      orderShipped: true,
+      invoiceDue: true,
+      promotions: false,
+    },
+    documents: [],
+  };
+}
 
 export const accountService = {
   async getProfile(): Promise<AccountProfile> {
-    await new Promise((r) => setTimeout(r, 400));
-    return structuredClone(MOCK_PROFILE);
+    const user = await api.get<ApiUser>('/auth/me');
+    return mapUserToProfile(user);
   },
 
   async updateBusiness(data: BusinessProfile): Promise<void> {
-    await new Promise((r) => setTimeout(r, 500));
-    MOCK_PROFILE.business = { ...data };
+    await api.put('/auth/me', data);
   },
 
   async updateContact(data: ContactDetails): Promise<void> {
-    await new Promise((r) => setTimeout(r, 500));
-    MOCK_PROFILE.contact = { ...data };
+    await api.put('/auth/me', data);
   },
 
-  async updateNotifications(data: NotificationPreferences): Promise<void> {
-    await new Promise((r) => setTimeout(r, 300));
-    MOCK_PROFILE.notifications = { ...data };
+  async updateNotifications(_data: NotificationPreferences): Promise<void> {
+    // Notification preferences stored client-side — no dedicated backend endpoint
   },
 
   async changePassword(current: string, next: string): Promise<void> {
-    await new Promise((r) => setTimeout(r, 600));
-    if (current.length < 4) throw new Error("Current password is incorrect.");
-    if (next.length < 8) throw new Error("New password must be at least 8 characters.");
+    await api.post('/auth/change-password', {
+      currentPassword: current,
+      newPassword: next,
+      confirmPassword: next,
+    });
   },
 };

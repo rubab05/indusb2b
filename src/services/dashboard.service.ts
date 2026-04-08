@@ -1,6 +1,7 @@
-import { AccountType } from "../types/auth";
+import { AccountType } from '../types/auth';
+import { api } from '../lib/api-client';
 
-export type OrderStatus = "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
+export type OrderStatus = 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
 
 export interface RecentOrder {
   id: string;
@@ -29,29 +30,50 @@ export interface DashboardData {
   accountInfo: AccountInfo;
 }
 
-const MOCK_ORDERS: RecentOrder[] = [
-  { id: "ord-001", orderNumber: "ORD-2026-0041", date: "28 Mar 2026", items: 4, total: "£1,240.00", status: "Shipped" },
-  { id: "ord-002", orderNumber: "ORD-2026-0038", date: "24 Mar 2026", items: 2, total: "£620.00", status: "Delivered" },
-  { id: "ord-003", orderNumber: "ORD-2026-0031", date: "18 Mar 2026", items: 7, total: "£2,890.00", status: "Delivered" },
-  { id: "ord-004", orderNumber: "ORD-2026-0029", date: "15 Mar 2026", items: 1, total: "£310.00", status: "Cancelled" },
-  { id: "ord-005", orderNumber: "ORD-2026-0022", date: "10 Mar 2026", items: 5, total: "£1,750.00", status: "Delivered" },
-];
+interface ApiOrderSummary {
+  id: string;
+  orderNumber: string;
+  date: string;
+  itemCount: number;
+  total: number;
+  status: OrderStatus;
+}
+
+interface ApiTicket {
+  id: string;
+  status: string;
+}
 
 export const dashboardService = {
   async getData(accountType: AccountType): Promise<DashboardData> {
-    await new Promise((r) => setTimeout(r, 400));
+    const [orders, tickets] = await Promise.all([
+      api.get<ApiOrderSummary[]>('/orders'),
+      api.get<ApiTicket[]>('/support'),
+    ]);
+
+    const recentOrders: RecentOrder[] = orders.slice(0, 5).map((o) => ({
+      id: o.id,
+      orderNumber: o.orderNumber,
+      date: o.date,
+      items: o.itemCount,
+      total: `£${o.total.toLocaleString('en-GB', { minimumFractionDigits: 2 })}`,
+      status: o.status,
+    }));
+
+    const pendingCount = orders.filter((o) => o.status === 'Pending').length;
+    const openTickets = tickets.filter((t) => t.status === 'Open' || t.status === 'InProgress').length;
 
     return {
       stats: {
-        recentOrdersCount: 12,
-        pendingOrdersCount: 1,
-        openSupportTickets: 0,
+        recentOrdersCount: orders.length,
+        pendingOrdersCount: pendingCount,
+        openSupportTickets: openTickets,
       },
-      recentOrders: MOCK_ORDERS,
+      recentOrders,
       accountInfo: {
         type: accountType,
-        tier: accountType === AccountType.WHOLESALE ? "Standard Wholesale" : "Standard Dropship",
-        approvalDate: "1 Jan 2026",
+        tier: accountType === AccountType.WHOLESALE ? 'Standard Wholesale' : 'Standard Dropship',
+        approvalDate: '',
       },
     };
   },
