@@ -7,6 +7,12 @@ import categoryRoutes from './routes/categories.js';
 import productRoutes from './routes/products.js';
 import pageRoutes from './routes/pages.js';
 import faqRoutes from './routes/faq.js';
+import orderRoutes from './routes/orders.js';
+import invoiceRoutes from './routes/invoices.js';
+import trackingRoutes from './routes/tracking.js';
+import supportRoutes from './routes/support.js';
+import pricingRoutes from './routes/pricing.js';
+import dropshipRoutes from './routes/dropship.js';
 
 const app = express();
 
@@ -29,12 +35,14 @@ app.use('/api/products', productRoutes);
 app.use('/api/pages', pageRoutes);
 app.use('/api/faq', faqRoutes);
 
-// app.use('/api/orders', orderRoutes);
-// app.use('/api/invoices', invoiceRoutes);
-// app.use('/api/tracking', trackingRoutes);
-// app.use('/api/support', supportRoutes);
-// app.use('/api/pricing', pricingRoutes);
-// app.use('/api/dropship', dropshipRoutes);
+// Partner & commerce routes
+app.use('/api/orders', orderRoutes);
+app.use('/api/invoices', invoiceRoutes);
+app.use('/api/tracking', trackingRoutes);
+app.use('/api/support', supportRoutes);
+app.use('/api/pricing', pricingRoutes);
+app.use('/api/dropship', dropshipRoutes);
+
 // app.use('/api/admin', adminRoutes);
 
 // Error handler (must be last)
