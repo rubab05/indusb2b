@@ -16,7 +16,7 @@ export interface User {
   companyName: string;
   accountType: AccountType;
   approvalStatus: ApprovalStatus;
-  role: "partner" | "admin";
+  role: "PARTNER" | "ADMIN";
 }
 
 export interface AuthState {

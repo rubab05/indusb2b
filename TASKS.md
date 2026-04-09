@@ -4211,3 +4211,8 @@ Apply these to EVERY task:
 13. **Use shadcn/ui** — always use existing UI primitives from `src/app/components/ui/`
 14. **Use existing services pattern** — study `orders.service.ts` before creating new services
 15. **Use existing guard pattern** — study `WholesaleGuard.tsx` before creating new guards
+
+
+
+
+

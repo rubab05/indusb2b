@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { ordersService } from "../../../services/orders.service";
-import { OrderStatus, OrderSummary } from "../../../types/orders";
+import { OrderStatus, OrderSummary, ORDER_STATUS_LABELS } from "../../../types/orders";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
-  Pending: "bg-yellow-100 text-yellow-800",
-  Processing: "bg-blue-100 text-blue-800",
-  Shipped: "bg-purple-100 text-purple-800",
-  Delivered: "bg-green-100 text-green-800",
-  Cancelled: "bg-gray-100 text-gray-600",
+  NEW: "bg-yellow-100 text-yellow-800",
+  PROCESSING: "bg-blue-100 text-blue-800",
+  PACKED: "bg-indigo-100 text-indigo-800",
+  SHIPPED: "bg-purple-100 text-purple-800",
+  DELIVERED: "bg-green-100 text-green-800",
+  CANCELLED: "bg-gray-100 text-gray-600",
 };
 
 const PAGE_SIZE = 5;
@@ -68,8 +69,8 @@ export default function OrdersListPage() {
           className="px-4 py-2.5 text-sm border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors bg-white"
         >
           <option value="">All statuses</option>
-          {(["Pending", "Processing", "Shipped", "Delivered", "Cancelled"] as OrderStatus[]).map((s) => (
-            <option key={s} value={s}>{s}</option>
+          {(["NEW", "PROCESSING", "PACKED", "SHIPPED", "DELIVERED", "CANCELLED"] as OrderStatus[]).map((s) => (
+            <option key={s} value={s}>{ORDER_STATUS_LABELS[s]}</option>
           ))}
         </select>
       </div>
@@ -109,12 +110,12 @@ export default function OrdersListPage() {
               {paginated.map((order) => (
                 <tr key={order.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3 font-medium text-gray-900">{order.orderNumber}</td>
-                  <td className="px-4 py-3 text-gray-500">{order.date}</td>
-                  <td className="px-4 py-3 text-gray-500">{order.itemCount}</td>
+                  <td className="px-4 py-3 text-gray-500">{new Date(order.createdAt).toLocaleDateString('en-GB')}</td>
+                  <td className="px-4 py-3 text-gray-500">{order.items.length}</td>
                   <td className="px-4 py-3 text-gray-900">£{order.total.toFixed(2)}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 text-xs font-medium rounded-sm ${STATUS_STYLES[order.status]}`}>
-                      {order.status}
+                      {ORDER_STATUS_LABELS[order.status]}
                     </span>
                   </td>
                   <td className="px-4 py-3">

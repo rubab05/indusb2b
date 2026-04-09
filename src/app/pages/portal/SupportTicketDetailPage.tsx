@@ -5,17 +5,17 @@ import { SupportTicket, TicketMessage, TicketStatus } from "../../../types/suppo
 import { ArrowLeft, Send, X } from "lucide-react";
 
 const STATUS_STYLES: Record<TicketStatus, string> = {
-  Open: "bg-green-100 text-green-800",
-  InProgress: "bg-blue-100 text-blue-800",
-  Resolved: "bg-gray-100 text-gray-600",
-  Closed: "bg-gray-100 text-gray-400",
+  OPEN: "bg-green-100 text-green-800",
+  IN_PROGRESS: "bg-blue-100 text-blue-800",
+  RESOLVED: "bg-gray-100 text-gray-600",
+  CLOSED: "bg-gray-100 text-gray-400",
 };
 
 const STATUS_LABELS: Record<TicketStatus, string> = {
-  Open: "Open",
-  InProgress: "In Progress",
-  Resolved: "Resolved",
-  Closed: "Closed",
+  OPEN: "Open",
+  IN_PROGRESS: "In Progress",
+  RESOLVED: "Resolved",
+  CLOSED: "Closed",
 };
 
 function MessageBubble({ msg }: { msg: TicketMessage }) {
@@ -30,7 +30,7 @@ function MessageBubble({ msg }: { msg: TicketMessage }) {
         {msg.body}
       </div>
       <p className="text-xs text-gray-400 mt-1.5">
-        {msg.authorName} · {msg.timestamp}
+        {msg.authorName} · {new Date(msg.createdAt).toLocaleString('en-GB')}
       </p>
     </div>
   );
@@ -65,7 +65,7 @@ export default function SupportTicketDetailPage() {
     setSending(true);
     const msg = await supportService.reply(ticket.id, reply.trim());
     setTicket((prev) =>
-      prev ? { ...prev, messages: [...prev.messages, msg], status: prev.status === "Resolved" || prev.status === "Closed" ? "Open" : prev.status } : prev,
+      prev ? { ...prev, messages: [...prev.messages, msg], status: prev.status === "RESOLVED" || prev.status === "CLOSED" ? "OPEN" : prev.status } : prev,
     );
     setReply("");
     setSending(false);
@@ -75,7 +75,7 @@ export default function SupportTicketDetailPage() {
     if (!ticket) return;
     setClosing(true);
     await supportService.close(ticket.id);
-    setTicket((prev) => prev ? { ...prev, status: "Closed" } : prev);
+    setTicket((prev) => prev ? { ...prev, status: "CLOSED" as const } : prev);
     setClosing(false);
   }
 
@@ -98,8 +98,8 @@ export default function SupportTicketDetailPage() {
     );
   }
 
-  const canReply = ticket.status !== "Closed";
-  const canClose = ticket.status === "Open" || ticket.status === "InProgress" || ticket.status === "Resolved";
+  const canReply = ticket.status !== "CLOSED";
+  const canClose = ticket.status !== "CLOSED";
 
   return (
     <div className="max-w-3xl space-y-6">
@@ -119,25 +119,25 @@ export default function SupportTicketDetailPage() {
             <h1 className="text-xl tracking-tight text-gray-900">{ticket.subject}</h1>
             <p className="text-xs text-gray-500">
               {ticket.category}
-              {ticket.relatedOrderNumber && (
+              {ticket.relatedOrderId && (
                 <>
                   {" · "}
                   <Link
-                    to={`/dashboard/orders/${ticket.relatedOrderNumber}`}
+                    to={`/dashboard/orders/${ticket.relatedOrderId}`}
                     className="underline hover:text-gray-900 transition-colors"
                   >
-                    {ticket.relatedOrderNumber}
+                    {ticket.relatedOrderId}
                   </Link>
                 </>
               )}
-              {" · Created "}{ticket.createdDate}
+              {" · Created "}{new Date(ticket.createdAt).toLocaleDateString('en-GB')}
             </p>
           </div>
           <div className="flex items-center gap-3 flex-shrink-0">
             <span className={`px-2.5 py-1 text-xs font-medium rounded-sm ${STATUS_STYLES[ticket.status]}`}>
               {STATUS_LABELS[ticket.status]}
             </span>
-            <span className={`text-xs ${ticket.priority === "High" || ticket.priority === "Urgent" ? "text-red-600 font-medium" : "text-gray-500"}`}>
+            <span className={`text-xs ${ticket.priority === "HIGH" || ticket.priority === "URGENT" ? "text-red-600 font-medium" : "text-gray-500"}`}>
               {ticket.priority}
             </span>
           </div>

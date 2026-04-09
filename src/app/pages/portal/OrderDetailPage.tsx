@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { ordersService } from "../../../services/orders.service";
-import { Order, OrderStatus } from "../../../types/orders";
+import { Order, OrderStatus, ORDER_STATUS_LABELS } from "../../../types/orders";
 import { ArrowLeft, Download, RotateCcw, X, CheckCircle2, Package, Truck, Clock } from "lucide-react";
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
-  Pending: "bg-yellow-100 text-yellow-800",
-  Processing: "bg-blue-100 text-blue-800",
-  Shipped: "bg-purple-100 text-purple-800",
-  Delivered: "bg-green-100 text-green-800",
-  Cancelled: "bg-gray-100 text-gray-600",
+  NEW: "bg-yellow-100 text-yellow-800",
+  PROCESSING: "bg-blue-100 text-blue-800",
+  PACKED: "bg-indigo-100 text-indigo-800",
+  SHIPPED: "bg-purple-100 text-purple-800",
+  DELIVERED: "bg-green-100 text-green-800",
+  CANCELLED: "bg-gray-100 text-gray-600",
 };
 
 const TIMELINE_ICONS: Record<string, React.ElementType> = {
@@ -58,7 +59,7 @@ export default function OrderDetailPage() {
     );
   }
 
-  const canCancel = order.status === "Pending" || order.status === "Processing";
+  const canCancel = order.status === "NEW" || order.status === "PROCESSING";
 
   return (
     <div className="max-w-4xl space-y-6">
@@ -76,11 +77,11 @@ export default function OrderDetailPage() {
         <div>
           <p className="text-xs tracking-widest text-gray-500 mb-1">ORDER</p>
           <h1 className="text-2xl tracking-tight text-gray-900">{order.orderNumber}</h1>
-          <p className="text-sm text-gray-500 mt-1">Placed {order.date}</p>
+          <p className="text-sm text-gray-500 mt-1">Placed {new Date(order.createdAt).toLocaleDateString('en-GB')}</p>
         </div>
         <div className="flex items-center gap-3">
           <span className={`px-3 py-1 text-sm font-medium rounded-sm ${STATUS_STYLES[order.status]}`}>
-            {order.status}
+            {ORDER_STATUS_LABELS[order.status]}
           </span>
         </div>
       </div>
@@ -105,7 +106,7 @@ export default function OrderDetailPage() {
               <tr key={item.id}>
                 <td className="px-4 py-3 text-gray-900">{item.productName}</td>
                 <td className="px-4 py-3 text-gray-500 font-mono text-xs">{item.sku}</td>
-                <td className="px-4 py-3 text-gray-700">{item.qty}</td>
+                <td className="px-4 py-3 text-gray-700">{item.quantity}</td>
                 <td className="px-4 py-3 text-gray-700">£{item.unitPrice.toFixed(2)}</td>
                 <td className="px-4 py-3 text-gray-900 font-medium">£{item.lineTotal.toFixed(2)}</td>
               </tr>
@@ -171,7 +172,7 @@ export default function OrderDetailPage() {
                   View in Tracking →
                 </Link>
                 <a
-                  href={order.tracking.trackingUrl}
+                  href={order.tracking.trackingUrl ?? undefined}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs text-gray-400 underline hover:text-gray-700 transition-colors"

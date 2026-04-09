@@ -1,13 +1,32 @@
-export type TicketStatus = "Open" | "InProgress" | "Resolved" | "Closed";
-export type TicketPriority = "Low" | "Normal" | "High" | "Urgent";
-export type TicketCategory = "Order Issue" | "Product Query" | "Account" | "Billing" | "Other";
+export type TicketStatus = "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
+export type TicketPriority = "LOW" | "NORMAL" | "HIGH" | "URGENT";
+export type TicketCategory =
+  | "Order Issue"
+  | "Product Query"
+  | "Account"
+  | "Billing"
+  | "Other";
+
+export const TICKET_STATUS_LABELS: Record<TicketStatus, string> = {
+  OPEN: "Open",
+  IN_PROGRESS: "In Progress",
+  RESOLVED: "Resolved",
+  CLOSED: "Closed",
+};
+
+export const TICKET_PRIORITY_LABELS: Record<TicketPriority, string> = {
+  LOW: "Low",
+  NORMAL: "Normal",
+  HIGH: "High",
+  URGENT: "Urgent",
+};
 
 export interface TicketMessage {
   id: string;
-  author: "partner" | "support";
+  author: string;
   authorName: string;
   body: string;
-  timestamp: string;
+  createdAt: string;
 }
 
 export interface SupportTicket {
@@ -17,7 +36,7 @@ export interface SupportTicket {
   category: TicketCategory;
   status: TicketStatus;
   priority: TicketPriority;
-  relatedOrderNumber?: string;
-  createdDate: string;
+  relatedOrderId?: string | null;
+  createdAt: string;
   messages: TicketMessage[];
 }

@@ -14,9 +14,56 @@ interface TransactionFilters {
   endDate?: string;
 }
 
+// Raw backend shapes
+interface RawBalance {
+  currentBalance: string | number;
+  currency: string;
+  threshold: string | number;
+  isLocked: boolean;
+  updatedAt?: string;
+}
+
+interface RawTransaction {
+  id: string;
+  type: string;
+  reference: string;
+  description: string;
+  amount: string | number;
+  runningBalance: string | number;
+  createdAt: string;
+}
+
+function toNum(v: string | number | undefined | null): number {
+  if (v === undefined || v === null) return 0;
+  return typeof v === 'number' ? v : parseFloat(v) || 0;
+}
+
+function normalizeBalance(raw: RawBalance): DropshipBalance {
+  return {
+    currentBalance: toNum(raw.currentBalance),
+    currency: raw.currency,
+    threshold: toNum(raw.threshold),
+    isLocked: raw.isLocked,
+    lastUpdated: raw.updatedAt ?? new Date().toISOString(),
+  };
+}
+
+function normalizeTransaction(raw: RawTransaction): Transaction {
+  return {
+    id: raw.id,
+    date: raw.createdAt,
+    type: raw.type as TransactionType,
+    reference: raw.reference,
+    description: raw.description,
+    amount: toNum(raw.amount),
+    runningBalance: toNum(raw.runningBalance),
+  };
+}
+
 export const dropshipService = {
   async getBalance(): Promise<DropshipBalance> {
-    return api.get<DropshipBalance>('/dropship/balance');
+    const raw = await api.get<RawBalance>('/dropship/balance');
+    return normalizeBalance(raw);
   },
 
   async getTransactions(filters?: TransactionFilters): Promise<Transaction[]> {
@@ -24,11 +71,13 @@ export const dropshipService = {
     if (filters?.type) params.type = filters.type;
     if (filters?.startDate) params.startDate = filters.startDate;
     if (filters?.endDate) params.endDate = filters.endDate;
-    return api.get<Transaction[]>('/dropship/transactions', params);
+    const raw = await api.get<RawTransaction[]>('/dropship/transactions', params);
+    return raw.map(normalizeTransaction);
   },
 
   async getRecentTransactions(limit: number = 10): Promise<Transaction[]> {
-    return api.get<Transaction[]>('/dropship/transactions/recent', { limit: String(limit) });
+    const raw = await api.get<RawTransaction[]>('/dropship/transactions/recent', { limit: String(limit) });
+    return raw.map(normalizeTransaction);
   },
 
   async submitTopUp(request: TopUpRequest): Promise<{ referenceNumber: string }> {
@@ -36,7 +85,8 @@ export const dropshipService = {
   },
 
   async getBalanceThreshold(): Promise<BalanceThreshold> {
-    const balance = await api.get<DropshipBalance>('/dropship/balance');
+    const raw = await api.get<RawBalance>('/dropship/balance');
+    const balance = normalizeBalance(raw);
     return {
       warningLevel: balance.threshold * 2,
       lockLevel: balance.threshold,
@@ -57,7 +107,8 @@ export const dropshipService = {
     totalDebits: number;
     netChange: number;
   }> {
-    const txns = await api.get<Transaction[]>('/dropship/statement', { startDate, endDate });
+    const raw = await api.get<RawTransaction[]>('/dropship/statement', { startDate, endDate });
+    const txns = raw.map(normalizeTransaction);
     const totalCredits = txns.filter((t) => t.amount > 0).reduce((s, t) => s + t.amount, 0);
     const totalDebits = txns.filter((t) => t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0);
     return {

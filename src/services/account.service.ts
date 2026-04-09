@@ -42,32 +42,36 @@ export interface AccountProfile {
 interface ApiUser {
   companyName?: string;
   email?: string;
-  contactName?: string;
-  registrationNumber?: string;
-  addressLine1?: string;
-  city?: string;
-  postcode?: string;
-  country?: string;
-  phone?: string;
-  website?: string;
+  profile?: {
+    contactName?: string;
+    contactEmail?: string;
+    contactPhone?: string;
+    companyRegNumber?: string;
+    addressLine1?: string;
+    city?: string;
+    postcode?: string;
+    country?: string;
+    websiteUrl?: string;
+  } | null;
 }
 
 function mapUserToProfile(user: ApiUser): AccountProfile {
+  const p = user.profile;
   return {
     business: {
       companyName: user.companyName ?? '',
-      registrationNumber: user.registrationNumber ?? '',
-      addressLine1: user.addressLine1 ?? '',
-      city: user.city ?? '',
-      postcode: user.postcode ?? '',
-      country: user.country ?? 'United Kingdom',
-      phone: user.phone ?? '',
-      website: user.website ?? '',
+      registrationNumber: p?.companyRegNumber ?? '',
+      addressLine1: p?.addressLine1 ?? '',
+      city: p?.city ?? '',
+      postcode: p?.postcode ?? '',
+      country: p?.country ?? 'United Kingdom',
+      phone: p?.contactPhone ?? '',
+      website: p?.websiteUrl ?? '',
     },
     contact: {
-      contactName: user.contactName ?? '',
-      contactEmail: user.email ?? '',
-      contactPhone: user.phone ?? '',
+      contactName: p?.contactName ?? '',
+      contactEmail: p?.contactEmail ?? user.email ?? '',
+      contactPhone: p?.contactPhone ?? '',
     },
     notifications: {
       orderConfirmations: true,

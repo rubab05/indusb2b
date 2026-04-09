@@ -5,17 +5,17 @@ import { SupportTicket, TicketStatus } from "../../../types/support";
 import { Plus, MessageSquare } from "lucide-react";
 
 const STATUS_STYLES: Record<TicketStatus, string> = {
-  Open: "bg-green-100 text-green-800",
-  InProgress: "bg-blue-100 text-blue-800",
-  Resolved: "bg-gray-100 text-gray-600",
-  Closed: "bg-gray-100 text-gray-400",
+  OPEN: "bg-green-100 text-green-800",
+  IN_PROGRESS: "bg-blue-100 text-blue-800",
+  RESOLVED: "bg-gray-100 text-gray-600",
+  CLOSED: "bg-gray-100 text-gray-400",
 };
 
 const STATUS_LABELS: Record<TicketStatus, string> = {
-  Open: "Open",
-  InProgress: "In Progress",
-  Resolved: "Resolved",
-  Closed: "Closed",
+  OPEN: "Open",
+  IN_PROGRESS: "In Progress",
+  RESOLVED: "Resolved",
+  CLOSED: "Closed",
 };
 
 export default function SupportListPage() {
@@ -58,7 +58,7 @@ export default function SupportListPage() {
           className="px-4 py-2.5 text-sm border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors bg-white"
         >
           <option value="">All statuses</option>
-          {(["Open", "InProgress", "Resolved", "Closed"] as TicketStatus[]).map((s) => (
+          {(["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"] as TicketStatus[]).map((s) => (
             <option key={s} value={s}>{STATUS_LABELS[s]}</option>
           ))}
         </select>
@@ -108,7 +108,7 @@ export default function SupportListPage() {
                   <td className="px-4 py-3 text-gray-700 max-w-xs truncate">{ticket.subject}</td>
                   <td className="px-4 py-3 text-gray-500">{ticket.category}</td>
                   <td className="px-4 py-3">
-                    <span className={`text-xs ${ticket.priority === "High" || ticket.priority === "Urgent" ? "text-red-600 font-medium" : "text-gray-500"}`}>
+                    <span className={`text-xs ${ticket.priority === "HIGH" || ticket.priority === "URGENT" ? "text-red-600 font-medium" : "text-gray-500"}`}>
                       {ticket.priority}
                     </span>
                   </td>
@@ -117,7 +117,7 @@ export default function SupportListPage() {
                       {STATUS_LABELS[ticket.status]}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-500">{ticket.createdDate}</td>
+                  <td className="px-4 py-3 text-gray-500">{new Date(ticket.createdAt).toLocaleDateString('en-GB')}</td>
                 </tr>
               ))}
             </tbody>

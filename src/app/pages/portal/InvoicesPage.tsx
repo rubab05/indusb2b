@@ -4,9 +4,15 @@ import { invoicesService, Invoice, InvoiceStatus } from "../../../services/invoi
 import { Download, ChevronLeft, ChevronRight } from "lucide-react";
 
 const STATUS_STYLES: Record<InvoiceStatus, string> = {
-  Paid: "bg-green-100 text-green-800",
-  Pending: "bg-yellow-100 text-yellow-800",
-  Overdue: "bg-red-100 text-red-800",
+  paid: "bg-green-100 text-green-800",
+  pending: "bg-yellow-100 text-yellow-800",
+  overdue: "bg-red-100 text-red-800",
+};
+
+const STATUS_LABELS: Record<InvoiceStatus, string> = {
+  paid: "Paid",
+  pending: "Pending",
+  overdue: "Overdue",
 };
 
 const PAGE_SIZE = 6;
@@ -54,8 +60,8 @@ export default function InvoicesPage() {
           className="px-4 py-2.5 text-sm border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors bg-white"
         >
           <option value="">All statuses</option>
-          {(["Paid", "Pending", "Overdue"] as InvoiceStatus[]).map((s) => (
-            <option key={s} value={s}>{s}</option>
+          {(["paid", "pending", "overdue"] as InvoiceStatus[]).map((s) => (
+            <option key={s} value={s}>{STATUS_LABELS[s]}</option>
           ))}
         </select>
       </div>
@@ -104,13 +110,13 @@ export default function InvoicesPage() {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-gray-500">{inv.date}</td>
-                  <td className={`px-4 py-3 text-sm ${inv.status === "Overdue" ? "text-red-600 font-medium" : "text-gray-500"}`}>
+                  <td className={`px-4 py-3 text-sm ${inv.status === "overdue" ? "text-red-600 font-medium" : "text-gray-500"}`}>
                     {inv.dueDate}
                   </td>
                   <td className="px-4 py-3 text-gray-900">£{inv.amount.toFixed(2)}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 text-xs font-medium rounded-sm ${STATUS_STYLES[inv.status]}`}>
-                      {inv.status}
+                      {STATUS_LABELS[inv.status]}
                     </span>
                   </td>
                   <td className="px-4 py-3">
