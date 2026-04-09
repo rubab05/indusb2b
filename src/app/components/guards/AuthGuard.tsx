@@ -27,7 +27,7 @@ export default function AuthGuard({ children, requireAdmin = false }: AuthGuardP
     return <Navigate to="/apply/restricted" replace />;
   }
 
-  if (requireAdmin && user.role !== "admin") {
+  if (requireAdmin && user.role !== "ADMIN") {
     return <Navigate to="/dashboard" replace />;
   }
 
