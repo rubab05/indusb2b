@@ -78,7 +78,7 @@ const NAV_SECTIONS: NavSection[] = [
       { label: "Orders", to: "/admin/operations/orders", icon: ClipboardList },
       { label: "Dashboard", to: "/admin/operations/dashboard", icon: BarChart3 },
       { label: "Returns", to: "/admin/operations/returns", icon: RotateCcw },
-      { label: "Activity Log", to: "/admin/operations/activity", icon: Activity },
+      { label: "Activity Log", to: "/admin/operations/logs", icon: Activity },
       { label: "Support", to: "/admin/operations/support", icon: LifeBuoy },
     ],
   },

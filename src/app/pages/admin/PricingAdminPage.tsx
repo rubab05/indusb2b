@@ -1,16 +1,31 @@
 import { useEffect, useState } from "react";
 import { pricingAdminService, PricingRule, MOQRuleAdmin, BulkDiscountTier } from "../../../services/pricing-admin.service";
+import { adminService } from "../../../services/admin.service";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 // Ordered list of categories for display
+// const CATEGORIES = [
+//   { slug: "kitchen-household", name: "Kitchen & Household" },
+//   { slug: "mats-rugs", name: "Mats & Rugs" },
+//   { slug: "decoration-seasonal", name: "Decoration & Seasonal" },
+//   { slug: "garden-outdoor", name: "Garden & Outdoor" },
+//   { slug: "toys-games", name: "Toys & Games" },
+// ];
+
 const CATEGORIES = [
-  { slug: "kitchen-household", name: "Kitchen & Household" },
-  { slug: "mats-rugs", name: "Mats & Rugs" },
-  { slug: "decoration-seasonal", name: "Decoration & Seasonal" },
-  { slug: "garden-outdoor", name: "Garden & Outdoor" },
-  { slug: "toys-games", name: "Toys & Games" },
+  { slug: "kitchen-and-household", name: "Kitchen & Household" },
+  { slug: "mats-and-rugs", name: "Mats & Rugs" },
+  { slug: "decoration-and-seasonal", name: "Decoration & Seasonal" },
+  { slug: "garden-and-outdoor", name: "Garden & Outdoor" },
+  { slug: "toys-and-games", name: "Toys & Games" },
 ];
+
+type ProductOptions = {
+  slug: string;
+  name: string;
+  categorySlug: string;
+};
 
 // ─── Visibility Tab ───────────────────────────────────────────────────────────
 
@@ -146,10 +161,12 @@ function VisibilityTab() {
 
 function MOQRuleDialog({
   rule,
+  products,
   onSave,
   onClose,
 }: {
   rule: MOQRuleAdmin | null;
+  products: ProductOption[];
   onSave: (r: MOQRuleAdmin) => Promise<void>;
   onClose: () => void;
 }) {
@@ -157,9 +174,19 @@ function MOQRuleDialog({
     rule ?? { id: "", categorySlug: "", productSlug: "", minQuantity: 1, unit: "units" },
   );
   const [saving, setSaving] = useState(false);
+  const filteredProducts = products.filter(
+  (p) => p.categorySlug === form.categorySlug,
+);
 
   async function handleSubmit() {
     if (!form.categorySlug || !form.minQuantity) return;
+
+    if (
+      form.productSlug &&
+      !filteredProducts.some((p) => p.slug === form.productSlug)
+    ) {
+      return;
+    }
     setSaving(true);
     await onSave({ ...form, productSlug: form.productSlug || undefined });
     setSaving(false);
@@ -170,27 +197,51 @@ function MOQRuleDialog({
       <div className="fixed inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-white border border-gray-200 p-8 max-w-sm w-full mx-4 shadow-xl z-10 space-y-4">
         <h2 className="text-lg font-medium text-gray-900">{rule ? "Edit MOQ Rule" : "Add MOQ Rule"}</h2>
+
         <div>
           <label className="block text-xs tracking-wide text-gray-500 mb-1">Category *</label>
           <select
             value={form.categorySlug}
-            onChange={(e) => setForm({ ...form, categorySlug: e.target.value })}
+            onChange={(e) => {
+              const nextCategory = e.target.value;
+              const stillValid = products.some(
+                (p) => p.categorySlug === nextCategory && p.slug === form.productSlug,
+              );
+
+              setForm({
+                ...form,
+                categorySlug: nextCategory,
+                productSlug: stillValid ? form.productSlug : "",
+              });
+            }}
             className="w-full border border-gray-200 text-sm px-3 py-2 focus:outline-none focus:border-gray-400"
           >
             <option value="">Select category</option>
-            {CATEGORIES.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
+            {CATEGORIES.map((c) => (
+              <option key={c.slug} value={c.slug}>
+                {c.name}
+              </option>
+            ))}
           </select>
         </div>
+
         <div>
-          <label className="block text-xs tracking-wide text-gray-500 mb-1">Product Slug (optional)</label>
-          <input
-            type="text"
+          <label className="block text-xs tracking-wide text-gray-500 mb-1">Product (optional)</label>
+          <select
             value={form.productSlug ?? ""}
             onChange={(e) => setForm({ ...form, productSlug: e.target.value })}
-            placeholder="Leave blank for whole category"
-            className="w-full border border-gray-200 text-sm px-3 py-2 focus:outline-none focus:border-gray-400"
-          />
+            disabled={!form.categorySlug}
+            className="w-full border border-gray-200 text-sm px-3 py-2 focus:outline-none focus:border-gray-400 disabled:bg-gray-50 disabled:text-gray-400"
+          >
+            <option value="">All products in category</option>
+            {filteredProducts.map((product) => (
+              <option key={product.slug} value={product.slug}>
+                {product.name}
+              </option>
+            ))}
+          </select>
         </div>
+
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-xs tracking-wide text-gray-500 mb-1">Min Quantity *</label>
@@ -212,8 +263,11 @@ function MOQRuleDialog({
             />
           </div>
         </div>
+
         <div className="flex gap-3 pt-2">
-          <button onClick={onClose} className="flex-1 py-2.5 border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors">Cancel</button>
+          <button onClick={onClose} className="flex-1 py-2.5 border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors">
+            Cancel
+          </button>
           <button
             onClick={handleSubmit}
             disabled={saving || !form.categorySlug}
@@ -227,19 +281,121 @@ function MOQRuleDialog({
   );
 }
 
+// function MOQTab() {
+//   const [rules, setRules] = useState<MOQRuleAdmin[]>([]);
+//   const [products, setProducts] = useState<ProductOption[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [editRule, setEditRule] = useState<MOQRuleAdmin | null | "new">(null);
+
+//   async function load() {
+//     setLoading(true);
+//     const data = await pricingAdminService.getMOQRules();
+//     setRules(data);
+//     setLoading(false);
+//   }
+
+//   useEffect(() => { load(); }, []);
+
+//   async function handleSave(rule: MOQRuleAdmin) {
+//     await pricingAdminService.saveMOQRule(rule);
+//     toast.success("MOQ rule saved");
+//     setEditRule(null);
+//     load();
+//   }
+
+//   async function handleDelete(id: string) {
+//     await pricingAdminService.deleteMOQRule(id);
+//     toast.success("MOQ rule deleted");
+//     load();
+//   }
+
+//   const catName = (slug: string) => CATEGORIES.find((c) => c.slug === slug)?.name ?? slug;
+
+//   if (loading) return <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-10 bg-gray-100 animate-pulse rounded" />)}</div>;
+
+//   return (
+//     <div className="space-y-4">
+//       <div className="flex justify-end">
+//         <button
+//           onClick={() => setEditRule("new")}
+//           className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm hover:bg-gray-800 transition-colors"
+//         >
+//           <Plus className="w-4 h-4" strokeWidth={1.5} />
+//           Add Rule
+//         </button>
+//       </div>
+//       <div className="bg-white border border-gray-200 overflow-hidden">
+//         {rules.length === 0 ? (
+//           <div className="py-12 text-center text-sm text-gray-400">No MOQ rules defined.</div>
+//         ) : (
+//           <table className="w-full text-sm">
+//             <thead>
+//               <tr className="border-b border-gray-100 bg-gray-50">
+//                 {["Category", "Product", "Min Quantity", "Unit", ""].map((h) => (
+//                   <th key={h} className="px-4 py-3 text-left text-xs tracking-widest text-gray-500 font-normal">{h}</th>
+//                 ))}
+//               </tr>
+//             </thead>
+//             <tbody className="divide-y divide-gray-50">
+//               {rules.map((rule) => (
+//                 <tr key={rule.id} className="hover:bg-gray-50 transition-colors">
+//                   <td className="px-4 py-3 text-gray-900">{catName(rule.categorySlug)}</td>
+//                   <td className="px-4 py-3 text-gray-500 font-mono text-xs">{rule.productSlug ?? <span className="italic text-gray-400">All products</span>}</td>
+//                   <td className="px-4 py-3 text-gray-900">{rule.minQuantity}</td>
+//                   <td className="px-4 py-3 text-gray-700">{rule.unit}</td>
+//                   <td className="px-4 py-3 text-right">
+//                     <div className="flex items-center gap-2 justify-end">
+//                       <button onClick={() => setEditRule(rule)} className="p-1 text-gray-400 hover:text-gray-900 transition-colors"><Pencil className="w-4 h-4" strokeWidth={1.5} /></button>
+//                       <button onClick={() => handleDelete(rule.id)} className="p-1 text-gray-400 hover:text-red-600 transition-colors"><Trash2 className="w-4 h-4" strokeWidth={1.5} /></button>
+//                     </div>
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         )}
+//       </div>
+//       {editRule !== null && (
+//         <MOQRuleDialog
+//           rule={editRule === "new" ? null : editRule}
+//           onSave={handleSave}
+//           onClose={() => setEditRule(null)}
+//         />
+//       )}
+//     </div>
+//   );
+// }
+
+// ─── Bulk Discounts Tab ───────────────────────────────────────────────────────
 function MOQTab() {
   const [rules, setRules] = useState<MOQRuleAdmin[]>([]);
+  const [products, setProducts] = useState<ProductOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [editRule, setEditRule] = useState<MOQRuleAdmin | null | "new">(null);
 
   async function load() {
     setLoading(true);
-    const data = await pricingAdminService.getMOQRules();
-    setRules(data);
+
+    const [rulesData, productsData] = await Promise.all([
+      pricingAdminService.getMOQRules(),
+      adminService.getProducts(),
+    ]);
+
+    setRules(rulesData);
+    setProducts(
+      productsData.map((product) => ({
+        slug: product.slug,
+        name: product.name,
+        categorySlug: product.categorySlug,
+      })),
+    );
+
     setLoading(false);
   }
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   async function handleSave(rule: MOQRuleAdmin) {
     await pricingAdminService.saveMOQRule(rule);
@@ -256,7 +412,9 @@ function MOQTab() {
 
   const catName = (slug: string) => CATEGORIES.find((c) => c.slug === slug)?.name ?? slug;
 
-  if (loading) return <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-10 bg-gray-100 animate-pulse rounded" />)}</div>;
+  if (loading) {
+    return <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-10 bg-gray-100 animate-pulse rounded" />)}</div>;
+  }
 
   return (
     <div className="space-y-4">
@@ -269,6 +427,7 @@ function MOQTab() {
           Add Rule
         </button>
       </div>
+
       <div className="bg-white border border-gray-200 overflow-hidden">
         {rules.length === 0 ? (
           <div className="py-12 text-center text-sm text-gray-400">No MOQ rules defined.</div>
@@ -285,13 +444,19 @@ function MOQTab() {
               {rules.map((rule) => (
                 <tr key={rule.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3 text-gray-900">{catName(rule.categorySlug)}</td>
-                  <td className="px-4 py-3 text-gray-500 font-mono text-xs">{rule.productSlug ?? <span className="italic text-gray-400">All products</span>}</td>
+                  <td className="px-4 py-3 text-gray-500 font-mono text-xs">
+                    {rule.productSlug ?? <span className="italic text-gray-400">All products</span>}
+                  </td>
                   <td className="px-4 py-3 text-gray-900">{rule.minQuantity}</td>
                   <td className="px-4 py-3 text-gray-700">{rule.unit}</td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center gap-2 justify-end">
-                      <button onClick={() => setEditRule(rule)} className="p-1 text-gray-400 hover:text-gray-900 transition-colors"><Pencil className="w-4 h-4" strokeWidth={1.5} /></button>
-                      <button onClick={() => handleDelete(rule.id)} className="p-1 text-gray-400 hover:text-red-600 transition-colors"><Trash2 className="w-4 h-4" strokeWidth={1.5} /></button>
+                      <button onClick={() => setEditRule(rule)} className="p-1 text-gray-400 hover:text-gray-900 transition-colors">
+                        <Pencil className="w-4 h-4" strokeWidth={1.5} />
+                      </button>
+                      <button onClick={() => handleDelete(rule.id)} className="p-1 text-gray-400 hover:text-red-600 transition-colors">
+                        <Trash2 className="w-4 h-4" strokeWidth={1.5} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -300,9 +465,11 @@ function MOQTab() {
           </table>
         )}
       </div>
+
       {editRule !== null && (
         <MOQRuleDialog
           rule={editRule === "new" ? null : editRule}
+          products={products}
           onSave={handleSave}
           onClose={() => setEditRule(null)}
         />
@@ -310,8 +477,6 @@ function MOQTab() {
     </div>
   );
 }
-
-// ─── Bulk Discounts Tab ───────────────────────────────────────────────────────
 
 function TierDialog({
   tier,

@@ -30,13 +30,22 @@ export interface MediaItem {
 }
 
 // ---------- Category CRUD ----------
+function normalizeCategory(category: any): CategoryContent {
+  return {
+    ...category,
+    productCount: category.productCount ?? category._count?.productFamilies ?? 0,
+    subcategories: Array.isArray(category.subcategories) ? category.subcategories : [],
+  };
+}
 
 async function getCategories(): Promise<CategoryContent[]> {
-  return api.get<CategoryContent[]>('/categories');
+  const data = await api.get<any[]>('/categories');
+  return Array.isArray(data) ? data.map(normalizeCategory) : [];
 }
 
 async function getCategoryBySlug(slug: string): Promise<CategoryContent | null> {
-  return api.get<CategoryContent>(`/categories/${slug}`);
+  const data = await api.get<any>(`/categories/${slug}`);
+  return data ? normalizeCategory(data) : null;
 }
 
 async function saveCategory(data: CategoryContent): Promise<CategoryContent> {
@@ -52,15 +61,25 @@ async function deleteCategory(slug: string): Promise<void> {
 }
 
 // ---------- Product CRUD ----------
+function normalizeProduct(product: any): ProductFamilyContent {
+  return {
+    ...product,
+    categorySlug: product.categorySlug ?? product.category?.slug ?? '',
+    categoryName: product.categoryName ?? product.category?.name ?? '',
+    variants: Array.isArray(product.variants) ? product.variants : [],
+  };
+}
 
 async function getProducts(categoryFilter?: string): Promise<ProductFamilyContent[]> {
   const params: Record<string, string> = {};
   if (categoryFilter) params.category = categoryFilter;
-  return api.get<ProductFamilyContent[]>('/products', params);
+  const data = await api.get<any[]>('/products', params);
+  return Array.isArray(data) ? data.map(normalizeProduct) : [];
 }
 
 async function getProductBySlug(slug: string): Promise<ProductFamilyContent | null> {
-  return api.get<ProductFamilyContent>(`/products/${slug}`);
+  const data = await api.get<any>(`/products/${slug}`);
+  return data ? normalizeProduct(data) : null;
 }
 
 async function saveProduct(data: ProductFamilyContent): Promise<ProductFamilyContent> {

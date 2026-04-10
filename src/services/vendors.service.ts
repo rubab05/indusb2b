@@ -11,19 +11,45 @@ export interface Vendor {
   status: 'active' | 'inactive';
 }
 
+function normalizeVendor(vendor: any): Vendor {
+  return {
+    id: vendor.id,
+    name: vendor.name ?? '',
+    contactEmail: vendor.contactEmail ?? '',
+    contactPhone: vendor.contactPhone ?? '',
+    address: vendor.address ?? '',
+    notes: vendor.notes ?? '',
+    status: vendor.status ?? 'active',
+    mappedProductFamilies: Array.isArray(vendor.mappedProductFamilies)
+      ? vendor.mappedProductFamilies
+      : Array.isArray(vendor.productMappings)
+        ? vendor.productMappings
+            .map((mapping: any) => mapping.productFamily?.slug ?? mapping.productFamilyId)
+            .filter(Boolean)
+        : [],
+  };
+}
+
 async function getVendors(): Promise<Vendor[]> {
-  return api.get<Vendor[]>('/admin/vendors');
+  const data = await api.get<any[]>('/admin/vendors');
+  return Array.isArray(data) ? data.map(normalizeVendor) : [];
 }
 
 async function getVendorById(id: string): Promise<Vendor | null> {
-  return api.get<Vendor>(`/admin/vendors/${id}`);
+  const data = await api.get<any>(`/admin/vendors/${id}`);
+  return data ? normalizeVendor(data) : null;
 }
 
 async function saveVendor(data: Vendor): Promise<Vendor> {
+  let saved: any;
+
   if (data.id && !data.id.startsWith('v-new')) {
-    return api.put<Vendor>(`/admin/vendors/${data.id}`, data);
+    saved = await api.put<any>(`/admin/vendors/${data.id}`, data);
+  } else {
+    saved = await api.post<any>('/admin/vendors', data);
   }
-  return api.post<Vendor>('/admin/vendors', data);
+
+  return normalizeVendor(saved);
 }
 
 async function deleteVendor(id: string): Promise<void> {

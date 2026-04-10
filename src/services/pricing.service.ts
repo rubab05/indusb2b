@@ -26,9 +26,49 @@ export const BULK_DISCOUNTS: BulkDiscount[] = [
   { tierLabel: 'Gold', minSpend: '£3,000', discountPercent: 12 },
 ];
 
+function toNumber(value: unknown): number {
+  const n = typeof value === 'number' ? value : Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
+// function normalizePriceListItem(item: any): PriceListItem {
+//   return {
+//     ...item,
+//     moq: toNumber(item.moq),
+//     unitPrice: toNumber(item.unitPrice),
+//     bulkTiers: Array.isArray(item.bulkTiers)
+//       ? item.bulkTiers.map((tier: any) => ({
+//           ...tier,
+//           minQty: toNumber(tier.minQty),
+//           pricePerUnit: toNumber(tier.pricePerUnit),
+//         }))
+//       : [],
+//   };
+// }
+
+function normalizePriceListItem(item: any): PriceListItem {
+  return {
+    id: item.id,
+    productName: item.productName ?? item.productFamily?.name ?? '',
+    sku: item.sku ?? item.productFamily?.sku ?? '',
+    category: item.category ?? item.productFamily?.category?.name ?? '',
+    moq: toNumber(item.moq),
+    unitPrice: toNumber(item.unitPrice),
+    stockStatus: item.stockStatus,
+    bulkTiers: Array.isArray(item.bulkTiers)
+      ? item.bulkTiers.map((tier: any) => ({
+          label: tier.label ?? '',
+          minQty: toNumber(tier.minQty),
+          pricePerUnit: toNumber(tier.pricePerUnit),
+        }))
+      : [],
+  };
+}
+
 export const pricingService = {
   async getPriceList(): Promise<PriceListItem[]> {
-    return api.get<PriceListItem[]>('/pricing/price-list');
+    const data = await api.get<any[]>('/pricing/price-list');
+    return Array.isArray(data) ? data.map(normalizePriceListItem) : [];
   },
 
   async getBySkus(skus: string[]): Promise<PriceListItem[]> {
