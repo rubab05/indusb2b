@@ -25,6 +25,8 @@ export const categorySchema = z.object({
     buttonText: z.string(),
     buttonLink: z.string(),
   }).optional(),
+  // metadata stores extra frontend-only fields (heroImages array, featuredFamilies, relatedCategories, etc.)
+  metadata: z.record(z.unknown()).optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
   status: z.enum(['published', 'draft']).default('published'),
@@ -52,7 +54,9 @@ export const productVariantSchema = z.object({
 });
 
 export const productSchema = z.object({
-  categoryId: z.string().min(1, 'Category is required'),
+  // Accept either categoryId (DB) or categorySlug (frontend form) — service resolves slug→id
+  categoryId: z.string().optional(),
+  categorySlug: z.string().optional(),
   name: z.string().min(1, 'Name is required'),
   slug: z.string().min(1, 'Slug is required').regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens'),
   summary: z.string().optional(),
@@ -61,6 +65,8 @@ export const productSchema = z.object({
   useCases: z.array(z.string()).default([]),
   gallery: z.array(z.string()).default([]),
   specifications: z.array(z.object({ key: z.string(), value: z.string() })).optional(),
+  // metadata stores extra frontend-only fields (galleryAlts, variantTitles, rawSpecs, relatedProducts, etc.)
+  metadata: z.record(z.unknown()).optional(),
   supportText: z.string().optional(),
   supportContact: z.string().optional(),
   seoTitle: z.string().optional(),

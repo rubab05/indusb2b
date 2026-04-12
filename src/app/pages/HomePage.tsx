@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Header } from "../components/Header";
 import { Hero } from "../components/Hero";
@@ -6,9 +7,26 @@ import { Footer } from "../components/Footer";
 import { UserCheck, Users, ShoppingCart, ClipboardList, FileText, Shield } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { siteContent } from "../../content/site-content";
-import { categories } from "../../content/categories";
+// import { categories } from "../../content/categories";
+import type { CategoryContent } from "../../lib/content-types";
+import { api } from "../../lib/api-client";
+import { normalizeCategory } from "../../services/admin.service";
 
 export default function HomePage() {
+
+    const [liveCategories, setLiveCategories] = useState<CategoryContent[]>([]);
+
+  useEffect(() => {
+    api
+      .get<any[]>("/categories")
+      .then((raw) => {
+        setLiveCategories(Array.isArray(raw) ? raw.map(normalizeCategory) : []);
+      })
+      .catch(() => {
+        setLiveCategories([]);
+      });
+  }, []);
+
   // Hero
   const heroImg = "https://images.unsplash.com/photo-1766289198899-61a45275351b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxob3VzZWhvbGQlMjBwcm9kdWN0cyUyMG1vZGVybiUyMGhvbWV8ZW58MXx8fHwxNzczMDE5NzYxfDA&ixlib=rb-4.1.0&q=80&w=1080";
 
@@ -36,13 +54,13 @@ export default function HomePage() {
           <h2 className="text-4xl mb-16 tracking-tight">Explore Categories</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {categories.map((cat, i) => (
+            {liveCategories.map((cat, i) => (
               <CategoryCard
                 key={cat.slug}
                 title={cat.name}
-                imageUrl={categoryImages[i]}
+                imageUrl={cat.heroImages?.[0]?.src ?? categoryImages[i] ?? ""}
                 productCount={cat.productCount}
-                href={`/categories/${cat.slug}`}
+                href={`/category/${cat.slug}`}
                 b2bLabel={cat.b2bLabel}
               />
             ))}

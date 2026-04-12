@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import { useParams, Navigate, Link } from "react-router";
-import { useState } from "react";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Breadcrumbs } from "../components/Breadcrumbs";
@@ -11,7 +11,9 @@ import { ProductCard } from "../components/ProductCard";
 import { ProductCarousel } from "../components/ProductCarousel";
 import { CategoryCard } from "../components/CategoryCard";
 import { CheckCircle2, Download, FileText, ShoppingCart, LogIn, MessageCircle } from "lucide-react";
-import { getProductFamilyBySlug, getCategoryBySlug } from "../../lib/content-helpers";
+import type { ProductFamilyContent } from "../../lib/content-types";
+import { api } from "../../lib/api-client";
+import { normalizeProduct } from "../../services/admin.service";
 
 export default function ProductPage() {
   const { categorySlug = "", productSlug = "" } = useParams<{
@@ -19,39 +21,67 @@ export default function ProductPage() {
     productSlug: string;
   }>();
 
-  const product = getProductFamilyBySlug(productSlug);
-  const category = getCategoryBySlug(categorySlug);
+  const [product, setProduct] = useState<ProductFamilyContent | null>(null);
+  const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Selector state — initialised from specs when component mounts
-  const selectorSizes = product
-    ? [...new Set(
-        (product.specifications ?? [])
-          .map((s) => s.diameter)
-          .filter((d): d is string => !!d && d !== "Various")
-      )]
-    : [];
-  const selectorCapacities = product
-    ? [...new Set(
-        (product.specifications ?? [])
-          .map((s) => s.capacity)
-          .filter((c): c is string => !!c && c !== "Various")
-      )]
-    : [];
-  const selectorFinishes = product
-    ? [...new Set(
-        (product.specifications ?? [])
-          .map((s) => s.finish?.replace(/ finish$/i, ""))
-          .filter((f): f is string => !!f && f !== "Various")
-      )]
-    : [];
+  // Selector state
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedCapacity, setSelectedCapacity] = useState("");
+  const [selectedFinish, setSelectedFinish] = useState("");
 
-  const [selectedSize, setSelectedSize] = useState(selectorSizes[0] ?? "");
-  const [selectedCapacity, setSelectedCapacity] = useState(selectorCapacities[0] ?? "");
-  const [selectedFinish, setSelectedFinish] = useState(selectorFinishes[0] ?? "");
+  useEffect(() => {
+    if (!productSlug) return;
+    setLoading(true);
+    setNotFound(false);
+    api
+      .get<any>(`/products/${productSlug}`)
+      .then((raw) => {
+        const normalised = normalizeProduct(raw);
+        setProduct(normalised);
 
-  if (!product) return <Navigate to="/" replace />;
+        // Initialise selectors from specs
+        const specs = normalised.specifications ?? [];
+        const sizes = [...new Set(specs.map((s) => s.diameter).filter((d): d is string => !!d && d !== "Various"))];
+        const caps = [...new Set(specs.map((s) => s.capacity).filter((c): c is string => !!c && c !== "Various"))];
+        const fins = [...new Set(specs.map((s) => s.finish?.replace(/ finish$/i, "")).filter((f): f is string => !!f && f !== "Various"))];
+        setSelectedSize(sizes[0] ?? "");
+        setSelectedCapacity(caps[0] ?? "");
+        setSelectedFinish(fins[0] ?? "");
 
-  // Map content specs (uses `compatibility`) to SpecTable shape (expects `hobCompatibility`)
+        setLoading(false);
+      })
+      .catch(() => {
+        setNotFound(true);
+        setLoading(false);
+      });
+  }, [productSlug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Header />
+        <div className="max-w-[1400px] mx-auto px-8 py-32 text-center text-gray-400 text-sm">
+          Loading…
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (notFound || !product) return <Navigate to="/" replace />;
+
+  const selectorSizes = [...new Set(
+    (product.specifications ?? []).map((s) => s.diameter).filter((d): d is string => !!d && d !== "Various")
+  )];
+  const selectorCapacities = [...new Set(
+    (product.specifications ?? []).map((s) => s.capacity).filter((c): c is string => !!c && c !== "Various")
+  )];
+  const selectorFinishes = [...new Set(
+    (product.specifications ?? []).map((s) => s.finish?.replace(/ finish$/i, "")).filter((f): f is string => !!f && f !== "Various")
+  )];
+
+  // Map content specs to SpecTable shape (compatibility → hobCompatibility)
   const specs = (product.specifications ?? []).map((s) => ({
     variant: s.variant ?? "",
     diameter: s.diameter ?? "",
@@ -62,7 +92,6 @@ export default function ProductPage() {
     finish: s.finish ?? "",
   }));
 
-  // Gallery images from content
   const galleryImages = product.gallery.map((img) => img.src);
 
   return (
@@ -76,7 +105,7 @@ export default function ProductPage() {
             items={[
               { label: "Home", href: "/" },
               { label: "Categories", href: "/#categories" },
-              ...(category ? [{ label: category.name, href: `/category/${categorySlug}` }] : []),
+              ...(categorySlug ? [{ label: categorySlug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()), href: `/category/${categorySlug}` }] : []),
               { label: product.name },
             ]}
           />
@@ -95,7 +124,7 @@ export default function ProductPage() {
             {/* Right: Product Info */}
             <div>
               <div className="text-xs tracking-widest text-gray-500 mb-4">
-                {category ? category.name.toUpperCase() : categorySlug.toUpperCase().replace(/-/g, " ")}
+                {categorySlug.toUpperCase().replace(/-/g, " ")}
               </div>
               <h1 className="text-5xl mb-6 tracking-tight">{product.name}</h1>
               <p className="text-lg text-gray-600 leading-relaxed mb-10">

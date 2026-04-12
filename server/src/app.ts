@@ -23,6 +23,7 @@ import adminOperationsRoutes from './routes/admin/operations.js';
 import adminSupportRoutes from './routes/admin/support.js';
 import adminTopUpsRoutes from './routes/admin/topups.js';
 import mediaRoutes from './routes/media.js';
+import brandRoutes from './routes/brand.js';
 
 const app = express();
 
@@ -60,6 +61,9 @@ app.use('/api/dropship', dropshipRoutes);
 
 // Media routes
 app.use('/api/media', mediaRoutes);
+
+// Public brand config (no auth — used by frontend to apply brand settings for all users)
+app.use('/api/brand', brandRoutes);
 
 // Admin routes
 app.use('/api/admin/partners', adminPartnersRoutes);

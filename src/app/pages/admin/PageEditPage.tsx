@@ -10,8 +10,8 @@ interface FormValues {
   slug: string;
   body: string;
   status: "published" | "draft";
-  metaTitle: string;
-  metaDescription: string;
+  seoTitle: string;
+  seoDescription: string;
 }
 
 function slugify(str: string) {
@@ -28,7 +28,7 @@ export default function PageEditPage() {
 
   const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<FormValues>({
     defaultValues: {
-      title: "", slug: "", body: "", status: "draft", metaTitle: "", metaDescription: "",
+      title: "", slug: "", body: "", status: "draft", seoTitle: "", seoDescription: "",
     },
   });
 
@@ -50,8 +50,8 @@ export default function PageEditPage() {
           slug: page.slug,
           body: page.body,
           status: page.status,
-          metaTitle: page.metaTitle ?? "",
-          metaDescription: page.metaDescription ?? "",
+          seoTitle: page.seoTitle ?? "",
+          seoDescription: page.seoDescription ?? "",
         });
         setAutoSlug(false);
         setLoading(false);
@@ -65,8 +65,8 @@ export default function PageEditPage() {
       title: data.title,
       body: data.body,
       status: data.status,
-      metaTitle: data.metaTitle || undefined,
-      metaDescription: data.metaDescription || undefined,
+      seoTitle: data.seoTitle || undefined,
+      seoDescription: data.seoDescription || undefined,
       lastUpdated: new Date().toISOString().split("T")[0],
     };
     await adminService.savePage(page);
@@ -134,11 +134,11 @@ export default function PageEditPage() {
           <p className="text-xs tracking-widest text-gray-500">SEO</p>
           <div>
             <label className="block text-xs text-gray-500 mb-1.5">Meta Title</label>
-            <input {...register("metaTitle")} placeholder="Page title for search engines" className="w-full px-4 py-2.5 text-sm border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors" />
+            <input {...register("seoTitle")} placeholder="Page title for search engines" className="w-full px-4 py-2.5 text-sm border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors" />
           </div>
           <div>
             <label className="block text-xs text-gray-500 mb-1.5">Meta Description</label>
-            <textarea {...register("metaDescription")} rows={2} placeholder="Brief description for search results" className="w-full px-4 py-3 text-sm border border-gray-200 focus:outline-none focus:border-gray-400 resize-none transition-colors" />
+            <textarea {...register("seoDescription")} rows={2} placeholder="Brief description for search results" className="w-full px-4 py-3 text-sm border border-gray-200 focus:outline-none focus:border-gray-400 resize-none transition-colors" />
           </div>
         </div>
 

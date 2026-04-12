@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useParams, Navigate, Link } from "react-router";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -9,13 +10,57 @@ import { CategoryCard } from "../components/CategoryCard";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { ProductCarousel } from "../components/ProductCarousel";
 import { CheckCircle2, Download, FileText, HelpCircle } from "lucide-react";
-import { getCategoryBySlug } from "../../lib/content-helpers";
+import type { CategoryContent, ProductFamilyContent } from "../../lib/content-types";
+import { api } from "../../lib/api-client";
+import { normalizeCategory, normalizeProduct } from "../../services/admin.service";
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
-  const category = getCategoryBySlug(slug ?? "");
+  const [category, setCategory] = useState<CategoryContent | null>(null);
+  const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  if (!category) return <Navigate to="/" replace />;
+  const [liveProducts, setLiveProducts] = useState<ProductFamilyContent[]>([]);
+
+  useEffect(() => {
+    if (!slug) return;
+    setLoading(true);
+    setNotFound(false);
+    api
+      .get<any>(`/categories/${slug}`)
+      .then((raw) => {
+        setCategory(normalizeCategory(raw));
+        setLoading(false);
+      })
+      .catch(() => {
+        setNotFound(true);
+        setLoading(false);
+      });
+
+      api
+        .get<any>("/products", { category: slug })
+        .then((raw) => {
+          const items = Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
+          setLiveProducts(items.map(normalizeProduct));
+        })
+        .catch(() => {
+          setLiveProducts([]);
+        });
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Header />
+        <div className="max-w-[1400px] mx-auto px-8 py-32 text-center text-gray-400 text-sm">
+          Loading…
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (notFound || !category) return <Navigate to="/" replace />;
 
   const heroImages = category.heroImages ?? [];
   const ctaSection = (category.sections ?? []).find((s) => s.type === "ctaStrip");
@@ -132,25 +177,6 @@ export default function CategoryPage() {
         </div>
       </section>
 
-      {/* Subcategory Grid
-      {category.subcategories.length > 0 && (
-        <section className="py-24 bg-white">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <h2 className="text-4xl mb-16 tracking-tight">Browse Subcategories</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {category.subcategories.map((sub) => (
-                <SubcategoryCard
-                  key={sub.title}
-                  title={sub.title}
-                  imageUrl={sub.image ?? ""}
-                  description={sub.description ?? ""}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-      )} */}
-
       {/* Featured Product Families */}
       {category.featuredFamilies.length > 0 && (
         <section className="py-24 bg-gray-50">
@@ -187,6 +213,25 @@ export default function CategoryPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+      )}
+
+            {liveProducts.length > 0 && (
+        <section className="py-24 bg-gray-50">
+          <div className="max-w-[1400px] mx-auto px-8">
+            <h2 className="text-4xl mb-16 tracking-tight">Products in This Category</h2>
+            <ProductCarousel slidesToShow={5}>
+              {liveProducts.map((item) => (
+                <div key={item.slug} className="px-4">
+                  <ProductCard
+                    name={item.name}
+                    imageUrl={item.gallery?.[0]?.src ?? ""}
+                    href={`/category/${slug}/${item.slug}`}
+                  />
+                </div>
+              ))}
+            </ProductCarousel>
           </div>
         </section>
       )}

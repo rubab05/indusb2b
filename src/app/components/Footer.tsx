@@ -11,11 +11,11 @@ export function Footer() {
           <div>
             <h4 className="text-xs tracking-widest mb-6 text-gray-900">CATEGORIES</h4>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><Link to="/category/mats-rugs" className="hover:text-gray-900 transition-colors">Mats &amp; Rugs</Link></li>
-              <li><Link to="/category/decoration-seasonal" className="hover:text-gray-900 transition-colors">Decoration &amp; Seasonal</Link></li>
-              <li><Link to="/category/kitchen-household" className="hover:text-gray-900 transition-colors">Kitchen &amp; Household</Link></li>
-              <li><Link to="/category/garden-outdoor" className="hover:text-gray-900 transition-colors">Garden &amp; Outdoor</Link></li>
-              <li><Link to="/category/toys-games" className="hover:text-gray-900 transition-colors">Toys &amp; Games</Link></li>
+              <li><Link to="/category/mats-and-rugs" className="hover:text-gray-900 transition-colors">Mats &amp; Rugs</Link></li>
+              <li><Link to="/category/decoration-and-seasonal" className="hover:text-gray-900 transition-colors">Decoration &amp; Seasonal</Link></li>
+              <li><Link to="/category/kitchen-and-household" className="hover:text-gray-900 transition-colors">Kitchen &amp; Household</Link></li>
+              <li><Link to="/category/garden-and-outdoor" className="hover:text-gray-900 transition-colors">Garden &amp; Outdoor</Link></li>
+              <li><Link to="/category/toys-and-games" className="hover:text-gray-900 transition-colors">Toys &amp; Games</Link></li>
             </ul>
           </div>
 

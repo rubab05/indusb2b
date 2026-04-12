@@ -63,7 +63,7 @@ src/
     ├── homatz-homepage-design.md
     ├── b2b-platform-update.md
     └── pasted_text/
-        ├── kitchen-household-category.tsx   # Reference import (not a live page)
+        ├── kitchen-and-household-category.tsx   # Reference import (not a live page)
         └── stock-pot-4-5l.tsx               # Reference import (not a live page)
 
 docs/
@@ -76,16 +76,16 @@ docs/
 
 ```
 /                                    → src/app/pages/HomePage.tsx
-/categories/kitchen-household        → src/app/pages/KitchenCategoryPage.tsx
+/categories/kitchen-and-household        → src/app/pages/KitchenCategoryPage.tsx
 /products/stock-pot-4-5l-24cm        → src/app/pages/ProductPage.tsx
 ```
 
 **ISSUE — Missing routes:** Only 3 routes are defined. The navigation.ts lists 5 categories and the content files contain data for all 5 categories and 16+ product families, but none of those pages have routes. The following routes have data but no route definitions:
 
-- `/categories/mats-rugs`
-- `/categories/decoration-seasonal`
-- `/categories/garden-outdoor`
-- `/categories/toys-games`
+- `/categories/mats-and-rugs`
+- `/categories/decoration-and-seasonal`
+- `/categories/garden-and-outdoor`
+- `/categories/toys-and-games`
 - All product pages except `/products/stock-pot-4-5l-24cm`
 
 **ISSUE — Navigation links broken:** Header.tsx does not consume `navigation.ts`. It hardcodes anchor href links (`/#categories`, `/#about`, `#`, `#`) instead of using the navigation data file. CATEGORIES and TRADE and CONTACT links are non-functional (`href="#"`).
@@ -100,7 +100,7 @@ docs/
 
 | Status | Detail |
 |---|---|
-| Completeness | COMPLETE — All 5 categories present: mats-rugs, decoration-seasonal, kitchen-household, garden-outdoor, toys-games |
+| Completeness | COMPLETE — All 5 categories present: mats-and-rugs, decoration-and-seasonal, kitchen-and-household, garden-and-outdoor, toys-and-games |
 | Data shape | Matches `CategoryContent` interface exactly |
 | Issues | None in the data file itself |
 

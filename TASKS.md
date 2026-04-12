@@ -236,8 +236,8 @@ MODIFY: server/src/app.ts — mount: /api/categories, /api/products, /api/pages,
 
 VERIFY:
 - GET /api/categories → published categories array
-- GET /api/categories/kitchen-household → category with subcategories + products
-- GET /api/products?category=kitchen-household → filtered results with pagination
+- GET /api/categories/kitchen-and-household → category with subcategories + products
+- GET /api/products?category=kitchen-and-household → filtered results with pagination
 - POST /api/categories without auth → 401
 - POST /api/categories as non-admin → 403
 - cd server && npx tsc --noEmit — 0 errors
@@ -1630,7 +1630,7 @@ All three sub-agents can run in parallel since they read different aspects of th
 
 1. **Public pages** — verify each renders with consistent design language:
    - `/` (Homepage — locked, just verify it renders)
-   - `/category/kitchen-household`, `/category/mats-and-rugs`, `/category/decoration-and-seasonal`, `/category/garden-outdoor`, `/category/toys-games`
+   - `/category/kitchen-and-household`, `/category/mats-and-rugs`, `/category/decoration-and-seasonal`, `/category/garden-and-outdoor`, `/category/toys-and-games`
    - All 16 product family pages (navigate from each category page)
    - `/about`, `/how-it-works`, `/faq`, `/privacy-policy`, `/terms`, `/shipping`, `/returns`, `/contact`
 
@@ -2992,8 +2992,8 @@ server/src/app.ts                       — Mount routes
 
 8. Test all CRUD operations:
    - Public: `GET /api/categories` → returns published categories
-   - Public: `GET /api/categories/kitchen-household` → returns category with subcategories
-   - Public: `GET /api/products?category=kitchen-household` → returns filtered products
+   - Public: `GET /api/categories/kitchen-and-household` → returns category with subcategories
+   - Public: `GET /api/products?category=kitchen-and-household` → returns filtered products
    - Admin: `POST /api/categories` with auth token → creates category
    - Admin: `PUT /api/products/stock-pot` → updates product
    - Unauthenticated admin routes → 401
@@ -3984,8 +3984,8 @@ Public endpoints return only published items. Admin endpoints require authentica
 
 VERIFY:
 - GET /api/categories → returns all published categories
-- GET /api/categories/kitchen-household → returns category with subcategories
-- GET /api/products?category=kitchen-household → filtered products
+- GET /api/categories/kitchen-and-household → returns category with subcategories
+- GET /api/products?category=kitchen-and-household → filtered products
 - Admin: POST /api/categories with JWT → creates category
 - Non-admin on admin routes → 403
 - cd server && npx tsc --noEmit — 0 errors

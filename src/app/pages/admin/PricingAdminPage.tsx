@@ -6,11 +6,11 @@ import { toast } from "sonner";
 
 // Ordered list of categories for display
 // const CATEGORIES = [
-//   { slug: "kitchen-household", name: "Kitchen & Household" },
-//   { slug: "mats-rugs", name: "Mats & Rugs" },
-//   { slug: "decoration-seasonal", name: "Decoration & Seasonal" },
-//   { slug: "garden-outdoor", name: "Garden & Outdoor" },
-//   { slug: "toys-games", name: "Toys & Games" },
+//   { slug: "kitchen-and-household", name: "Kitchen & Household" },
+//   { slug: "mats-and-rugs", name: "Mats & Rugs" },
+//   { slug: "decoration-and-seasonal", name: "Decoration & Seasonal" },
+//   { slug: "garden-and-outdoor", name: "Garden & Outdoor" },
+//   { slug: "toys-and-games", name: "Toys & Games" },
 // ];
 
 const CATEGORIES = [

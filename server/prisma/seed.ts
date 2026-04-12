@@ -1,7 +1,13 @@
 import { PrismaClient, AccountType, ApprovalStatus, UserRole, OrderStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { categories } from '../../src/content/categories';
+import { productFamilies } from '../../src/content/product-families';
 
 const prisma = new PrismaClient();
+
+function slugify(str: string) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
 
 async function main() {
   console.log('🌱 Seeding database...');
@@ -265,6 +271,96 @@ async function main() {
   });
 
   console.log('✅ Subcategories seeded');
+
+    for (const cat of categories) {
+    const introSection = cat.sections?.find((s) => s.type === 'intro');
+    const ctaSection = cat.sections?.find((s) => s.type === 'ctaStrip');
+
+    const savedCategory = await prisma.category.upsert({
+      where: { slug: cat.slug },
+      update: {
+        name: cat.name,
+        description: cat.description,
+        heroImage: cat.heroImages?.[0]?.src ?? null,
+        intro: introSection?.type === 'intro' ? introSection.text : null,
+        benefits: cat.benefits ?? undefined,
+        ctaStrip:
+          ctaSection?.type === 'ctaStrip'
+            ? {
+                headline: ctaSection.title,
+                description: ctaSection.description ?? '',
+                buttonText: ctaSection.ctas?.[0]?.label ?? '',
+                buttonLink: ctaSection.ctas?.[0]?.href ?? '',
+              }
+            : undefined,
+        metadata: {
+          heroImages: cat.heroImages ?? [],
+          featuredFamilies: cat.featuredFamilies ?? [],
+          bestSellers: cat.bestSellers ?? [],
+          relatedCategories: cat.relatedCategories ?? [],
+          productCount: cat.productCount ?? 0,
+          b2bLabel: cat.b2bLabel ?? '',
+          subcategoryHrefs: Object.fromEntries(
+            (cat.subcategories ?? []).map((s) => [
+              s.href?.split('/').pop() ?? slugify(s.title),
+              s.href ?? '',
+            ])
+          ),
+        },
+        status: 'published',
+      },
+      create: {
+        name: cat.name,
+        slug: cat.slug,
+        description: cat.description,
+        heroImage: cat.heroImages?.[0]?.src ?? null,
+        intro: introSection?.type === 'intro' ? introSection.text : null,
+        benefits: cat.benefits ?? undefined,
+        ctaStrip:
+          ctaSection?.type === 'ctaStrip'
+            ? {
+                headline: ctaSection.title,
+                description: ctaSection.description ?? '',
+                buttonText: ctaSection.ctas?.[0]?.label ?? '',
+                buttonLink: ctaSection.ctas?.[0]?.href ?? '',
+              }
+            : undefined,
+        metadata: {
+          heroImages: cat.heroImages ?? [],
+          featuredFamilies: cat.featuredFamilies ?? [],
+          bestSellers: cat.bestSellers ?? [],
+          relatedCategories: cat.relatedCategories ?? [],
+          productCount: cat.productCount ?? 0,
+          b2bLabel: cat.b2bLabel ?? '',
+          subcategoryHrefs: Object.fromEntries(
+            (cat.subcategories ?? []).map((s) => [
+              s.href?.split('/').pop() ?? slugify(s.title),
+              s.href ?? '',
+            ])
+          ),
+        },
+        status: 'published',
+        sortOrder: 0,
+      },
+    });
+
+    await prisma.subcategory.deleteMany({
+      where: { categoryId: savedCategory.id },
+    });
+
+    if ((cat.subcategories ?? []).length > 0) {
+      await prisma.subcategory.createMany({
+        data: cat.subcategories.map((subcat, index) => ({
+          categoryId: savedCategory.id,
+          name: subcat.title,
+          slug: subcat.href?.split('/').pop() ?? slugify(subcat.title),
+          description: subcat.description ?? null,
+          image: subcat.image ?? null,
+          sortOrder: index + 1,
+        })),
+      });
+    }
+  }
 
   // ─── PRODUCT FAMILIES ────────────────────────────────
   const stockPot = await prisma.productFamily.upsert({
@@ -559,6 +655,83 @@ async function main() {
   });
 
   console.log('✅ Product families seeded');
+
+    const categoryMap = Object.fromEntries(
+    (await prisma.category.findMany({ select: { id: true, slug: true } })).map((c) => [c.slug, c.id])
+  );
+
+  for (const product of productFamilies) {
+    const categoryId = categoryMap[product.categorySlug];
+    if (!categoryId) continue;
+
+    const savedProduct = await prisma.productFamily.upsert({
+      where: { slug: product.slug },
+      update: {
+        categoryId,
+        name: product.name,
+        summary: product.summary,
+        longDescription: product.description,
+        features: product.features ?? [],
+        useCases: product.useCases ?? [],
+        gallery: product.gallery.map((g) => g.src),
+        supportText: product.support?.description ?? null,
+        seoTitle: product.seoTitle ?? null,
+        seoDescription: product.seoDescription ?? null,
+        metadata: {
+          galleryAlts: product.gallery.map((g) => g.alt ?? ''),
+          variantTitles: product.variants?.map((v) => v.title) ?? [],
+          rawSpecs: product.specifications ?? [],
+          relatedProducts: product.relatedProducts ?? [],
+          relatedCategories: product.relatedCategories ?? [],
+          supportTitle: product.support?.title ?? '',
+          supportCtas: product.support?.ctas ?? [],
+          description: product.description,
+        },
+        status: 'published',
+      },
+      create: {
+        categoryId,
+        name: product.name,
+        slug: product.slug,
+        summary: product.summary,
+        longDescription: product.description,
+        features: product.features ?? [],
+        useCases: product.useCases ?? [],
+        gallery: product.gallery.map((g) => g.src),
+        supportText: product.support?.description ?? null,
+        seoTitle: product.seoTitle ?? null,
+        seoDescription: product.seoDescription ?? null,
+        metadata: {
+          galleryAlts: product.gallery.map((g) => g.alt ?? ''),
+          variantTitles: product.variants?.map((v) => v.title) ?? [],
+          rawSpecs: product.specifications ?? [],
+          relatedProducts: product.relatedProducts ?? [],
+          relatedCategories: product.relatedCategories ?? [],
+          supportTitle: product.support?.title ?? '',
+          supportCtas: product.support?.ctas ?? [],
+          description: product.description,
+        },
+        status: 'published',
+        sortOrder: 0,
+      },
+    });
+
+    await prisma.productVariant.deleteMany({
+      where: { productFamilyId: savedProduct.id },
+    });
+
+    if ((product.variants ?? []).length > 0) {
+      await prisma.productVariant.createMany({
+        data: product.variants!.map((variant, index) => ({
+          productFamilyId: savedProduct.id,
+          name: variant.title,
+          sku: `${product.slug}-${index + 1}`,
+          image: variant.image ?? null,
+          sortOrder: index + 1,
+        })),
+      });
+    }
+  }
 
   // ─── PRODUCT VARIANTS ────────────────────────────────
   await prisma.productVariant.createMany({

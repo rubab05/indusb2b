@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useBrand, BrandConfig } from "../../../contexts/BrandContext";
 import { toast } from "sonner";
 
+
 function ColorSwatch({ color }: { color: string }) {
   return (
     <div
@@ -32,7 +33,7 @@ function FormField({ label, children }: { label: string; children: React.ReactNo
 }
 
 export default function BrandSettingsPage() {
-  const { brand, updateBrand } = useBrand();
+  const { brand, updateBrand, reloadBrand } = useBrand();
   const [form, setForm] = useState<BrandConfig>({ ...brand });
   const [saving, setSaving] = useState(false);
 

@@ -17,11 +17,12 @@ export interface BrandConfig {
 interface BrandContextValue {
   brand: BrandConfig;
   updateBrand: (config: Partial<BrandConfig>) => Promise<void>;
+  reloadBrand: () => Promise<void>;
 }
 
 const STORAGE_KEY = 'homatz_brand_config';
 
-const DEFAULT_BRAND: BrandConfig = {
+export const DEFAULT_BRAND: BrandConfig = {
   brandName: 'HOMATZ',
   logoUrl: '',
   logoSecondaryUrl: '',
@@ -46,41 +47,48 @@ function loadLocalBrand(): BrandConfig {
   return DEFAULT_BRAND;
 }
 
+function persistBrand(config: BrandConfig) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+  } catch {
+    // ignore storage errors
+  }
+}
+
 const BrandContext = createContext<BrandContextValue | null>(null);
 
 export function BrandProvider({ children }: { children: React.ReactNode }) {
   const [brand, setBrand] = useState<BrandConfig>(loadLocalBrand);
 
+  async function reloadBrand() {
+    // Always fetch from the public /api/brand endpoint (no auth required)
+    const config = await api.get<BrandConfig>('/brand');
+    const merged = { ...DEFAULT_BRAND, ...config };
+    setBrand(merged);
+    persistBrand(merged);
+  }
+
   useEffect(() => {
-    const token = localStorage.getItem('homatz_auth_token');
-    if (!token) return;
-    api
-      .get<BrandConfig>('/admin/brand')
-      .then((config) => {
-        setBrand({ ...DEFAULT_BRAND, ...config });
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
-        } catch {
-          // ignore storage errors
-        }
-      })
-      .catch(() => {
-        // Not admin or brand endpoint unavailable — keep local/default brand
-      });
+    // Load brand on mount for all users (public endpoint)
+    reloadBrand().catch(() => {
+      // API unavailable — keep local/default brand already in state
+    });
   }, []);
 
   async function updateBrand(config: Partial<BrandConfig>) {
+    // updateBrand still writes through the protected admin endpoint
     const updated = { ...brand, ...config };
     const saved = await api.put<BrandConfig>('/admin/brand', updated);
-    setBrand({ ...DEFAULT_BRAND, ...saved });
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-    } catch {
-      // ignore storage errors
-    }
+    const merged = { ...DEFAULT_BRAND, ...saved };
+    setBrand(merged);
+    persistBrand(merged);
   }
 
-  return <BrandContext.Provider value={{ brand, updateBrand }}>{children}</BrandContext.Provider>;
+  return (
+    <BrandContext.Provider value={{ brand, updateBrand, reloadBrand }}>
+      {children}
+    </BrandContext.Provider>
+  );
 }
 
 export function useBrand(): BrandContextValue {

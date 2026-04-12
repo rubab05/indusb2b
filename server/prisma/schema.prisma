@@ -73,6 +73,7 @@ model Category {
   intro           String?
   benefits        Json?
   ctaStrip        Json?
+  metadata        Json?
   seoTitle        String?
   seoDescription  String?
   status          String          @default("published")
@@ -107,6 +108,7 @@ model ProductFamily {
   useCases        String[]
   gallery         String[]
   specifications  Json?
+  metadata        Json?
   supportText     String?
   supportContact  String?
   seoTitle        String?

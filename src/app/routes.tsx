@@ -216,6 +216,6 @@ export const router = createBrowserRouter([
   { path: "/categories/:slug", Component: CategorySlugRedirect },
   {
     path: "/products/stock-pot-4-5l-24cm",
-    element: <Navigate to="/category/kitchen-household/stock-pot-4-5l-24cm" replace />,
+    element: <Navigate to="/category/kitchen-and-household/stock-pot-4-5l-24cm" replace />,
   },
 ]);

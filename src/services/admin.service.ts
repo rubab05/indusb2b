@@ -6,8 +6,9 @@ export interface ContentPage {
   title: string;
   body: string;
   status: 'published' | 'draft';
-  metaTitle?: string;
-  metaDescription?: string;
+  // seoTitle/seoDescription match the backend field names
+  seoTitle?: string;
+  seoDescription?: string;
   lastUpdated: string;
 }
 
@@ -29,12 +30,141 @@ export interface MediaItem {
   uploadDate: string;
 }
 
+// ---------- Slugify helper ----------
+function slugify(str: string): string {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
 // ---------- Category CRUD ----------
-function normalizeCategory(category: any): CategoryContent {
+
+/**
+ * Map DB category record → CategoryContent (frontend shape).
+ * DB has: heroImage (string), intro (string), ctaStrip ({headline,...}), subcategories[].name
+ * Frontend needs: heroImages ([{src,alt}]), sections ([intro,ctaStrip]), subcategories[].title
+ * Extra fields (featuredFamilies, relatedCategories, etc.) are stored in DB metadata JSON.
+ */
+function normalizeCategory(raw: any): CategoryContent {
+  const meta: Record<string, any> = raw.metadata ?? {};
+
+  // Build heroImages: prefer metadata.heroImages (array); fall back to single heroImage string
+  const heroImages: CategoryContent['heroImages'] =
+    Array.isArray(meta.heroImages) && meta.heroImages.length > 0
+      ? meta.heroImages
+      : raw.heroImage
+        ? [{ src: raw.heroImage, alt: raw.name ?? '' }]
+        : [];
+
+  // Rebuild subcategories: DB stores {name, slug, description, image}; frontend uses {title, description, image, href}
+  const subcategories: CategoryContent['subcategories'] = Array.isArray(raw.subcategories)
+    ? raw.subcategories.map((s: any) => ({
+        title: s.name ?? s.title ?? '',
+        description: s.description ?? '',
+        image: s.image ?? '',
+        href: s.href ?? meta.subcategoryHrefs?.[s.slug] ?? '',
+      }))
+    : [];
+
+  // Rebuild sections from intro + ctaStrip
+  const sections: CategoryContent['sections'] = [];
+  if (raw.intro) {
+    sections.push({ type: 'intro', text: raw.intro });
+  }
+  if (raw.ctaStrip && typeof raw.ctaStrip === 'object') {
+    const cta = raw.ctaStrip as Record<string, any>;
+    sections.push({
+      type: 'ctaStrip',
+      title: cta.headline ?? '',
+      description: cta.description ?? '',
+      ctas: cta.buttonText
+        ? [{ label: cta.buttonText, href: cta.buttonLink ?? '', variant: 'primary' as const }]
+        : [],
+    });
+  }
+
+  // Benefits stored directly in DB
+  const benefits: CategoryContent['benefits'] = Array.isArray(raw.benefits) ? raw.benefits : undefined;
+
   return {
-    ...category,
-    productCount: category.productCount ?? category._count?.productFamilies ?? 0,
-    subcategories: Array.isArray(category.subcategories) ? category.subcategories : [],
+    slug: raw.slug,
+    name: raw.name,
+    description: raw.description ?? '',
+    seoTitle: raw.seoTitle ?? undefined,
+    seoDescription: raw.seoDescription ?? undefined,
+    productCount: meta.productCount ?? raw._count?.productFamilies ?? 0,
+    b2bLabel: meta.b2bLabel ?? undefined,
+    heroImages,
+    subcategories,
+    featuredFamilies: Array.isArray(meta.featuredFamilies) ? meta.featuredFamilies : [],
+    bestSellers: Array.isArray(meta.bestSellers) ? meta.bestSellers : undefined,
+    relatedCategories: Array.isArray(meta.relatedCategories) ? meta.relatedCategories : undefined,
+    benefits,
+    sections: sections.length > 0 ? sections : undefined,
+  };
+}
+
+/**
+ * Map CategoryContent (frontend shape) → DB payload.
+ * Translates heroImages→heroImage, sections→intro/ctaStrip, subcategories title→name,
+ * and packs extra fields into metadata JSON.
+ */
+function categoryToDbPayload(data: CategoryContent) {
+  // heroImage: use first heroImage src for the dedicated DB column
+  const heroImage = data.heroImages?.[0]?.src ?? undefined;
+
+  // intro: extract from sections
+  const introSection = (data.sections ?? []).find((s) => s.type === 'intro');
+  const intro = introSection && introSection.type === 'intro' ? introSection.text : undefined;
+
+  // ctaStrip: extract from sections and convert to DB shape
+  const ctaSection = (data.sections ?? []).find((s) => s.type === 'ctaStrip');
+  const ctaStrip =
+    ctaSection && ctaSection.type === 'ctaStrip'
+      ? {
+          headline: ctaSection.title,
+          description: ctaSection.description ?? '',
+          buttonText: ctaSection.ctas[0]?.label ?? '',
+          buttonLink: ctaSection.ctas[0]?.href ?? '',
+        }
+      : undefined;
+
+  // subcategories: map title→name, generate slug if missing
+  const subcategories = data.subcategories.map((s, i) => ({
+    name: s.title,
+    slug: slugify(s.title) || `subcat-${i}`,
+    description: s.description ?? undefined,
+    image: s.image ?? undefined,
+    sortOrder: i,
+  }));
+
+  // Build subcategoryHrefs map (slug→href) to store in metadata so we can restore hrefs on load
+  const subcategoryHrefs: Record<string, string> = {};
+  data.subcategories.forEach((s) => {
+    if (s.href) subcategoryHrefs[slugify(s.title)] = s.href;
+  });
+
+  // metadata: store all fields the DB doesn't have dedicated columns for
+  const metadata: Record<string, any> = {
+    heroImages: data.heroImages ?? [],
+    featuredFamilies: data.featuredFamilies ?? [],
+    relatedCategories: data.relatedCategories ?? [],
+    bestSellers: data.bestSellers ?? [],
+    productCount: data.productCount ?? 0,
+    b2bLabel: data.b2bLabel ?? '',
+    subcategoryHrefs,
+  };
+
+  return {
+    name: data.name,
+    slug: data.slug,
+    description: data.description,
+    heroImage,
+    intro,
+    ctaStrip,
+    benefits: data.benefits,
+    metadata,
+    seoTitle: data.seoTitle,
+    seoDescription: data.seoDescription,
+    subcategories,
   };
 }
 
@@ -49,10 +179,13 @@ async function getCategoryBySlug(slug: string): Promise<CategoryContent | null> 
 }
 
 async function saveCategory(data: CategoryContent): Promise<CategoryContent> {
+  const payload = categoryToDbPayload(data);
   try {
-    return await api.put<CategoryContent>(`/categories/${data.slug}`, data);
+    const result = await api.put<any>(`/categories/${data.slug}`, payload);
+    return normalizeCategory(result);
   } catch {
-    return api.post<CategoryContent>('/categories', data);
+    const result = await api.post<any>('/categories', payload);
+    return normalizeCategory(result);
   }
 }
 
@@ -61,20 +194,120 @@ async function deleteCategory(slug: string): Promise<void> {
 }
 
 // ---------- Product CRUD ----------
-function normalizeProduct(product: any): ProductFamilyContent {
+
+/**
+ * Map DB productFamily record → ProductFamilyContent (frontend shape).
+ * DB has: gallery (string[]), longDescription, variants[].{name,sku}, category.slug
+ * Frontend needs: gallery ([{src,alt}]), description, variants[].{title}, categorySlug
+ * Extra fields (relatedProducts, relatedCategories, specs as SpecRow[], support.title) are in metadata.
+ */
+function normalizeProduct(raw: any): ProductFamilyContent {
+  const meta: Record<string, any> = raw.metadata ?? {};
+
+  // gallery: combine DB string[] with metadata alt texts
+  const galleryAlts: string[] = Array.isArray(meta.galleryAlts) ? meta.galleryAlts : [];
+  const gallery: ProductFamilyContent['gallery'] = Array.isArray(raw.gallery)
+    ? raw.gallery.map((src: string, i: number) => ({ src, alt: galleryAlts[i] ?? '' }))
+    : [];
+
+  // variants: prefer metadata titles; fall back to DB name
+  const variants = Array.isArray(raw.variants)
+    ? raw.variants.map((v: any, i: number) => ({
+        title: (meta.variantTitles as string[] | undefined)?.[i] ?? (v.name as string) ?? '',
+        image: (v.image as string | undefined) ?? undefined,
+      }))
+    : [];
+
+  // specifications: use metadata rawSpecs (SpecRow[]) if available
+  const specifications = Array.isArray(meta.rawSpecs) ? meta.rawSpecs : undefined;
+
+  // support
+  const support =
+    meta.supportTitle || raw.supportText
+      ? {
+          title: meta.supportTitle ?? '',
+          description: raw.supportText ?? '',
+          ctas: Array.isArray(meta.supportCtas) ? meta.supportCtas : undefined,
+        }
+      : undefined;
+
   return {
-    ...product,
-    categorySlug: product.categorySlug ?? product.category?.slug ?? '',
-    categoryName: product.categoryName ?? product.category?.name ?? '',
-    variants: Array.isArray(product.variants) ? product.variants : [],
+    slug: raw.slug,
+    categorySlug: raw.category?.slug ?? raw.categorySlug ?? '',
+    name: raw.name,
+    description: raw.longDescription ?? meta.description ?? '',
+    summary: raw.summary ?? '',
+    seoTitle: raw.seoTitle ?? undefined,
+    seoDescription: raw.seoDescription ?? undefined,
+    gallery,
+    features: Array.isArray(raw.features) ? raw.features : [],
+    useCases: Array.isArray(raw.useCases) ? raw.useCases : undefined,
+    variants: variants.length > 0 ? variants : undefined,
+    specifications,
+    relatedProducts: Array.isArray(meta.relatedProducts) ? meta.relatedProducts : undefined,
+    relatedCategories: Array.isArray(meta.relatedCategories) ? meta.relatedCategories : undefined,
+    support,
+  };
+}
+
+/**
+ * Map ProductFamilyContent (frontend shape) → DB payload.
+ */
+function productToDbPayload(data: ProductFamilyContent) {
+  // gallery: split into URL array + alt array
+  const galleryUrls = data.gallery.map((g) => g.src);
+  const galleryAlts = data.gallery.map((g) => g.alt ?? '');
+
+  // variants: create DB variant records (name + generated SKU)
+  const variants =
+    data.variants && data.variants.length > 0
+      ? data.variants.map((v, i) => ({
+          name: v.title,
+          sku: `${data.slug}-${slugify(v.title) || i}`,
+          image: v.image ?? undefined,
+          sortOrder: i,
+        }))
+      : undefined;
+
+  // Extract variant titles for metadata (to restore form on load)
+  const variantTitles = data.variants?.map((v) => v.title) ?? [];
+
+  // metadata: store all extra fields
+  const metadata: Record<string, any> = {
+    galleryAlts,
+    variantTitles,
+    rawSpecs: data.specifications ?? [],
+    relatedProducts: data.relatedProducts ?? [],
+    relatedCategories: data.relatedCategories ?? [],
+    supportTitle: data.support?.title ?? '',
+    supportCtas: data.support?.ctas ?? [],
+    description: data.description,
+  };
+
+  return {
+    categorySlug: data.categorySlug,
+    name: data.name,
+    slug: data.slug,
+    summary: data.summary,
+    longDescription: data.description,
+    features: data.features,
+    useCases: data.useCases,
+    gallery: galleryUrls,
+    supportText: data.support?.description,
+    metadata,
+    seoTitle: data.seoTitle,
+    seoDescription: data.seoDescription,
+    variants,
   };
 }
 
 async function getProducts(categoryFilter?: string): Promise<ProductFamilyContent[]> {
   const params: Record<string, string> = {};
   if (categoryFilter) params.category = categoryFilter;
-  const data = await api.get<any[]>('/products', params);
-  return Array.isArray(data) ? data.map(normalizeProduct) : [];
+  const data = await api.get<any>('/products', params);
+  // Products endpoint returns paginated: { data: [], total, page, limit }
+  const items = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
+  return items.map(normalizeProduct);
 }
 
 async function getProductBySlug(slug: string): Promise<ProductFamilyContent | null> {
@@ -83,10 +316,13 @@ async function getProductBySlug(slug: string): Promise<ProductFamilyContent | nu
 }
 
 async function saveProduct(data: ProductFamilyContent): Promise<ProductFamilyContent> {
+  const payload = productToDbPayload(data);
   try {
-    return await api.put<ProductFamilyContent>(`/products/${data.slug}`, data);
+    const result = await api.put<any>(`/products/${data.slug}`, payload);
+    return normalizeProduct(result);
   } catch {
-    return api.post<ProductFamilyContent>('/products', data);
+    const result = await api.post<any>('/products', payload);
+    return normalizeProduct(result);
   }
 }
 
@@ -176,3 +412,6 @@ export const adminService = {
   uploadMedia,
   deleteMedia,
 };
+
+// Export normalize functions for use by public pages
+export { normalizeCategory, normalizeProduct };

@@ -65,11 +65,14 @@ export const vendorProductMappingSchema = z.object({
 
 // ─── Brand Config ────────────────────────────────────────
 
+// Allow empty string ("") as well as valid URLs or null for logo/favicon fields
+const optionalUrl = z.union([z.string().url(), z.literal(''), z.null()]).optional();
+
 export const updateBrandConfigSchema = z.object({
   brandName: z.string().min(1).optional(),
-  logoUrl: z.string().url().optional().nullable(),
-  logoSecondaryUrl: z.string().url().optional().nullable(),
-  faviconUrl: z.string().url().optional().nullable(),
+  logoUrl: optionalUrl,
+  logoSecondaryUrl: optionalUrl,
+  faviconUrl: optionalUrl,
   primaryColor: z.string().optional(),
   secondaryColor: z.string().optional(),
   accentColor: z.string().optional(),

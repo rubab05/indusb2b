@@ -58,6 +58,7 @@ export async function createCategory(data: {
   intro?: string;
   benefits?: Prisma.InputJsonValue;
   ctaStrip?: Prisma.InputJsonValue;
+  metadata?: Prisma.InputJsonValue;
   seoTitle?: string;
   seoDescription?: string;
   status?: string;
@@ -73,13 +74,14 @@ export async function createCategory(data: {
   const existing = await prisma.category.findUnique({ where: { slug: data.slug } });
   if (existing) throw ApiError.conflict('A category with this slug already exists');
 
-  const { subcategories, benefits, ctaStrip, ...rest } = data;
+  const { subcategories, benefits, ctaStrip, metadata, ...rest } = data;
 
   return prisma.category.create({
     data: {
       ...rest,
       ...(benefits !== undefined && { benefits }),
       ...(ctaStrip !== undefined && { ctaStrip }),
+      ...(metadata !== undefined && { metadata }),
       subcategories: subcategories
         ? { create: subcategories }
         : undefined,
@@ -102,6 +104,7 @@ export async function updateCategory(
     intro: string;
     benefits: Prisma.InputJsonValue;
     ctaStrip: Prisma.InputJsonValue;
+    metadata: Prisma.InputJsonValue;
     seoTitle: string;
     seoDescription: string;
     status: string;
@@ -123,7 +126,7 @@ export async function updateCategory(
     if (existing) throw ApiError.conflict('A category with this slug already exists');
   }
 
-  const { subcategories, benefits, ctaStrip, ...rest } = data;
+  const { subcategories, benefits, ctaStrip, metadata, ...rest } = data;
 
   if (subcategories !== undefined) {
     await prisma.subcategory.deleteMany({ where: { categoryId: category.id } });
@@ -135,6 +138,7 @@ export async function updateCategory(
       ...rest,
       ...(benefits !== undefined && { benefits }),
       ...(ctaStrip !== undefined && { ctaStrip }),
+      ...(metadata !== undefined && { metadata }),
       subcategories: subcategories
         ? { create: subcategories.map((s) => ({ ...s, categoryId: category.id })) }
         : undefined,
@@ -166,6 +170,17 @@ export async function reorderCategories(items: Array<{ id: string; sortOrder: nu
 }
 
 // ─── Products ───────────────────────────────────────────
+
+/** Resolve categoryId from either categoryId or categorySlug in the incoming payload */
+async function resolveCategoryId(data: { categoryId?: string; categorySlug?: string }): Promise<string> {
+  if (data.categoryId) return data.categoryId;
+  if (data.categorySlug) {
+    const cat = await prisma.category.findUnique({ where: { slug: data.categorySlug } });
+    if (!cat) throw ApiError.badRequest(`Category not found for slug: ${data.categorySlug}`);
+    return cat.id;
+  }
+  throw ApiError.badRequest('Either categoryId or categorySlug is required');
+}
 
 export async function getProducts(query: {
   page?: string;
@@ -249,7 +264,8 @@ export async function getRelatedProducts(slug: string) {
 }
 
 export async function createProduct(data: {
-  categoryId: string;
+  categoryId?: string;
+  categorySlug?: string;
   name: string;
   slug: string;
   summary?: string;
@@ -258,6 +274,7 @@ export async function createProduct(data: {
   useCases?: string[];
   gallery?: string[];
   specifications?: Prisma.InputJsonValue;
+  metadata?: Prisma.InputJsonValue;
   supportText?: string;
   supportContact?: string;
   seoTitle?: string;
@@ -275,21 +292,24 @@ export async function createProduct(data: {
   const existing = await prisma.productFamily.findUnique({ where: { slug: data.slug } });
   if (existing) throw ApiError.conflict('A product with this slug already exists');
 
-  const category = await prisma.category.findUnique({ where: { id: data.categoryId } });
+  const categoryId = await resolveCategoryId(data);
+  const category = await prisma.category.findUnique({ where: { id: categoryId } });
   if (!category) throw ApiError.badRequest('Category not found');
 
-  const { variants, ...productData } = data;
+  const { variants, categorySlug: _cs, categoryId: _ci, metadata, ...productData } = data;
 
   // Check variant SKU uniqueness
   if (variants?.length) {
     const skus = variants.map((v) => v.sku);
-    const existing = await prisma.productVariant.findFirst({ where: { sku: { in: skus } } });
-    if (existing) throw ApiError.conflict(`SKU already exists: ${existing.sku}`);
+    const existingVariant = await prisma.productVariant.findFirst({ where: { sku: { in: skus } } });
+    if (existingVariant) throw ApiError.conflict(`SKU already exists: ${existingVariant.sku}`);
   }
 
   return prisma.productFamily.create({
     data: {
       ...productData,
+      categoryId,
+      ...(metadata !== undefined && { metadata }),
       variants: variants ? { create: variants } : undefined,
     },
     include: {
@@ -303,6 +323,7 @@ export async function updateProduct(
   slug: string,
   data: Partial<{
     categoryId: string;
+    categorySlug: string;
     name: string;
     slug: string;
     summary: string;
@@ -311,6 +332,7 @@ export async function updateProduct(
     useCases: string[];
     gallery: string[];
     specifications: Prisma.InputJsonValue;
+    metadata: Prisma.InputJsonValue;
     supportText: string;
     supportContact: string;
     seoTitle: string;
@@ -334,7 +356,15 @@ export async function updateProduct(
     if (existing) throw ApiError.conflict('A product with this slug already exists');
   }
 
-  const { variants, ...productData } = data;
+  // Resolve categoryId from categorySlug if provided
+  let resolvedCategoryId: string | undefined;
+  if (data.categorySlug) {
+    const cat = await prisma.category.findUnique({ where: { slug: data.categorySlug } });
+    if (!cat) throw ApiError.badRequest(`Category not found for slug: ${data.categorySlug}`);
+    resolvedCategoryId = cat.id;
+  }
+
+  const { variants, categorySlug: _cs, metadata, ...productData } = data;
 
   if (variants !== undefined) {
     await prisma.productVariant.deleteMany({ where: { productFamilyId: product.id } });
@@ -344,6 +374,8 @@ export async function updateProduct(
     where: { id: product.id },
     data: {
       ...productData,
+      ...(resolvedCategoryId && { categoryId: resolvedCategoryId }),
+      ...(metadata !== undefined && { metadata }),
       variants: variants ? { create: variants } : undefined,
     },
     include: {

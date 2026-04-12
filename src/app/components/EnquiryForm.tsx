@@ -51,7 +51,6 @@ export function EnquiryForm() {
             <input
               type="text"
               id="product"
-              defaultValue="Stock Pot 4.5L / 24cm"
               className="w-full px-4 py-3 border border-gray-300 bg-gray-100 focus:outline-none focus:border-gray-900 transition-colors"
               readOnly
             />
