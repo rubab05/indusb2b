@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { adminService, ContentPage } from "../../../services/admin.service";
+import { CMS_PAGE_DEFAULTS, CMS_PAGE_DEFAULTS_MAP, isPlaceholderBody } from "../../../content/cms-page-defaults";
 import { Plus, MoreHorizontal, Pencil, ExternalLink, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -8,15 +9,68 @@ export default function PagesListPage() {
   const navigate = useNavigate();
   const [pages, setPages] = useState<ContentPage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
   const [deleteSlug, setDeleteSlug] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   useEffect(() => {
-    adminService.getPages().then((data) => {
-      setPages(data);
-      setLoading(false);
-    });
+    loadAndSync();
   }, []);
+
+  async function loadAndSync() {
+    setLoading(true);
+    try {
+      const data = await adminService.getPages();
+      const existingSlugs = new Set(data.map((p) => p.slug));
+
+      // Find defaults that are missing or still have old placeholder content
+      const toCreate: ContentPage[] = [];
+      const toUpdate: ContentPage[] = [];
+
+      for (const def of CMS_PAGE_DEFAULTS) {
+        if (!existingSlugs.has(def.slug)) {
+          toCreate.push({
+            slug: def.slug,
+            title: def.title,
+            body: def.body,
+            status: "published",
+            seoTitle: def.seoTitle,
+            seoDescription: def.seoDescription,
+            lastUpdated: new Date().toISOString().split("T")[0],
+          });
+        } else {
+          const existing = data.find((p) => p.slug === def.slug);
+          if (existing && isPlaceholderBody(def.slug, existing.body)) {
+            toUpdate.push({
+              ...existing,
+              body: def.body,
+              seoTitle: def.seoTitle,
+              seoDescription: def.seoDescription,
+              lastUpdated: new Date().toISOString().split("T")[0],
+            });
+          }
+        }
+      }
+
+      if (toCreate.length > 0 || toUpdate.length > 0) {
+        setSyncing(true);
+        await Promise.all([
+          ...toCreate.map((p) => adminService.savePage(p)),
+          ...toUpdate.map((p) => adminService.savePage(p)),
+        ]);
+        setSyncing(false);
+        const updated = await adminService.getPages();
+        setPages(updated);
+      } else {
+        setPages(data);
+      }
+    } catch (err) {
+      console.error("Failed to load pages", err);
+      setPages([]);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleDelete() {
     if (!deleteSlug) return;
@@ -31,7 +85,10 @@ export default function PagesListPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl tracking-tight text-gray-900">Pages</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage static content pages.</p>
+          <p className="text-sm text-gray-500 mt-1">
+            Manage static content pages.{" "}
+            {syncing && <span className="text-yellow-600">Syncing default content…</span>}
+          </p>
         </div>
         <Link
           to="/admin/pages/new/edit"
@@ -45,7 +102,7 @@ export default function PagesListPage() {
       <div className="bg-white border border-gray-200 overflow-hidden">
         {loading ? (
           <div className="p-6 space-y-3">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(6)].map((_, i) => (
               <div key={i} className="h-12 bg-gray-100 animate-pulse rounded" />
             ))}
           </div>
@@ -97,14 +154,16 @@ export default function PagesListPage() {
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                             onClick={() => setOpenMenu(null)}
                           >
-                            <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.5} /> View
+                            <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.5} /> Preview
                           </a>
-                          <button
-                            onClick={() => { setOpenMenu(null); setDeleteSlug(page.slug); }}
-                            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} /> Delete
-                          </button>
+                          {!CMS_PAGE_DEFAULTS_MAP.has(page.slug) && (
+                            <button
+                              onClick={() => { setOpenMenu(null); setDeleteSlug(page.slug); }}
+                              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} /> Delete
+                            </button>
+                          )}
                         </div>
                       </>
                     )}

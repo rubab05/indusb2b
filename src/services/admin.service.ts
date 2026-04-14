@@ -333,11 +333,16 @@ async function deleteProduct(slug: string): Promise<void> {
 // ---------- Page CRUD ----------
 
 async function getPages(): Promise<ContentPage[]> {
-  return api.get<ContentPage[]>('/pages');
+  // Use the admin endpoint so all pages (including drafts) are visible
+  return api.get<ContentPage[]>('/admin/pages');
 }
 
 async function getPageBySlug(slug: string): Promise<ContentPage | null> {
-  return api.get<ContentPage>(`/pages/${slug}`);
+  try {
+    return await api.get<ContentPage>(`/admin/pages/${slug}`);
+  } catch {
+    return null;
+  }
 }
 
 async function savePage(data: ContentPage): Promise<ContentPage> {

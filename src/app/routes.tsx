@@ -8,7 +8,7 @@ import FAQPage from "./pages/FAQPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import ShippingPage from "./pages/ShippingPage";
-// import ReturnsPage from "./pages/ReturnsPage";
+import PublicReturnsPage from "./pages/ReturnsPage";
 import ContactPage from "./pages/ContactPage";
 import ApplyPage from "./pages/ApplyPage";
 import ApplyWholesalePage from "./pages/ApplyWholesalePage";
@@ -58,7 +58,7 @@ import VendorsPage from "./pages/admin/VendorsPage";
 import BrandSettingsPage from "./pages/admin/BrandSettingsPage";
 import OrderWorkflowPage from "./pages/admin/OrderWorkflowPage";
 import OpsDashboardPage from "./pages/admin/OpsDashboardPage";
-import ReturnsPage from "./pages/admin/ReturnsPage";
+import AdminReturnsPage from "./pages/admin/ReturnsPage";
 import ActivityLogPage from "./pages/admin/ActivityLogPage";
 import AdminSupportPage from "./pages/admin/AdminSupportPage";
 
@@ -103,7 +103,7 @@ export const router = createBrowserRouter([
   { path: "/privacy-policy", Component: PrivacyPolicyPage },
   { path: "/terms", Component: TermsPage },
   { path: "/shipping", Component: ShippingPage },
-  { path: "/returns", Component: ReturnsPage },
+  { path: "/returns", Component: PublicReturnsPage },
   { path: "/contact", Component: ContactPage },
 
   // Auth pages
@@ -206,7 +206,7 @@ export const router = createBrowserRouter([
       // Operations
       { path: "operations/orders", Component: OrderWorkflowPage },
       { path: "operations/dashboard", Component: OpsDashboardPage },
-      { path: "operations/returns", Component: ReturnsPage },
+      { path: "operations/returns", Component: AdminReturnsPage },
       { path: "operations/logs", Component: ActivityLogPage },
       { path: "operations/support", Component: AdminSupportPage },
     ],

@@ -22,6 +22,7 @@ import adminBrandRoutes from './routes/admin/brand.js';
 import adminOperationsRoutes from './routes/admin/operations.js';
 import adminSupportRoutes from './routes/admin/support.js';
 import adminTopUpsRoutes from './routes/admin/topups.js';
+import adminPagesRoutes from './routes/admin/pages.js';
 import mediaRoutes from './routes/media.js';
 import brandRoutes from './routes/brand.js';
 
@@ -73,6 +74,7 @@ app.use('/api/admin/brand', adminBrandRoutes);
 app.use('/api/admin/operations', adminOperationsRoutes);
 app.use('/api/admin/support', adminSupportRoutes);
 app.use('/api/admin/topups', adminTopUpsRoutes);
+app.use('/api/admin/pages', adminPagesRoutes);
 
 // Error handler (must be last)
 app.use(errorHandler);
