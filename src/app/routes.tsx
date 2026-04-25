@@ -55,7 +55,6 @@ import PartnerListPage from "./pages/admin/PartnerListPage";
 import RolesPermissionsPage from "./pages/admin/RolesPermissionsPage";
 import PricingAdminPage from "./pages/admin/PricingAdminPage";
 import VendorsPage from "./pages/admin/VendorsPage";
-import BrandSettingsPage from "./pages/admin/BrandSettingsPage";
 import OrderWorkflowPage from "./pages/admin/OrderWorkflowPage";
 import OpsDashboardPage from "./pages/admin/OpsDashboardPage";
 import AdminReturnsPage from "./pages/admin/ReturnsPage";
@@ -201,8 +200,6 @@ export const router = createBrowserRouter([
       // Commerce
       { path: "pricing", Component: PricingAdminPage },
       { path: "vendors", Component: VendorsPage },
-      // Platform
-      { path: "brand", Component: BrandSettingsPage },
       // Operations
       { path: "operations/orders", Component: OrderWorkflowPage },
       { path: "operations/dashboard", Component: OpsDashboardPage },

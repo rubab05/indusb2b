@@ -10,7 +10,17 @@ export function Header() {
         <div className="flex items-center justify-between gap-12">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to="/" className="text-2xl tracking-tight font-light">{brand.brandName}</Link>
+            <Link to="/" className="flex items-center">
+              {brand.logoUrl ? (
+                <img
+                  src={brand.logoUrl}
+                  alt={brand.brandName}
+                  className="h-10 object-contain"
+                />
+              ) : (
+                <span className="text-2xl tracking-tight font-light">{brand.brandName}</span>
+              )}
+            </Link>
           </div>
 
           {/* Navigation */}

@@ -1,6 +1,11 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Brand colour defaults — overridden at runtime by BrandProvider */
+  --brand-primary: #111827;
+  --brand-secondary: #6b7280;
+  --brand-accent: #eab308;
+
   --font-size: 16px;
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
@@ -117,6 +122,20 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Primary colour → replaces dark gray used for buttons, CTAs, headings */
+  --color-gray-900: var(--brand-primary);
+  --color-gray-800: var(--brand-primary);
+
+  /* Secondary colour → replaces medium gray used for subdued text and labels */
+  --color-gray-600: var(--brand-secondary);
+  --color-gray-500: var(--brand-secondary);
+
+  /* Accent colour → replaces yellow used for highlight CTAs and badges */
+  --color-yellow-300: var(--brand-accent);
+  --color-yellow-400: var(--brand-accent);
+  --color-yellow-500: var(--brand-accent);
+  --color-yellow-600: var(--brand-accent);
 }
 
 @layer base {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
+import { useBrand } from "../contexts/BrandContext";
 import {
   FolderOpen,
   Users,
@@ -22,7 +23,6 @@ import {
   Shield,
   DollarSign,
   Store,
-  Palette,
   ClipboardList,
   Activity,
   RotateCcw,
@@ -62,13 +62,6 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: "Pricing Rules", to: "/admin/pricing", icon: DollarSign },
       { label: "Vendors", to: "/admin/vendors", icon: Store },
-    ],
-  },
-  {
-    label: "Platform",
-    icon: Settings,
-    items: [
-      { label: "Brand Settings", to: "/admin/brand", icon: Palette },
     ],
   },
   {
@@ -126,6 +119,7 @@ function SidebarSection({ section }: { section: NavSection }) {
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
+  const { brand } = useBrand();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -138,8 +132,12 @@ export default function AdminLayout() {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="px-4 py-5 border-b border-gray-100">
-        <Link to="/admin/categories" className="text-lg tracking-widest font-light text-gray-900">
-          HOMATZ
+        <Link to="/admin/categories" className="text-lg tracking-widest font-light text-gray-900 flex items-center">
+          {brand.logoUrl ? (
+            <img src={brand.logoUrl} alt={brand.brandName} className="h-8 object-contain" />
+          ) : (
+            brand.brandName
+          )}
         </Link>
         <p className="text-xs text-gray-500 mt-0.5">Admin Panel</p>
       </div>
