@@ -191,3 +191,25 @@ export async function sendTopUpConfirmation(params: {
 
   await sendEmail(params.to, subject, html, text);
 }
+
+export async function sendEnquiryEmail(params: {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+  replyTo?: string;
+}): Promise<void> {
+  if (transport) {
+    await transport.sendMail({
+      from: env.SMTP_FROM,
+      to: params.to,
+      replyTo: params.replyTo,
+      subject: params.subject,
+      html: params.html,
+      text: params.text,
+    });
+    logger.info(`Enquiry email sent: ${params.subject}`);
+  } else {
+    logger.info(`[EMAIL DEV] To: ${params.to} | Subject: ${params.subject}\n${params.text}`);
+  }
+}

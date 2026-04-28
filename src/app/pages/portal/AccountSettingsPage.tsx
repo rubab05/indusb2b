@@ -6,7 +6,7 @@ import {
   ContactDetails,
   NotificationPreferences,
 } from "../../../services/account.service";
-import { Edit2, Check, X, Upload, FileText } from "lucide-react";
+import { Edit2, Check, X, FileText } from "lucide-react";
 
 // ─── Shared primitives ────────────────────────────────────────────────────────
 
@@ -99,7 +99,7 @@ function Input({
   );
 }
 
-function SaveFeedback({ status }: { status: "success" | "error" | null; message?: string }) {
+function SaveFeedback({ status, message }: { status: "success" | "error" | null; message?: string }) {
   if (!status) return null;
   return (
     <div className={`text-xs px-3 py-2 mt-2 ${status === "success" ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-700 border border-red-200"}`}>
@@ -378,12 +378,7 @@ function DocumentsSection({ documents }: { documents: AccountProfile["documents"
         </div>
       )}
 
-      {/* Upload placeholder */}
-      <div className="border border-dashed border-gray-300 px-6 py-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
-        <Upload className="w-5 h-5 text-gray-400 mx-auto mb-2" strokeWidth={1.5} />
-        <p className="text-sm text-gray-500">Upload a document</p>
-        <p className="text-xs text-gray-400 mt-0.5">PDF up to 10MB — API-ready</p>
-      </div>
+      <p className="text-xs text-gray-400">To upload or update documents, please contact support.</p>
     </div>
   );
 }

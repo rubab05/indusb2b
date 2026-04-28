@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { authService } from "../../services/auth.service";
 
 function getStrength(password: string): { label: string; color: string; width: string } {
   if (password.length === 0) return { label: "", color: "bg-gray-200", width: "w-0" };
@@ -17,6 +18,8 @@ function getStrength(password: string): { label: string; color: string; width: s
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token") ?? "";
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
@@ -26,6 +29,10 @@ export default function ResetPasswordPage() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!token) {
+      setError("Invalid or missing reset link. Please request a new one.");
+      return;
+    }
     if (password.length < 8) {
       setError("Password must be at least 8 characters.");
       return;
@@ -36,10 +43,14 @@ export default function ResetPasswordPage() {
     }
     setError("");
     setLoading(true);
-    // API-ready: submit password reset with token from URL params
-    await new Promise((r) => setTimeout(r, 800));
-    setLoading(false);
-    navigate("/login");
+    try {
+      await authService.resetPassword(token, password);
+      navigate("/login");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Reset link is invalid or has expired. Please request a new one.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

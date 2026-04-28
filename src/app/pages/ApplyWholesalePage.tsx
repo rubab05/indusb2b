@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { ContentPage } from "../components/ContentPage";
+import { api, ApiError } from "../../lib/api-client";
+
+interface AuthResponse {
+  user: { id: string };
+  token: string;
+}
 
 export default function ApplyWholesalePage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [apiError, setApiError] = useState("");
 
   const [form, setForm] = useState({
     companyName: "",
@@ -16,6 +23,8 @@ export default function ApplyWholesalePage() {
     contactName: "",
     contactEmail: "",
     contactPhone: "",
+    password: "",
+    confirmPassword: "",
     businessType: "",
     revenueRange: "",
     categories: [] as string[],
@@ -26,6 +35,7 @@ export default function ApplyWholesalePage() {
   function set(field: string, value: string | boolean) {
     setForm((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: "" }));
+    setApiError("");
   }
 
   function toggleCategory(cat: string) {
@@ -47,17 +57,48 @@ export default function ApplyWholesalePage() {
     if (!form.contactEmail) e.contactEmail = "Required";
     if (!form.contactPhone) e.contactPhone = "Required";
     if (!form.businessType) e.businessType = "Required";
+    if (!form.password) e.password = "Required";
+    else if (form.password.length < 8) e.password = "Password must be at least 8 characters";
+    if (!form.confirmPassword) e.confirmPassword = "Required";
+    else if (form.password !== form.confirmPassword) e.confirmPassword = "Passwords do not match";
     if (!form.terms) e.terms = "You must accept the terms";
     return e;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const e2 = validate();
     if (Object.keys(e2).length > 0) { setErrors(e2); return; }
     setLoading(true);
-    // API-ready: submit wholesale application
-    setTimeout(() => navigate("/apply/pending"), 1000);
+    setApiError("");
+    try {
+      const result = await api.post<AuthResponse>("/auth/register", {
+        email: form.contactEmail,
+        password: form.password,
+        companyName: form.companyName,
+        accountType: "WHOLESALE",
+        contactName: form.contactName,
+        contactPhone: form.contactPhone,
+        companyRegNumber: form.companyNumber || undefined,
+        addressLine1: form.address,
+        city: form.city,
+        postcode: form.postcode,
+        country: "United Kingdom",
+        businessType: form.businessType || undefined,
+        revenueRange: form.revenueRange || undefined,
+        categoriesOfInterest: form.categories.length > 0 ? form.categories : undefined,
+      });
+      localStorage.setItem("homatz_auth_token", result.token);
+      navigate("/apply/pending");
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 409) {
+        setApiError("An account with this email already exists. Please log in instead.");
+      } else {
+        setApiError(err instanceof Error ? err.message : "Submission failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   const inputClass = (field: string) =>
@@ -76,6 +117,11 @@ export default function ApplyWholesalePage() {
       <section className="py-24 bg-white">
         <div className="max-w-3xl mx-auto px-8">
           <form onSubmit={handleSubmit} className="space-y-12">
+            {apiError && (
+              <div className="px-4 py-3 bg-red-50 border border-red-200 text-sm text-red-700">
+                {apiError}
+              </div>
+            )}
             {/* Business Details */}
             <div>
               <h2 className="text-xl tracking-tight mb-6 pb-4 border-b border-gray-100">Business Details</h2>
@@ -131,6 +177,35 @@ export default function ApplyWholesalePage() {
                     <input type="tel" className={inputClass("contactPhone")} value={form.contactPhone} onChange={(e) => set("contactPhone", e.target.value)} />
                     {errors.contactPhone && <p className="text-xs text-red-500 mt-1">{errors.contactPhone}</p>}
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Account Access */}
+            <div>
+              <h2 className="text-xl tracking-tight mb-6 pb-4 border-b border-gray-100">Account Access</h2>
+              <p className="text-sm text-gray-500 mb-6">Your email address above will be your login. Choose a password for your trade account.</p>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs tracking-widests text-gray-700 mb-2">PASSWORD *</label>
+                  <input
+                    type="password"
+                    className={inputClass("password")}
+                    value={form.password}
+                    onChange={(e) => set("password", e.target.value)}
+                    placeholder="Minimum 8 characters"
+                  />
+                  {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password}</p>}
+                </div>
+                <div>
+                  <label className="block text-xs tracking-widest text-gray-700 mb-2">CONFIRM PASSWORD *</label>
+                  <input
+                    type="password"
+                    className={inputClass("confirmPassword")}
+                    value={form.confirmPassword}
+                    onChange={(e) => set("confirmPassword", e.target.value)}
+                  />
+                  {errors.confirmPassword && <p className="text-xs text-red-500 mt-1">{errors.confirmPassword}</p>}
                 </div>
               </div>
             </div>

@@ -38,7 +38,6 @@ const DEFAULT_PERMISSIONS: Record<string, PermissionState> = {
 
 export default function RolesPermissionsPage() {
   const [permissions, setPermissions] = useState<Record<string, PermissionState>>(DEFAULT_PERMISSIONS);
-  const [saving, setSaving] = useState(false);
 
   function toggle(permKey: string, role: keyof PermissionState) {
     setPermissions((prev) => ({
@@ -47,11 +46,7 @@ export default function RolesPermissionsPage() {
     }));
   }
 
-  async function handleSave() {
-    setSaving(true);
-    // Simulate API delay
-    await new Promise((r) => setTimeout(r, 400));
-    setSaving(false);
+  function handleSave() {
     toast.success("Permissions saved");
   }
 
@@ -105,10 +100,9 @@ export default function RolesPermissionsPage() {
       <div className="flex items-center gap-4">
         <button
           onClick={handleSave}
-          disabled={saving}
-          className="px-6 py-2.5 bg-gray-900 text-white text-sm hover:bg-gray-800 transition-colors disabled:opacity-50"
+          className="px-6 py-2.5 bg-gray-900 text-white text-sm hover:bg-gray-800 transition-colors"
         >
-          {saving ? "Saving..." : "Save Permissions"}
+          Save Permissions
         </button>
         <p className="text-xs text-gray-400">Changes take effect immediately for new sessions.</p>
       </div>

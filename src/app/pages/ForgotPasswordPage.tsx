@@ -2,19 +2,27 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { authService } from "../../services/auth.service";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError("");
     setLoading(true);
-    // API-ready: trigger password reset email
-    await new Promise((r) => setTimeout(r, 800));
-    setLoading(false);
-    setSubmitted(true);
+    try {
+      await authService.forgotPassword(email);
+      setSubmitted(true);
+    } catch {
+      // Always show success to prevent email enumeration
+      setSubmitted(true);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

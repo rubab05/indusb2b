@@ -25,6 +25,7 @@ import adminTopUpsRoutes from './routes/admin/topups.js';
 import adminPagesRoutes from './routes/admin/pages.js';
 import mediaRoutes from './routes/media.js';
 import brandRoutes from './routes/brand.js';
+import contactRoutes from './routes/contact.js';
 
 const app = express();
 
@@ -65,6 +66,9 @@ app.use('/api/media', mediaRoutes);
 
 // Public brand config (no auth — used by frontend to apply brand settings for all users)
 app.use('/api/brand', brandRoutes);
+
+// Public contact / enquiry form (no auth required)
+app.use('/api/contact', contactRoutes);
 
 // Admin routes
 app.use('/api/admin/partners', adminPartnersRoutes);

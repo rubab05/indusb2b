@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { SupportTicket, TicketStatus, TicketPriority, TicketCategory, TicketMessage } from "../../../types/support";
-import { supportService } from "../../../services/support.service";
+import { api } from "../../../lib/api-client";
 import { toast } from "sonner";
 import { X, Search } from "lucide-react";
 
-// ─── Extended admin fields (augmented in-memory on the ticket) ────────────────
+// ─── Extended admin fields returned by the admin API ─────────────────────────
 
 interface AdminTicketMeta {
   assignedAgent: string | null;
@@ -12,18 +12,50 @@ interface AdminTicketMeta {
   partnerName: string;
 }
 
-// We augment tickets with admin metadata stored separately keyed by id
-const adminMeta: Record<string, AdminTicketMeta> = {
-  "tkt-001": { assignedAgent: "Sarah", internalNotes: [{ text: "Re-dispatch confirmed. Tracking sent to partner.", user: "Sarah", date: "19 Mar 2026, 12:05" }], partnerName: "Demo Wholesale Ltd" },
-  "tkt-002": { assignedAgent: "Mike", internalNotes: [], partnerName: "Demo Wholesale Ltd" },
-  "tkt-003": { assignedAgent: null, internalNotes: [{ text: "Accounts team checking incoming bank payments for 3 Apr batch.", user: "Alex", date: "28 Mar 2026, 10:35" }], partnerName: "Demo Wholesale Ltd" },
-};
+// Raw admin ticket shape from GET /api/admin/support
+interface RawAdminTicket {
+  id: string;
+  ticketNumber: string;
+  subject: string;
+  category: string;
+  status: string;
+  priority: string;
+  relatedOrderId?: string | null;
+  createdAt: string;
+  assignedTo?: string | null;
+  user?: { id: string; companyName: string; email: string } | null;
+  messages?: Array<{ id: string; authorType: string; authorName: string; body: string; createdAt: string }>;
+  internalNotes?: Array<{ id: string; authorName: string; body: string; createdAt: string }>;
+}
 
-function getAdminMeta(id: string): AdminTicketMeta {
-  if (!adminMeta[id]) {
-    adminMeta[id] = { assignedAgent: null, internalNotes: [], partnerName: "Unknown Partner" };
-  }
-  return adminMeta[id];
+function normalizeAdminTicket(raw: RawAdminTicket): { ticket: SupportTicket; meta: AdminTicketMeta } {
+  const ticket: SupportTicket = {
+    id: raw.id,
+    ticketNumber: raw.ticketNumber,
+    subject: raw.subject,
+    category: raw.category as TicketCategory,
+    status: raw.status as TicketStatus,
+    priority: raw.priority as TicketPriority,
+    relatedOrderId: raw.relatedOrderId,
+    createdAt: raw.createdAt,
+    messages: (raw.messages ?? []).map((m) => ({
+      id: m.id,
+      author: m.authorType === 'ADMIN' ? 'support' : 'user',
+      authorName: m.authorName,
+      body: m.body,
+      createdAt: m.createdAt,
+    })),
+  };
+  const meta: AdminTicketMeta = {
+    assignedAgent: raw.assignedTo ?? null,
+    partnerName: raw.user?.companyName ?? raw.user?.email ?? 'Unknown Partner',
+    internalNotes: (raw.internalNotes ?? []).map((n) => ({
+      text: n.body,
+      user: n.authorName,
+      date: new Date(n.createdAt).toLocaleString('en-GB'),
+    })),
+  };
+  return { ticket, meta };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -140,71 +172,96 @@ function TicketDetailSheet({
   }
 
   async function handleAssign(agent: string) {
-    const val = agent === "Unassigned" ? null : agent;
-    const updated = { ...localMeta, assignedAgent: val };
-    setLocalMeta(updated);
-    adminMeta[ticket.id] = updated;
-    onUpdate(localTicket, updated);
-    toast.success("Agent assigned");
+    const assignedTo = agent === "Unassigned" ? "" : agent;
+    try {
+      await api.patch(`/admin/support/${ticket.id}/assign`, { assignedTo: assignedTo || "Unassigned" });
+      const updated = { ...localMeta, assignedAgent: assignedTo || null };
+      setLocalMeta(updated);
+      onUpdate(localTicket, updated);
+      toast.success("Agent assigned");
+    } catch {
+      toast.error("Failed to assign agent");
+    }
   }
 
   async function handlePriority(priority: TicketPriority) {
-    await supportService.updateStatus(ticket.id, localTicket.status);
-    const updated = { ...localTicket, priority };
-    setLocalTicket(updated);
-    onUpdate(updated, localMeta);
-    toast.success(`Priority set to ${priority}`);
+    try {
+      await api.patch(`/admin/support/${ticket.id}/priority`, { priority });
+      const updated = { ...localTicket, priority };
+      setLocalTicket(updated);
+      onUpdate(updated, localMeta);
+      toast.success(`Priority set to ${priority}`);
+    } catch {
+      toast.error("Failed to update priority");
+    }
   }
 
   async function handleReply() {
     if (!reply.trim()) return;
     setSending(true);
-    const msg: TicketMessage = {
-      id: `m${localTicket.messages.length + 1}`,
-      author: "support",
-      authorName: "HOMATZ Admin",
-      body: reply.trim(),
-      createdAt: new Date().toISOString(),
-    };
-    // Mutate via supportService reply
-    await supportService.reply(ticket.id, reply.trim());
-    const updated = { ...localTicket, messages: [...localTicket.messages, msg] };
-    setLocalTicket(updated);
-    onUpdate(updated, localMeta);
-    setReply("");
-    toast.success("Reply sent");
-    setSending(false);
+    try {
+      await api.post(`/admin/support/${ticket.id}/reply`, { body: reply.trim() });
+      const msg: TicketMessage = {
+        id: `m${localTicket.messages.length + 1}`,
+        author: "support",
+        authorName: "HOMATZ Admin",
+        body: reply.trim(),
+        createdAt: new Date().toISOString(),
+      };
+      const updated = { ...localTicket, messages: [...localTicket.messages, msg] };
+      setLocalTicket(updated);
+      onUpdate(updated, localMeta);
+      setReply("");
+      toast.success("Reply sent");
+    } catch {
+      toast.error("Failed to send reply");
+    } finally {
+      setSending(false);
+    }
   }
 
-  function handleAddInternalNote() {
+  async function handleAddInternalNote() {
     if (!internalNote.trim()) return;
     setAddingNote(true);
-    const note = { text: internalNote.trim(), user: "Admin", date: formatNow() };
-    const updatedMeta = { ...localMeta, internalNotes: [...localMeta.internalNotes, note] };
-    setLocalMeta(updatedMeta);
-    adminMeta[ticket.id] = updatedMeta;
-    onUpdate(localTicket, updatedMeta);
-    setInternalNote("");
-    toast.success("Note added");
-    setAddingNote(false);
+    try {
+      await api.post(`/admin/support/${ticket.id}/notes`, { body: internalNote.trim() });
+      const note = { text: internalNote.trim(), user: "Admin", date: formatNow() };
+      const updatedMeta = { ...localMeta, internalNotes: [...localMeta.internalNotes, note] };
+      setLocalMeta(updatedMeta);
+      onUpdate(localTicket, updatedMeta);
+      setInternalNote("");
+      toast.success("Note added");
+    } catch {
+      toast.error("Failed to add note");
+    } finally {
+      setAddingNote(false);
+    }
   }
 
   async function handleClose() {
-    await supportService.close(ticket.id);
-    const updated = { ...localTicket, status: "CLOSED" as TicketStatus };
-    setLocalTicket(updated);
-    onUpdate(updated, localMeta);
-    setShowCloseConfirm(false);
-    toast.success("Ticket closed");
+    try {
+      await api.post(`/admin/support/${ticket.id}/close`);
+      const updated = { ...localTicket, status: "CLOSED" as TicketStatus };
+      setLocalTicket(updated);
+      onUpdate(updated, localMeta);
+      setShowCloseConfirm(false);
+      toast.success("Ticket closed");
+    } catch {
+      toast.error("Failed to close ticket");
+    }
   }
 
   async function handleReopen() {
-    await supportService.updateStatus(ticket.id, "OPEN");
-    const updated = { ...localTicket, status: "OPEN" as TicketStatus };
-    setLocalTicket(updated);
-    onUpdate(updated, localMeta);
-    setShowReopenConfirm(false);
-    toast.success("Ticket reopened");
+    try {
+      await api.post(`/admin/support/${ticket.id}/reopen`);
+      const updated = { ...localTicket, status: "OPEN" as TicketStatus };
+      setLocalTicket(updated);
+      onUpdate(updated, localMeta);
+      setShowReopenConfirm(false);
+      toast.success("Ticket reopened");
+    } catch {
+      toast.error("Failed to reopen ticket");
+    }
   }
 
   return (
@@ -400,12 +457,6 @@ function TicketDetailSheet({
 
 type TicketWithMeta = { ticket: SupportTicket; meta: AdminTicketMeta };
 
-const PARTNER_NAMES: Record<string, string> = {
-  "tkt-001": "Demo Wholesale Ltd",
-  "tkt-002": "Demo Wholesale Ltd",
-  "tkt-003": "Demo Wholesale Ltd",
-};
-
 export default function AdminSupportPage() {
   const [rows, setRows] = useState<TicketWithMeta[]>([]);
   const [loading, setLoading] = useState(true);
@@ -420,17 +471,11 @@ export default function AdminSupportPage() {
   });
 
   useEffect(() => {
-    supportService.list().then((tickets) => {
-      const data: TicketWithMeta[] = tickets.map((t) => {
-        const meta = getAdminMeta(t.id);
-        if (!meta.partnerName || meta.partnerName === "Unknown Partner") {
-          meta.partnerName = PARTNER_NAMES[t.id] ?? "Demo Wholesale Ltd";
-        }
-        return { ticket: t, meta };
-      });
-      setRows(data);
+    api.get<{ data: RawAdminTicket[] } | RawAdminTicket[]>('/admin/support').then((res) => {
+      const raw: RawAdminTicket[] = Array.isArray(res) ? res : (res as { data: RawAdminTicket[] }).data ?? [];
+      setRows(raw.map(normalizeAdminTicket));
       setLoading(false);
-    });
+    }).catch(() => setLoading(false));
   }, []);
 
   const filtered = rows.filter(({ ticket, meta }) => {
