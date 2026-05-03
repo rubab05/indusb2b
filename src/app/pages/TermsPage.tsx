@@ -1,5 +1,8 @@
 import { ContentPage } from "../components/ContentPage";
 import { useCMSPage } from "../../hooks/useCMSPage";
+import { brandConfig } from "../../config/brand.config";
+
+const bn = brandConfig.brandName;
 
 export default function TermsPage() {
   const { hasContent, page, loading } = useCMSPage("terms");
@@ -7,7 +10,7 @@ export default function TermsPage() {
   return (
     <ContentPage
       title="Terms & Conditions"
-      subtitle="Terms governing use of the HOMATZ B2B platform and trading relationship."
+      subtitle={`Terms governing use of the ${bn} B2B platform and trading relationship.`}
       breadcrumbs={[{ label: "Home", href: "/" }, { label: "Terms & Conditions" }]}
     >
       {loading ? (
@@ -27,15 +30,15 @@ export default function TermsPage() {
               <div>
                 <h2 className="text-2xl tracking-tight text-gray-900 mb-4">1. Definitions</h2>
                 <p>
-                  "HOMATZ" or "we" refers to Indusfort Limited, operators of the HOMATZ B2B platform.
+                  "{bn}" or "we" refers to Indusfort Limited, operators of the {bn} B2B platform.
                   "Partner" refers to any registered wholesale or dropship account holder. "Platform"
-                  refers to the HOMATZ web application, partner portal, and associated services.
+                  refers to the {bn} web application, partner portal, and associated services.
                 </p>
               </div>
 
               <div>
                 <h2 className="text-2xl tracking-tight text-gray-900 mb-4">2. Account eligibility</h2>
-                <p>Access to the HOMATZ platform is restricted to registered UK businesses. By applying, you confirm that:</p>
+                <p>Access to the {bn} platform is restricted to registered UK businesses. By applying, you confirm that:</p>
                 <ul className="mt-3 space-y-2 list-disc pl-5">
                   <li>You are acting on behalf of a legitimately registered business entity</li>
                   <li>The business information provided during registration is accurate</li>
@@ -65,8 +68,8 @@ export default function TermsPage() {
               <div>
                 <h2 className="text-2xl tracking-tight text-gray-900 mb-4">5. Delivery and risk</h2>
                 <p>
-                  Risk in goods passes to the partner on delivery. Title remains with HOMATZ until full
-                  payment is received. Delivery timescales are indicative and HOMATZ accepts no liability
+                  Risk in goods passes to the partner on delivery. Title remains with {bn} until full
+                  payment is received. Delivery timescales are indicative and {bn} accepts no liability
                   for delays caused by third-party carriers, customs, or force majeure events.
                 </p>
               </div>
@@ -84,14 +87,14 @@ export default function TermsPage() {
                 <h2 className="text-2xl tracking-tight text-gray-900 mb-4">7. Confidentiality</h2>
                 <p>
                   Partner pricing, terms, and account information are confidential. Partners must not
-                  disclose HOMATZ wholesale pricing to consumers or publish it on publicly accessible platforms.
+                  disclose {bn} wholesale pricing to consumers or publish it on publicly accessible platforms.
                 </p>
               </div>
 
               <div>
                 <h2 className="text-2xl tracking-tight text-gray-900 mb-4">8. Limitation of liability</h2>
                 <p>
-                  HOMATZ's liability to any partner shall not exceed the value of the relevant order in dispute.
+                  {bn}'s liability to any partner shall not exceed the value of the relevant order in dispute.
                   We accept no liability for indirect or consequential losses including lost profit or business interruption.
                 </p>
               </div>

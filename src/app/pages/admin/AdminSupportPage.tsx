@@ -3,6 +3,7 @@ import { SupportTicket, TicketStatus, TicketPriority, TicketCategory, TicketMess
 import { api } from "../../../lib/api-client";
 import { toast } from "sonner";
 import { X, Search } from "lucide-react";
+import { brandConfig } from "../../../config/brand.config";
 
 // ─── Extended admin fields returned by the admin API ─────────────────────────
 
@@ -204,7 +205,7 @@ function TicketDetailSheet({
       const msg: TicketMessage = {
         id: `m${localTicket.messages.length + 1}`,
         author: "support",
-        authorName: "HOMATZ Admin",
+        authorName: `${brandConfig.brandName} Admin`,
         body: reply.trim(),
         createdAt: new Date().toISOString(),
       };

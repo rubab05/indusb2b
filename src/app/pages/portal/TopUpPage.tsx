@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { dropshipService } from "../../../services/dropship.service";
 import { DropshipBalance, BalanceThreshold } from "../../../types/commerce";
 import { Wallet, Landmark, CreditCard } from "lucide-react";
+import { brandConfig } from "../../../config/brand.config";
 
 const PRESET_AMOUNTS = [100, 250, 500, 1000];
 
@@ -149,9 +150,9 @@ export default function TopUpPage() {
               <span className="text-gray-500">Account Number</span>
               <span className="text-gray-900 font-mono">12345678</span>
               <span className="text-gray-500">Account Name</span>
-              <span className="text-gray-900">HOMATZ Ltd</span>
+              <span className="text-gray-900">{brandConfig.brandName} Ltd</span>
               <span className="text-gray-500">Reference</span>
-              <span className="text-gray-900 font-mono text-xs">HOMATZ-DS-{Date.now()}</span>
+              <span className="text-gray-900 font-mono text-xs">{brandConfig.brandName}-DS-{Date.now()}</span>
             </div>
           </div>
         )}

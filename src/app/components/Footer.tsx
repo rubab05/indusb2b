@@ -54,7 +54,7 @@ export function Footer() {
           <div>
             <h4 className="text-xs tracking-widest mb-6 text-gray-900">CONTACT</h4>
             <div className="space-y-3 text-sm text-gray-600">
-              <p>trade@homatz.co.uk</p>
+              <p>{`trade@${brand.domain}`}</p>
               <p>+44 (0) 1234 567 890</p>
             </div>
           </div>

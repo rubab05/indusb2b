@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { dropshipService } from "../../../services/dropship.service";
 import { ApiError } from "../../../lib/api-client";
+import { brandConfig } from "../../../config/brand.config";
 
 export default function BankTransferConfirmPage() {
   const [params] = useSearchParams();
@@ -92,7 +93,7 @@ export default function BankTransferConfirmPage() {
           <span className="text-gray-600">Account Number</span>
           <span className="text-gray-900 font-mono font-medium">12345678</span>
           <span className="text-gray-600">Account Name</span>
-          <span className="text-gray-900 font-medium">HOMATZ Ltd</span>
+          <span className="text-gray-900 font-medium">{brandConfig.brandName} Ltd</span>
           <span className="text-gray-600">Payment Reference</span>
           <span className="text-gray-900 font-mono font-medium">{reference}</span>
         </div>

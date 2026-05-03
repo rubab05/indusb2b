@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { pricingService, CATEGORIES } from "../../../services/pricing.service";
 import { PriceListItem, StockStatus } from "../../../types/commerce";
 import { Search, Download } from "lucide-react";
+import { brandConfig } from "../../../config/brand.config";
 
 const STOCK_STYLES: Record<StockStatus, string> = {
   "In Stock": "text-green-700",
@@ -41,7 +42,7 @@ export default function PriceListPage() {
     const blob = new Blob([[header, ...rows].join("\n")], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = "homatz-price-list.csv"; a.click();
+    a.href = url; a.download = `${brandConfig.brandName.toLowerCase().replace(/\s+/g, '-')}-price-list.csv`; a.click();
     URL.revokeObjectURL(url);
   }
 

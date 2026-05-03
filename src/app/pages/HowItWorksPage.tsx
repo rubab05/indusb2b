@@ -1,6 +1,7 @@
 import { ContentPage } from "../components/ContentPage";
 import { siteContent } from "../../content/site-content";
 import { useCMSPage } from "../../hooks/useCMSPage";
+import { brandConfig } from "../../config/brand.config";
 
 export default function HowItWorksPage() {
   const { hasContent, page, loading } = useCMSPage("how-it-works");
@@ -8,7 +9,7 @@ export default function HowItWorksPage() {
   return (
     <ContentPage
       title="How It Works"
-      subtitle="HOMATZ is a trade-only platform. Here's how to get started as a wholesale or dropship partner."
+      subtitle={`${brandConfig.brandName} is a trade-only platform. Here's how to get started as a wholesale or dropship partner.`}
       breadcrumbs={[{ label: "Home", href: "/" }, { label: "How It Works" }]}
     >
       {loading ? (
@@ -50,7 +51,7 @@ export default function HowItWorksPage() {
                   <h3 className="text-2xl tracking-tight mb-4">Wholesale Partner</h3>
                   <p className="text-gray-600 leading-relaxed mb-8">
                     Purchase products in bulk at wholesale prices. Stock your store, warehouse,
-                    or outlet with HOMATZ products at competitive MOQ-based pricing.
+                    or outlet with {brandConfig.brandName} products at competitive MOQ-based pricing.
                   </p>
                   <ul className="space-y-3 text-sm text-gray-600 mb-10">
                     <li className="flex items-start gap-3"><span className="text-yellow-500 mt-0.5">—</span>Access to wholesale price lists</li>
@@ -66,13 +67,13 @@ export default function HowItWorksPage() {
                 <div className="border border-gray-200 p-10 bg-white">
                   <h3 className="text-2xl tracking-tight mb-4">Dropship Partner</h3>
                   <p className="text-gray-600 leading-relaxed mb-8">
-                    Sell HOMATZ products through your online store without holding stock.
+                    Sell {brandConfig.brandName} products through your online store without holding stock.
                     We fulfil orders directly to your customers on your behalf.
                   </p>
                   <ul className="space-y-3 text-sm text-gray-600 mb-10">
                     <li className="flex items-start gap-3"><span className="text-yellow-500 mt-0.5">—</span>No stock holding required</li>
                     <li className="flex items-start gap-3"><span className="text-yellow-500 mt-0.5">—</span>Pre-funded balance account</li>
-                    <li className="flex items-start gap-3"><span className="text-yellow-500 mt-0.5">—</span>Order placed and fulfilled by HOMATZ</li>
+                    <li className="flex items-start gap-3"><span className="text-yellow-500 mt-0.5">—</span>Order placed and fulfilled by {brandConfig.brandName}</li>
                     <li className="flex items-start gap-3"><span className="text-yellow-500 mt-0.5">—</span>Product data and images provided</li>
                     <li className="flex items-start gap-3"><span className="text-yellow-500 mt-0.5">—</span>Compatible with Shopify, WooCommerce, and more</li>
                   </ul>

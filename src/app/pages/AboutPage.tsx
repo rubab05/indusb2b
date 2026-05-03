@@ -1,13 +1,14 @@
 import { ContentPage } from "../components/ContentPage";
 import { siteContent } from "../../content/site-content";
 import { useCMSPage } from "../../hooks/useCMSPage";
+import { brandConfig } from "../../config/brand.config";
 
 export default function AboutPage() {
   const { hasContent, page, loading } = useCMSPage("about");
 
   return (
     <ContentPage
-      title="About HOMATZ"
+      title={`About ${brandConfig.brandName}`}
       subtitle="A B2B wholesale and dropshipping platform built for trade buyers across the UK and beyond."
       breadcrumbs={[{ label: "Home", href: "/" }, { label: "About" }]}
     >
@@ -60,7 +61,7 @@ export default function AboutPage() {
             <div className="max-w-[1400px] mx-auto px-8 text-center">
               <h2 className="text-4xl tracking-tight text-white mb-6">Ready to partner with us?</h2>
               <p className="text-gray-300 mb-10 max-w-xl mx-auto">
-                Apply for wholesale or dropship access and start sourcing from HOMATZ today.
+                Apply for wholesale or dropship access and start sourcing from {brandConfig.brandName} today.
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <a href="/apply" className="bg-yellow-500 text-gray-900 px-8 py-4 text-sm tracking-widest font-medium hover:bg-yellow-400 transition-colors">

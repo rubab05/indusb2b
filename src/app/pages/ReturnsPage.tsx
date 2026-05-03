@@ -1,5 +1,6 @@
 import { ContentPage } from "../components/ContentPage";
 import { useCMSPage } from "../../hooks/useCMSPage";
+import { brandConfig } from "../../config/brand.config";
 
 export default function ReturnsPage() {
   const { hasContent, page, loading } = useCMSPage("returns");
@@ -7,7 +8,7 @@ export default function ReturnsPage() {
   return (
     <ContentPage
       title="Returns Policy"
-      subtitle="How to request a return or report an issue with your HOMATZ order."
+      subtitle={`How to request a return or report an issue with your ${brandConfig.brandName} order.`}
       breadcrumbs={[{ label: "Home", href: "/" }, { label: "Returns" }]}
     >
       {loading ? (
@@ -26,7 +27,7 @@ export default function ReturnsPage() {
             <div className="max-w-3xl space-y-12 text-sm text-gray-600 leading-relaxed">
               <div>
                 <h2 className="text-2xl tracking-tight text-gray-900 mb-4">Eligible return reasons</h2>
-                <p>HOMATZ accepts returns for the following reasons:</p>
+                <p>{brandConfig.brandName} accepts returns for the following reasons:</p>
                 <ul className="mt-3 space-y-2 list-disc pl-5">
                   <li>Manufacturing defects confirmed on inspection</li>
                   <li>Items damaged in transit (must be reported within 48 hours of delivery)</li>
@@ -75,7 +76,7 @@ export default function ReturnsPage() {
                 <h2 className="text-2xl tracking-tight text-gray-900 mb-4">Refunds and credits</h2>
                 <p>Approved returns will be resolved via one of the following, at our discretion:</p>
                 <ul className="mt-3 space-y-2 list-disc pl-5">
-                  <li>Credit note applied to your HOMATZ account</li>
+                  <li>Credit note applied to your {brandConfig.brandName} account</li>
                   <li>Replacement goods dispatched</li>
                   <li>Refund to your original payment method (where applicable)</li>
                 </ul>
@@ -89,8 +90,8 @@ export default function ReturnsPage() {
                 <p>
                   For any questions about a return or delivery issue, raise a support ticket from your
                   portal or email us at{" "}
-                  <a href="mailto:trade@homatz.co.uk" className="text-gray-900 underline">
-                    trade@homatz.co.uk
+                  <a href={`mailto:trade@${brandConfig.domain}`} className="text-gray-900 underline">
+                    {`trade@${brandConfig.domain}`}
                   </a>
                 </p>
               </div>

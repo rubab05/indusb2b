@@ -2,6 +2,7 @@ import { Mail, Phone, Clock } from "lucide-react";
 import { ContentPage } from "../components/ContentPage";
 import { EnquiryForm } from "../components/EnquiryForm";
 import { siteContent } from "../../content/site-content";
+import { brandConfig } from "../../config/brand.config";
 
 export default function ContactPage() {
   return (
@@ -18,7 +19,7 @@ export default function ContactPage() {
               <div>
                 <p className="text-xs tracking-widest text-gray-500 mb-6">TRADE ENQUIRIES</p>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  HOMATZ is a trade-only platform. Our team handles enquiries from registered businesses
+                  {brandConfig.brandName} is a trade-only platform. Our team handles enquiries from registered businesses
                   and applicants. For support on an existing account, please use the support section
                   within your portal.
                 </p>

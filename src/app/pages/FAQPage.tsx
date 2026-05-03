@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { ContentPage } from "../components/ContentPage";
 import { api } from "../../lib/api-client";
+import { brandConfig } from "../../config/brand.config";
 
 interface FAQApiItem {
   id: string;
@@ -147,7 +148,7 @@ export default function FAQPage() {
   return (
     <ContentPage
       title="Frequently Asked Questions"
-      subtitle="Answers to common questions about the HOMATZ trade platform."
+      subtitle={`Answers to common questions about the ${brandConfig.brandName} trade platform.`}
       breadcrumbs={[{ label: "Home", href: "/" }, { label: "FAQ" }]}
     >
       <section className="py-24 bg-white">

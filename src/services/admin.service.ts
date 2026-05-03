@@ -1,5 +1,14 @@
 import { CategoryContent, ProductFamilyContent } from '../lib/content-types';
 import { api } from '../lib/api-client';
+import { brandConfig } from '../config/brand.config';
+
+function brandify(s: string): string {
+  if (!s) return s;
+  return s
+    .replace(/HOMATZ/g, brandConfig.brandName)
+    .replace(/homatz/g, brandConfig.brandName.toLowerCase())
+    .replace(/trade@homatz\.co\.uk/gi, `trade@${brandConfig.domain}`);
+}
 
 export interface ContentPage {
   slug: string;
@@ -87,7 +96,7 @@ function normalizeCategory(raw: any): CategoryContent {
   return {
     slug: raw.slug,
     name: raw.name,
-    description: raw.description ?? '',
+    description: brandify(raw.description ?? ''),
     seoTitle: raw.seoTitle ?? undefined,
     seoDescription: raw.seoDescription ?? undefined,
     productCount: meta.productCount ?? raw._count?.productFamilies ?? 0,

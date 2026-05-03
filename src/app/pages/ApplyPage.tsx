@@ -1,12 +1,13 @@
 import { Link } from "react-router";
 import { ContentPage } from "../components/ContentPage";
 import { Building2, Truck, CheckCircle2 } from "lucide-react";
+import { brandConfig } from "../../config/brand.config";
 
 export default function ApplyPage() {
   return (
     <ContentPage
       title="Apply for Trade Access"
-      subtitle="Join HOMATZ as a wholesale or dropship partner. Access approved pricing, bulk ordering, and dedicated account management."
+      subtitle={`Join ${brandConfig.brandName} as a wholesale or dropship partner. Access approved pricing, bulk ordering, and dedicated account management.`}
       breadcrumbs={[{ label: "Home", href: "/" }, { label: "Apply" }]}
     >
       <section className="py-24 bg-white">
@@ -50,7 +51,7 @@ export default function ApplyPage() {
               <p className="text-xs tracking-widest text-gray-500 mb-3">PARTNER TYPE</p>
               <h2 className="text-3xl tracking-tight mb-4">Dropship Partner</h2>
               <p className="text-sm text-gray-600 leading-relaxed mb-8">
-                Sell HOMATZ products without holding stock. We fulfil directly to your customers
+                Sell {brandConfig.brandName} products without holding stock. We fulfil directly to your customers
                 under plain or branded packaging. Ideal for online sellers, marketplace traders,
                 and e-commerce businesses.
               </p>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { ContentPage } from "../components/ContentPage";
 import { api, ApiError } from "../../lib/api-client";
+import { brandConfig } from "../../config/brand.config";
 
 interface AuthResponse {
   user: { id: string };
@@ -108,7 +109,7 @@ export default function ApplyDropshipPage() {
   return (
     <ContentPage
       title="Dropship Partner Application"
-      subtitle="Complete the form below to apply for a HOMATZ dropship trade account."
+      subtitle={`Complete the form below to apply for a ${brandConfig.brandName} dropship trade account.`}
       breadcrumbs={[
         { label: "Home", href: "/" },
         { label: "Apply", href: "/apply" },

@@ -1,12 +1,13 @@
 import { Link } from "react-router";
 import { ContentPage } from "../components/ContentPage";
 import { Clock, Mail, CheckCircle2 } from "lucide-react";
+import { brandConfig } from "../../config/brand.config";
 
 export default function ApplyPendingPage() {
   return (
     <ContentPage
       title="Application Received"
-      subtitle="Thank you for applying to become a HOMATZ trade partner."
+      subtitle={`Thank you for applying to become a ${brandConfig.brandName} trade partner.`}
       breadcrumbs={[{ label: "Home", href: "/" }, { label: "Apply", href: "/apply" }, { label: "Pending" }]}
     >
       <section className="py-24 bg-white">

@@ -4,6 +4,7 @@ import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { useAuth } from "../../contexts/AuthContext";
 import { ApprovalStatus } from "../../types/auth";
+import { brandConfig } from "../../config/brand.config";
 
 export default function LoginPage() {
   const { login, isAuthenticated, user, loading } = useAuth();
@@ -45,7 +46,7 @@ export default function LoginPage() {
           <div className="text-center mb-10">
             <p className="text-xs tracking-widest text-gray-500 mb-3">PARTNER PORTAL</p>
             <h1 className="text-4xl tracking-tight">Sign In</h1>
-            <p className="text-sm text-gray-600 mt-3">Access your HOMATZ trade account</p>
+            <p className="text-sm text-gray-600 mt-3">Access your {brandConfig.brandName} trade account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6 bg-white border border-gray-200 p-10">

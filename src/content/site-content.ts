@@ -1,11 +1,12 @@
 import type { SiteContent } from "../lib/content-types";
+import { brandConfig } from "../config/brand.config";
 
 export const siteContent: SiteContent = {
-  brandName: "HOMATZ",
+  brandName: brandConfig.brandName,
   tagline:
     "We develop and source high quality household products, specifically focused on everyday house items.",
   about:
-    "HOMATZ develops and sources high quality household products, specifically focused on everyday house items. Our range is built around practical use, accessible design, and category breadth, helping trade buyers source reliable household product lines.",
+    `${brandConfig.brandName} develops and sources high quality household products, specifically focused on everyday house items. Our range is built around practical use, accessible design, and category breadth, helping trade buyers source reliable household product lines.`,
   tradeMessage:
     "Join our B2B partner network as a wholesale or dropship partner. Access approved pricing, bulk ordering, and dedicated account management.",
   processSteps: [
@@ -73,7 +74,7 @@ export const siteContent: SiteContent = {
     },
   ],
   contact: {
-    email: "trade@homatz.co.uk",
+    email: `trade@${brandConfig.domain}`,
     phone: "+44 (0) 1234 567 890",
   },
 };

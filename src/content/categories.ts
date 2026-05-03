@@ -1,4 +1,5 @@
 import type { CategoryContent } from "../lib/content-types";
+import { brandConfig } from "../config/brand.config";
 
 export const categories: CategoryContent[] = [
   {
@@ -296,7 +297,7 @@ export const categories: CategoryContent[] = [
     productCount: 68,
     b2bLabel: "DROPSHIP ELIGIBLE",
     description:
-      "Explore HOMATZ cookware, organisers, and household utility products designed around everyday convenience. From stock pots and wok pans to corner racks and drying solutions, this category combines practical function with broad retail appeal.",
+      `Explore ${brandConfig.brandName} cookware, organisers, and household utility products designed around everyday convenience. From stock pots and wok pans to corner racks and drying solutions, this category combines practical function with broad retail appeal.`,
     heroImages: [
       { src: "https://images.unsplash.com/photo-1728240257876-dd4fc7398043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFpbmxlc3MlMjBzdGVlbCUyMHN0b2NrJTIwcG90JTIwY29va2luZ3xlbnwxfHx8fDE3NzM4NzA5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Stock pot" },
       { src: "https://images.unsplash.com/photo-1772385953538-2c694ad89d49?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b2slMjBwYW4lMjBjb29raW5nJTIwYXNpYW58ZW58MXx8fHwxNzczODcwOTg0fDA&ixlib=rb-4.1.0&q=80&w=1080", alt: "Wok pan" },

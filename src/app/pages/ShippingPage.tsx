@@ -1,5 +1,6 @@
 import { ContentPage } from "../components/ContentPage";
 import { useCMSPage } from "../../hooks/useCMSPage";
+import { brandConfig } from "../../config/brand.config";
 
 export default function ShippingPage() {
   const { hasContent, page, loading } = useCMSPage("shipping");
@@ -7,7 +8,7 @@ export default function ShippingPage() {
   return (
     <ContentPage
       title="Shipping Information"
-      subtitle="Delivery options, lead times, and logistics information for HOMATZ trade partners."
+      subtitle={`Delivery options, lead times, and logistics information for ${brandConfig.brandName} trade partners.`}
       breadcrumbs={[{ label: "Home", href: "/" }, { label: "Shipping" }]}
     >
       {loading ? (

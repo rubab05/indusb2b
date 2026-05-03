@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
+import { brandConfig } from "../config/brand.config";
 import { AccountType } from "../types/auth";
 import { dropshipService } from "../services/dropship.service";
 import { DropshipBalance } from "../types/commerce";
@@ -90,7 +91,7 @@ export default function PortalLayout() {
       {/* Logo */}
       <div className="px-6 py-5 border-b border-gray-100">
         <Link to="/" className="text-lg tracking-widest font-light text-gray-900">
-          HOMATZ
+          {brandConfig.brandName}
         </Link>
         <p className="text-xs text-gray-500 mt-0.5">Partner Portal</p>
       </div>

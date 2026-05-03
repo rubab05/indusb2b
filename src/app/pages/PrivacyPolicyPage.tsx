@@ -1,5 +1,9 @@
 import { ContentPage } from "../components/ContentPage";
 import { useCMSPage } from "../../hooks/useCMSPage";
+import { brandConfig } from "../../config/brand.config";
+
+const bn = brandConfig.brandName;
+const contactEmail = `trade@${brandConfig.domain}`;
 
 export default function PrivacyPolicyPage() {
   const { hasContent, page, loading } = useCMSPage("privacy-policy");
@@ -7,7 +11,7 @@ export default function PrivacyPolicyPage() {
   return (
     <ContentPage
       title="Privacy Policy"
-      subtitle="How HOMATZ collects, uses, and protects your data."
+      subtitle={`How ${bn} collects, uses, and protects your data.`}
       breadcrumbs={[{ label: "Home", href: "/" }, { label: "Privacy Policy" }]}
     >
       {loading ? (
@@ -27,10 +31,10 @@ export default function PrivacyPolicyPage() {
               <div>
                 <h2 className="text-2xl tracking-tight text-gray-900 mb-4">1. Who we are</h2>
                 <p>
-                  HOMATZ is a B2B wholesale and dropshipping platform operated by Indusfort Limited.
-                  References to "we", "us", or "HOMATZ" in this policy refer to Indusfort Limited.
+                  {bn} is a B2B wholesale and dropshipping platform operated by Indusfort Limited.
+                  References to "we", "us", or "{bn}" in this policy refer to Indusfort Limited.
                 </p>
-                <p className="mt-3">For data-related enquiries, contact us at: trade@homatz.co.uk</p>
+                <p className="mt-3">For data-related enquiries, contact us at: {contactEmail}</p>
               </div>
 
               <div>
@@ -99,7 +103,7 @@ export default function PrivacyPolicyPage() {
                   <li>Object to processing based on legitimate interests</li>
                   <li>Lodge a complaint with the ICO (ico.org.uk)</li>
                 </ul>
-                <p className="mt-3">To exercise your rights, contact: trade@homatz.co.uk</p>
+                <p className="mt-3">To exercise your rights, contact: {contactEmail}</p>
               </div>
 
               <div>
