@@ -16,7 +16,14 @@ export default function BulkOrderPage() {
   const [category, setCategory] = useState("All");
 
   const [orderLines, setOrderLines] = useState<OrderLineInput[]>([]);
-  const [address, setAddress] = useState("14 Trade Park Way, Manchester, M1 4AB");
+  const [address, setAddress] = useState({
+  name: "",
+  company: "",
+  line1: "14 Trade Park Way",
+  city: "Manchester",
+  postcode: "M1 4AB",
+  country: "UK",
+});
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [confirmed, setConfirmed] = useState<string | null>(null);
@@ -227,12 +234,52 @@ export default function BulkOrderPage() {
 
                 <div>
                   <label className="block text-xs tracking-widests text-gray-500 mb-1.5">DELIVERY ADDRESS</label>
-                  <textarea
-                    rows={2}
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 resize-none transition-colors"
-                  />
+                    <div className="grid grid-cols-1 gap-2">
+                      <input
+                        type="text"
+                        value={address.name}
+                        onChange={(e) => setAddress((prev) => ({ ...prev, name: e.target.value }))}
+                        placeholder="Contact name"
+                        className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors"
+                      />
+                      <input
+                        type="text"
+                        value={address.company}
+                        onChange={(e) => setAddress((prev) => ({ ...prev, company: e.target.value }))}
+                        placeholder="Company"
+                        className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors"
+                      />
+                      <input
+                        type="text"
+                        value={address.line1}
+                        onChange={(e) => setAddress((prev) => ({ ...prev, line1: e.target.value }))}
+                        placeholder="Address line 1"
+                        className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors"
+                      />
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="text"
+                          value={address.city}
+                          onChange={(e) => setAddress((prev) => ({ ...prev, city: e.target.value }))}
+                          placeholder="City"
+                          className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors"
+                        />
+                        <input
+                          type="text"
+                          value={address.postcode}
+                          onChange={(e) => setAddress((prev) => ({ ...prev, postcode: e.target.value }))}
+                          placeholder="Postcode"
+                          className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors"
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        value={address.country}
+                        onChange={(e) => setAddress((prev) => ({ ...prev, country: e.target.value }))}
+                        placeholder="Country"
+                        className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors"
+                      />
+                    </div>
                 </div>
                 <div>
                   <label className="block text-xs tracking-widests text-gray-500 mb-1.5">ORDER NOTES</label>

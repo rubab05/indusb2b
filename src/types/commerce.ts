@@ -8,7 +8,9 @@ export interface BulkTier {
 
 export interface PriceListItem {
   id: string;
+  productFamilyId: string;
   productName: string;
+  productSlug: string;
   sku: string;
   category: string;
   moq: number;

@@ -150,15 +150,19 @@ function ConfirmDialog({
 
 function TicketDetailSheet({
   ticket,
+  meta,
   onClose,
   onUpdate,
 }: {
   ticket: SupportTicket;
+  meta: AdminTicketMeta;
   onClose: () => void;
   onUpdate: (t: SupportTicket, meta: AdminTicketMeta) => void;
 }) {
-  const meta = getAdminMeta(ticket.id);
-  const [localMeta, setLocalMeta] = useState<AdminTicketMeta>({ ...meta, internalNotes: [...meta.internalNotes] });
+  const [localMeta, setLocalMeta] = useState<AdminTicketMeta>({
+    ...meta,
+    internalNotes: [...meta.internalNotes],
+  });
   const [reply, setReply] = useState("");
   const [internalNote, setInternalNote] = useState("");
   const [sending, setSending] = useState(false);
@@ -610,6 +614,7 @@ export default function AdminSupportPage() {
       {selected && (
         <TicketDetailSheet
           ticket={selected.ticket}
+          meta={selected.meta}
           onClose={() => setSelected(null)}
           onUpdate={handleUpdate}
         />

@@ -62,7 +62,13 @@ export const supportService = {
     relatedOrderId?: string;
     description: string;
   }): Promise<SupportTicket> {
-    const raw = await api.post<RawTicket>('/support', data);
+    const raw = await api.post<RawTicket>('/support', {
+      subject: data.subject,
+      category: data.category,
+      relatedOrderId: data.relatedOrderId,
+      body: data.description,
+    });
+
     return normalizeTicket(raw);
   },
 

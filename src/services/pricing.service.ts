@@ -49,6 +49,8 @@ function toNumber(value: unknown): number {
 function normalizePriceListItem(item: any): PriceListItem {
   return {
     id: item.id,
+    productFamilyId: item.productFamilyId ?? item.productFamily?.id ?? '',
+    productSlug: item.productSlug ?? item.productFamily?.slug ?? '',
     productName: item.productName ?? item.productFamily?.name ?? '',
     sku: item.sku ?? item.productFamily?.sku ?? '',
     category: item.category ?? item.productFamily?.category?.name ?? '',
