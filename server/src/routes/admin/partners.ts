@@ -3,6 +3,7 @@ import { authenticate, requireAdmin } from '../../middleware/auth.js';
 import { validate } from '../../middleware/validate.js';
 import { reviewApplicationSchema, suspendPartnerSchema } from '../../validators/admin.validators.js';
 import * as adminService from '../../services/admin.service.js';
+import * as commerceService from '../../services/commerce.service.js';
 import { apiSuccess, apiPaginated } from '../../utils/api-response.js';
 
 const router = Router();
@@ -24,6 +25,17 @@ router.get('/applications', async (req: Request, res: Response, next: NextFuncti
       limit: qs(req.query.limit) ? parseInt(qs(req.query.limit)!) : undefined,
     });
     res.json(apiPaginated(result.applications, result.total, result.page, result.limit));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/admin/partners/applications/:id
+router.get('/applications/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params['id'] as string;
+    const application = await adminService.getApplicationById(id);
+    res.json(apiSuccess(application));
   } catch (err) {
     next(err);
   }
@@ -108,6 +120,17 @@ router.post('/:id/reactivate', async (req: Request, res: Response, next: NextFun
     const admin = req.user!;
     const result = await adminService.reactivatePartner(req.params['id'] as string, admin.id, admin.companyName);
     res.json(apiSuccess(result));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/admin/partners/:id/orders
+router.get('/:id/orders', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const partnerId = req.params['id'] as string;
+    const result = await commerceService.getOrders(partnerId, { limit: 20 });
+    res.json(apiSuccess(result.orders));
   } catch (err) {
     next(err);
   }

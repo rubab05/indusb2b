@@ -52,7 +52,7 @@ function normalizePriceListItem(item: any): PriceListItem {
     productFamilyId: item.productFamilyId ?? item.productFamily?.id ?? '',
     productSlug: item.productSlug ?? item.productFamily?.slug ?? '',
     productName: item.productName ?? item.productFamily?.name ?? '',
-    sku: item.sku ?? item.productFamily?.sku ?? '',
+    sku: item.sku ?? item.productFamily?.sku ?? item.productSlug ?? item.productFamily?.slug ?? '',
     category: item.category ?? item.productFamily?.category?.name ?? '',
     moq: toNumber(item.moq),
     unitPrice: toNumber(item.unitPrice),

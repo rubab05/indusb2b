@@ -31,6 +31,15 @@ export default function QuickOrderPage() {
   const [looking, setLooking] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [confirmed, setConfirmed] = useState<string | null>(null);
+  const [address, setAddress] = useState({
+    name: "",
+    company: "",
+    line1: "",
+    city: "",
+    postcode: "",
+    country: "United Kingdom",
+  });
+  const [notes, setNotes] = useState("");
 
   async function handleLookup() {
     const lines = parseInput(inputText);
@@ -56,7 +65,8 @@ export default function QuickOrderPage() {
     setSubmitting(true);
     const orderNumber = await orderingService.submitQuickOrder(
       valid.map((l) => ({ item: l.item!, qty: l.qty })),
-      "",
+      address,
+      notes,
     );
     setConfirmed(orderNumber);
     setSubmitting(false);
@@ -170,17 +180,37 @@ export default function QuickOrderPage() {
             </tbody>
           </table>
           {validLines.length > 0 && (
-            <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-              <div className="text-sm font-medium text-gray-900">
-                Subtotal: £{subtotal.toFixed(2)}
+            <div className="px-6 py-4 border-t border-gray-100 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs tracking-widests text-gray-500 mb-1">DELIVERY ADDRESS</label>
+                  <div className="space-y-2">
+                    <input type="text" value={address.name} onChange={(e) => setAddress((p) => ({ ...p, name: e.target.value }))} placeholder="Contact name *" className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors" />
+                    <input type="text" value={address.company} onChange={(e) => setAddress((p) => ({ ...p, company: e.target.value }))} placeholder="Company" className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors" />
+                    <input type="text" value={address.line1} onChange={(e) => setAddress((p) => ({ ...p, line1: e.target.value }))} placeholder="Address line 1 *" className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors" />
+                    <div className="grid grid-cols-2 gap-2">
+                      <input type="text" value={address.city} onChange={(e) => setAddress((p) => ({ ...p, city: e.target.value }))} placeholder="City *" className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors" />
+                      <input type="text" value={address.postcode} onChange={(e) => setAddress((p) => ({ ...p, postcode: e.target.value }))} placeholder="Postcode *" className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors" />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs tracking-widests text-gray-500 mb-1">ORDER NOTES</label>
+                  <textarea rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional" className="w-full px-3 py-2 text-xs border border-gray-200 focus:outline-none focus:border-gray-400 resize-none transition-colors" />
+                </div>
               </div>
-              <button
-                onClick={handleSubmit}
-                disabled={submitting}
-                className="px-6 py-3 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide disabled:opacity-50"
-              >
-                {submitting ? "SUBMITTING..." : `CONFIRM ORDER (${validLines.length} line${validLines.length !== 1 ? "s" : ""})`}
-              </button>
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-medium text-gray-900">
+                  Subtotal: £{subtotal.toFixed(2)}
+                </div>
+                <button
+                  onClick={handleSubmit}
+                  disabled={submitting}
+                  className="px-6 py-3 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide disabled:opacity-50"
+                >
+                  {submitting ? "SUBMITTING..." : `CONFIRM ORDER (${validLines.length} line${validLines.length !== 1 ? "s" : ""})`}
+                </button>
+              </div>
             </div>
           )}
         </div>

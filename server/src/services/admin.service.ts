@@ -45,7 +45,17 @@ export async function listApplications(filters: {
   const [applications, total] = await Promise.all([
     prisma.partnerApplication.findMany({
       where,
-      include: { user: { select: { id: true, email: true, companyName: true, accountType: true } } },
+      include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+              companyName: true,
+              accountType: true,
+              profile: true,
+            },
+          },
+        },
       orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
@@ -54,6 +64,25 @@ export async function listApplications(filters: {
   ]);
 
   return { applications, total, page, limit };
+}
+
+export async function getApplicationById(applicationId: string) {
+  const application = await prisma.partnerApplication.findUnique({
+    where: { id: applicationId },
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          companyName: true,
+          accountType: true,
+          profile: true,
+        },
+      },
+    },
+  });
+  if (!application) throw ApiError.notFound('Application not found');
+  return application;
 }
 
 export async function approveApplication(

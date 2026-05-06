@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\rubab\\\\Downloads\\\\indusb2b\\\\src\\\\lib\" -File | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\rubab\\\\Downloads\\\\indusb2b\\\\server\\\\src\" -File | ForEach-Object { $_.Name })"
     ]
   }
 }

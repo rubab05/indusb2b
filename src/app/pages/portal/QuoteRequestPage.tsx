@@ -57,7 +57,7 @@ export default function QuoteRequestPage() {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setSubmitting(true);
     const result = await orderingService.submitQuoteRequest({
-      lines: lines.map((l) => ({ sku: l.item.sku, productName: l.item.productName, qty: l.qty })),
+      lines: lines.map((l) => ({ productSlug: l.item.productSlug, sku: l.item.sku, quantity: l.qty })),
       specialRequirements: requirements,
     });
     setConfirmed(result.referenceNumber);

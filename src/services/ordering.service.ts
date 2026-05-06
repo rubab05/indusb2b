@@ -30,16 +30,32 @@ export const orderingService = {
   return order.orderNumber;
 },
 
-  async submitQuickOrder(lines: OrderLineInput[], notes: string): Promise<string> {
+  async submitQuickOrder(
+    lines: OrderLineInput[],
+    shippingAddress: {
+      name: string;
+      company: string;
+      line1: string;
+      city: string;
+      postcode: string;
+      country: string;
+    },
+    notes: string
+  ): Promise<string> {
     const order = await api.post<{ orderNumber: string }>('/orders', {
-      lines,
+      items: lines.map((line) => ({
+        productSlug: line.item.productSlug,
+        sku: line.item.sku,
+        quantity: line.qty,
+      })),
+      shippingAddress,
       notes,
     });
     return order.orderNumber;
   },
 
   async submitQuoteRequest(data: {
-    lines: Array<{ sku: string; productName: string; qty: number }>;
+    lines: Array<{ productSlug: string; sku: string; quantity: number }>;
     specialRequirements: string;
   }): Promise<QuoteRequest> {
     return api.post<QuoteRequest>('/pricing/quote-request', data);
