@@ -47,6 +47,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Support", to: "/dashboard/support", icon: LifeBuoy },
   { label: "Account Settings", to: "/dashboard/account", icon: Settings },
   { label: "Dropship Dashboard", to: "/dashboard/dropship", icon: Wallet, dropshipOnly: true },
+  { label: "New Order", to: "/dashboard/dropship/orders/new", icon: Zap, dropshipOnly: true },
   { label: "Transaction Ledger", to: "/dashboard/dropship/ledger", icon: FileText, dropshipOnly: true },
   { label: "Top Up Funds", to: "/dashboard/dropship/topup", icon: PlusCircle, dropshipOnly: true },
   { label: "Statement", to: "/dashboard/dropship/statement", icon: Download, dropshipOnly: true },

@@ -64,7 +64,30 @@ export default function DropshipLedgerPage() {
   }
 
   function handleDownload() {
-    toast.success("Statement download started");
+    if (transactions.length === 0) {
+      toast.error("No transactions to download.");
+      return;
+    }
+    const rows = [
+      ["Date", "Type", "Reference", "Description", "Amount (£)", "Running Balance (£)"],
+      ...transactions.map((tx) => [
+        new Date(tx.date).toLocaleDateString("en-GB"),
+        tx.type,
+        tx.reference,
+        tx.description,
+        tx.amount.toFixed(2),
+        tx.runningBalance.toFixed(2),
+      ]),
+    ];
+    const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ledger-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Ledger downloaded");
   }
 
   return (

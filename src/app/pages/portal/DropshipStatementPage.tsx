@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { dropshipService } from "../../../services/dropship.service";
+import { Transaction } from "../../../types/commerce";
 import { Download, FileText } from "lucide-react";
 import { toast } from "sonner";
+
+interface StatementSummary {
+  transactionCount: number;
+  totalCredits: number;
+  totalDebits: number;
+  netChange: number;
+}
 
 export default function DropshipStatementPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [summary, setSummary] = useState<{
-    transactionCount: number;
-    totalCredits: number;
-    totalDebits: number;
-    netChange: number;
-  } | null>(null);
+  const [summary, setSummary] = useState<StatementSummary | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [generated, setGenerated] = useState(false);
 
@@ -20,14 +24,39 @@ export default function DropshipStatementPage() {
     setLoading(true);
     setGenerated(false);
     const data = await dropshipService.getStatementSummary(startDate, endDate);
-    setSummary(data);
+    const { transactions: txns, ...rest } = data;
+    setSummary(rest);
+    setTransactions(txns);
     setLoading(false);
     setGenerated(true);
     toast.success("Statement generated");
   }
 
   function handleDownload() {
-    toast.success("Statement download started");
+    if (transactions.length === 0) {
+      toast.error("No transactions in this date range.");
+      return;
+    }
+    const rows = [
+      ["Date", "Type", "Reference", "Description", "Amount (£)", "Running Balance (£)"],
+      ...transactions.map((tx) => [
+        new Date(tx.date).toLocaleDateString("en-GB"),
+        tx.type,
+        tx.reference,
+        tx.description,
+        tx.amount.toFixed(2),
+        tx.runningBalance.toFixed(2),
+      ]),
+    ];
+    const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `statement-${startDate}-to-${endDate}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Statement downloaded");
   }
 
   return (
@@ -76,9 +105,7 @@ export default function DropshipStatementPage() {
             <FileText className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
             <p className="text-xs tracking-widest text-gray-700">STATEMENT SUMMARY</p>
           </div>
-          <p className="text-xs text-gray-500">
-            {startDate} to {endDate}
-          </p>
+          <p className="text-xs text-gray-500">{startDate} to {endDate}</p>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-50 border border-gray-100 p-4">
@@ -107,7 +134,7 @@ export default function DropshipStatementPage() {
               className="w-full py-3 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide flex items-center justify-center gap-2"
             >
               <Download className="w-4 h-4" strokeWidth={1.5} />
-              DOWNLOAD STATEMENT (PDF)
+              DOWNLOAD CSV
             </button>
           )}
         </div>

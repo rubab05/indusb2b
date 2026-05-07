@@ -42,6 +42,7 @@ import DropshipLedgerPage from "./pages/portal/DropshipLedgerPage";
 import TopUpPage from "./pages/portal/TopUpPage";
 import BankTransferConfirmPage from "./pages/portal/BankTransferConfirmPage";
 import DropshipStatementPage from "./pages/portal/DropshipStatementPage";
+import DropshipOrderPage from "./pages/portal/DropshipOrderPage";
 import CategoryListPage from "./pages/admin/CategoryListPage";
 import CategoryEditPage from "./pages/admin/CategoryEditPage";
 import ProductListPage from "./pages/admin/ProductListPage";
@@ -157,6 +158,10 @@ export const router = createBrowserRouter([
       {
         path: "dropship",
         element: <DropshipGuard><DropshipDashboardPage /></DropshipGuard>,
+      },
+      {
+        path: "dropship/orders/new",
+        element: <DropshipGuard><DropshipOrderPage /></DropshipGuard>,
       },
       {
         path: "dropship/ledger",

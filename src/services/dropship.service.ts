@@ -135,6 +135,7 @@ export const dropshipService = {
     totalCredits: number;
     totalDebits: number;
     netChange: number;
+    transactions: Transaction[];
   }> {
     const raw = await api.get<RawTransaction[]>('/dropship/statement', { startDate, endDate });
     const txns = raw.map(normalizeTransaction);
@@ -145,6 +146,7 @@ export const dropshipService = {
       totalCredits: Math.round(totalCredits * 100) / 100,
       totalDebits: Math.round(totalDebits * 100) / 100,
       netChange: Math.round((totalCredits - totalDebits) * 100) / 100,
+      transactions: txns,
     };
   },
 };

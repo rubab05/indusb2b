@@ -2,23 +2,76 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { dashboardService, DashboardData, OrderStatus } from "../../services/dashboard.service";
-import { ShoppingCart, FileText, LifeBuoy, ChevronRight } from "lucide-react";
+import { dropshipService } from "../../services/dropship.service";
+import { DropshipBalance } from "../../types/commerce";
+import { AccountType } from "../../types/auth";
+import {
+  ShoppingCart,
+  FileText,
+  LifeBuoy,
+  ChevronRight,
+  Wallet,
+  PlusCircle,
+  AlertTriangle,
+} from "lucide-react";
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
   Pending: "bg-yellow-100 text-yellow-800",
   Processing: "bg-blue-100 text-blue-800",
+  Packed: "bg-indigo-100 text-indigo-800",
   Shipped: "bg-purple-100 text-purple-800",
   Delivered: "bg-green-100 text-green-800",
   Cancelled: "bg-gray-100 text-gray-600",
 };
 
+function DropshipBalanceWidget({ balance }: { balance: DropshipBalance | null }) {
+  if (!balance) {
+    return <div className="h-24 bg-gray-100 animate-pulse rounded" />;
+  }
+  const isLocked = balance.isLocked;
+  const isLow = !isLocked && balance.currentBalance <= balance.threshold * 2;
+  const bg = isLocked ? "bg-red-50 border-red-200" : isLow ? "bg-yellow-50 border-yellow-200" : "bg-green-50 border-green-200";
+  const text = isLocked ? "text-red-700" : isLow ? "text-yellow-700" : "text-green-700";
+  const label = isLocked ? "LOCKED" : isLow ? "LOW" : "HEALTHY";
+
+  return (
+    <div className={`border p-6 ${bg}`}>
+      {isLocked && (
+        <div className="flex items-center gap-2 mb-3">
+          <AlertTriangle className="w-4 h-4 text-red-600" strokeWidth={1.5} />
+          <p className="text-xs text-red-700 font-medium">Orders blocked — top up required</p>
+        </div>
+      )}
+      <div className="flex items-center justify-between mb-1">
+        <Wallet className={`w-5 h-5 ${text}`} strokeWidth={1.5} />
+        <span className={`text-xs font-medium px-2 py-0.5 ${text}`}>{label}</span>
+      </div>
+      <p className="text-xs text-gray-500 mt-2">DROPSHIP BALANCE</p>
+      <p className={`text-3xl font-light ${text}`}>£{balance.currentBalance.toFixed(2)}</p>
+      <Link
+        to="/dashboard/dropship/topup"
+        className="inline-flex items-center gap-1.5 mt-3 text-xs text-gray-600 hover:text-gray-900 transition-colors"
+      >
+        <PlusCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+        Top up funds
+      </Link>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { user } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
+  const [dsBalance, setDsBalance] = useState<DropshipBalance | null>(null);
+
+  const isDropship = user?.accountType === AccountType.DROPSHIP;
 
   useEffect(() => {
     if (user) {
       dashboardService.getData(user.accountType).then(setData);
+      if (user.accountType === AccountType.DROPSHIP) {
+        dropshipService.getBalance().then(setDsBalance);
+      }
     }
   }, [user]);
 
@@ -36,39 +89,30 @@ export default function DashboardPage() {
 
       {/* Account status + stats */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Account card */}
-        <div className="sm:col-span-2 lg:col-span-1 bg-white border border-gray-200 p-6">
-          <p className="text-xs tracking-widest text-gray-500 mb-3">ACCOUNT</p>
-          {data ? (
-            <div className="space-y-1.5">
-              <p className="text-sm font-medium text-gray-900">{data.accountInfo.tier}</p>
-              <p className="text-xs text-gray-500">Approved {data.accountInfo.approvalDate}</p>
-            </div>
-          ) : (
-            <div className="h-8 bg-gray-100 animate-pulse rounded" />
-          )}
-        </div>
+        {/* Account card — for dropship show balance widget instead */}
+        {isDropship ? (
+          <div className="sm:col-span-2 lg:col-span-1">
+            <DropshipBalanceWidget balance={dsBalance} />
+          </div>
+        ) : (
+          <div className="sm:col-span-2 lg:col-span-1 bg-white border border-gray-200 p-6">
+            <p className="text-xs tracking-widest text-gray-500 mb-3">ACCOUNT</p>
+            {data ? (
+              <div className="space-y-1.5">
+                <p className="text-sm font-medium text-gray-900">{data.accountInfo.tier}</p>
+                <p className="text-xs text-gray-500">Approved {data.accountInfo.approvalDate}</p>
+              </div>
+            ) : (
+              <div className="h-8 bg-gray-100 animate-pulse rounded" />
+            )}
+          </div>
+        )}
 
         {/* Stats */}
         {[
-          {
-            label: "TOTAL ORDERS",
-            icon: ShoppingCart,
-            value: data?.stats.recentOrdersCount,
-            sub: "last 30 days",
-          },
-          {
-            label: "PENDING",
-            icon: FileText,
-            value: data?.stats.pendingOrdersCount,
-            sub: "awaiting fulfilment",
-          },
-          {
-            label: "SUPPORT",
-            icon: LifeBuoy,
-            value: data?.stats.openSupportTickets,
-            sub: "open tickets",
-          },
+          { label: "TOTAL ORDERS", icon: ShoppingCart, value: data?.stats.recentOrdersCount, sub: "last 30 days" },
+          { label: "PENDING", icon: FileText, value: data?.stats.pendingOrdersCount, sub: "awaiting fulfilment" },
+          { label: "SUPPORT", icon: LifeBuoy, value: data?.stats.openSupportTickets, sub: "open tickets" },
         ].map(({ label, icon: Icon, value, sub }) => (
           <div key={label} className="bg-white border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-3">
@@ -87,22 +131,47 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Quick actions */}
+      {/* Quick actions — account-type aware */}
       <div>
         <p className="text-xs tracking-widest text-gray-500 mb-3">QUICK ACTIONS</p>
         <div className="flex flex-wrap gap-3">
-          <Link
-            to="/dashboard/orders/new"
-            className="px-6 py-3 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide"
-          >
-            NEW ORDER
-          </Link>
-          <Link
-            to="/dashboard/price-list"
-            className="px-6 py-3 border border-gray-900 text-gray-900 hover:bg-gray-50 transition-colors text-sm tracking-wide"
-          >
-            PRICE LIST
-          </Link>
+          {isDropship ? (
+            <>
+              <Link
+                to="/dashboard/dropship/orders/new"
+                className="px-6 py-3 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide"
+              >
+                NEW ORDER
+              </Link>
+              <Link
+                to="/dashboard/dropship"
+                className="px-6 py-3 border border-gray-900 text-gray-900 hover:bg-gray-50 transition-colors text-sm tracking-wide"
+              >
+                DROPSHIP DASHBOARD
+              </Link>
+              <Link
+                to="/dashboard/dropship/topup"
+                className="px-6 py-3 border border-gray-200 text-gray-700 hover:border-gray-400 transition-colors text-sm tracking-wide"
+              >
+                TOP UP BALANCE
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/dashboard/orders/new"
+                className="px-6 py-3 bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition-colors text-sm tracking-wide"
+              >
+                NEW ORDER
+              </Link>
+              <Link
+                to="/dashboard/price-list"
+                className="px-6 py-3 border border-gray-900 text-gray-900 hover:bg-gray-50 transition-colors text-sm tracking-wide"
+              >
+                PRICE LIST
+              </Link>
+            </>
+          )}
           <Link
             to="/dashboard/support/new"
             className="px-6 py-3 border border-gray-200 text-gray-700 hover:border-gray-400 transition-colors text-sm tracking-wide"
@@ -131,15 +200,22 @@ export default function DashboardPage() {
                 <div key={i} className="h-6 bg-gray-100 animate-pulse rounded" />
               ))}
             </div>
+          ) : data.recentOrders.length === 0 ? (
+            <div className="py-16 text-center">
+              <p className="text-sm text-gray-400">No orders yet.</p>
+              <Link
+                to={isDropship ? "/dashboard/dropship/orders/new" : "/dashboard/orders/new"}
+                className="mt-2 inline-block text-sm text-gray-900 underline"
+              >
+                Place your first order
+              </Link>
+            </div>
           ) : (
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50">
                   {["Order #", "Date", "Items", "Total", "Status", ""].map((h) => (
-                    <th
-                      key={h}
-                      className="px-4 py-3 text-left text-xs tracking-widest text-gray-500 font-normal"
-                    >
+                    <th key={h} className="px-4 py-3 text-left text-xs tracking-widest text-gray-500 font-normal">
                       {h}
                     </th>
                   ))}
@@ -147,18 +223,13 @@ export default function DashboardPage() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {data.recentOrders.map((order) => (
-                  <tr
-                    key={order.id}
-                    className="hover:bg-gray-50 transition-colors cursor-pointer"
-                  >
+                  <tr key={order.id} className="hover:bg-gray-50 transition-colors cursor-pointer">
                     <td className="px-4 py-3 font-medium text-gray-900">{order.orderNumber}</td>
                     <td className="px-4 py-3 text-gray-500">{order.date}</td>
                     <td className="px-4 py-3 text-gray-500">{order.items}</td>
                     <td className="px-4 py-3 text-gray-900">{order.total}</td>
                     <td className="px-4 py-3">
-                      <span
-                        className={`px-2 py-0.5 text-xs font-medium rounded-sm ${STATUS_STYLES[order.status]}`}
-                      >
+                      <span className={`px-2 py-0.5 text-xs font-medium rounded-sm ${STATUS_STYLES[order.status]}`}>
                         {order.status}
                       </span>
                     </td>
