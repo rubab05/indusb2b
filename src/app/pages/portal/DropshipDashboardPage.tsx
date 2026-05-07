@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { dropshipService } from "../../../services/dropship.service";
-import { DropshipBalance, BalanceThreshold, Transaction, BalanceHistoryPoint } from "../../../types/commerce";
-import { Wallet, ArrowUpRight, ArrowDownRight, TrendingUp, PlusCircle, AlertTriangle } from "lucide-react";
+import { DropshipBalance, BalanceThreshold, Transaction, BalanceHistoryPoint, TopUpRequestRecord } from "../../../types/commerce";
+import { Wallet, ArrowUpRight, ArrowDownRight, TrendingUp, PlusCircle, AlertTriangle, Clock } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 function balanceColor(balance: number, threshold: BalanceThreshold) {
@@ -26,6 +26,7 @@ export default function DropshipDashboardPage() {
   const [threshold, setThreshold] = useState<BalanceThreshold | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [history, setHistory] = useState<BalanceHistoryPoint[]>([]);
+  const [topUpRequests, setTopUpRequests] = useState<TopUpRequestRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,14 +35,18 @@ export default function DropshipDashboardPage() {
       dropshipService.getBalanceThreshold(),
       dropshipService.getRecentTransactions(10),
       dropshipService.getBalanceHistory(30),
-    ]).then(([b, t, tx, h]) => {
+      dropshipService.getTopUpRequests(),
+    ]).then(([b, t, tx, h, reqs]) => {
       setBalance(b);
       setThreshold(t);
       setTransactions(tx);
       setHistory(h);
+      setTopUpRequests(reqs);
       setLoading(false);
     });
   }, []);
+
+  const pendingTopUps = topUpRequests.filter((r) => r.status === "pending");
 
   if (loading || !balance || !threshold) {
     return (
@@ -139,6 +144,45 @@ export default function DropshipDashboardPage() {
                 <Line type="monotone" dataKey="balance" stroke="#eab308" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
+      {/* Pending top-up requests */}
+      {pendingTopUps.length > 0 && (
+        <div className="bg-white border border-yellow-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-yellow-100 bg-yellow-50 flex items-center gap-2">
+            <Clock className="w-4 h-4 text-yellow-600" strokeWidth={1.5} />
+            <p className="text-xs tracking-widest text-yellow-700">PENDING TOP-UP REQUESTS</p>
+          </div>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100">
+                {["Date", "Reference", "Amount", "Method", "Status"].map((h) => (
+                  <th key={h} className="px-4 py-3 text-left text-xs tracking-widest text-gray-500 font-normal">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {pendingTopUps.map((req) => (
+                <tr key={req.id}>
+                  <td className="px-4 py-3 text-gray-600 text-xs">
+                    {new Date(req.createdAt).toLocaleDateString("en-GB")}
+                  </td>
+                  <td className="px-4 py-3 text-gray-600 font-mono text-xs">{req.referenceNumber ?? "—"}</td>
+                  <td className="px-4 py-3 font-medium text-green-600">+£{req.amount.toFixed(2)}</td>
+                  <td className="px-4 py-3 text-gray-600 text-xs capitalize">{req.method.replace("-", " ")}</td>
+                  <td className="px-4 py-3">
+                    <span className="text-xs px-2 py-0.5 font-medium bg-yellow-100 text-yellow-700">PENDING</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="px-6 py-3 border-t border-yellow-100 bg-yellow-50">
+            <p className="text-xs text-yellow-700">
+              Pending requests are awaiting admin verification. Balance will be updated once confirmed.
+            </p>
           </div>
         </div>
       )}

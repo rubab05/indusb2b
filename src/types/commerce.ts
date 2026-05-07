@@ -71,6 +71,18 @@ export interface TopUpRequest {
   reference?: string;
 }
 
+export type TopUpStatus = "pending" | "confirmed" | "failed";
+
+export interface TopUpRequestRecord {
+  id: string;
+  amount: number;
+  method: "bank-transfer" | "card";
+  referenceNumber: string | null;
+  status: TopUpStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface BalanceThreshold {
   warningLevel: number;
   lockLevel: number;

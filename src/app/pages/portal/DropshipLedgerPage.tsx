@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { dropshipService } from "../../../services/dropship.service";
-import { Transaction, TransactionType } from "../../../types/commerce";
-import { ArrowUpRight, ArrowDownRight, Download, RotateCcw } from "lucide-react";
+import { Transaction, TransactionType, TopUpRequestRecord } from "../../../types/commerce";
+import { ArrowUpRight, ArrowDownRight, Download, RotateCcw, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 const TYPES: Array<{ label: string; value: TransactionType | "" }> = [
@@ -26,11 +26,18 @@ function typeBadge(type: Transaction["type"]) {
 
 export default function DropshipLedgerPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [pendingTopUps, setPendingTopUps] = useState<TopUpRequestRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [typeFilter, setTypeFilter] = useState<TransactionType | "">("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    dropshipService.getTopUpRequests().then((reqs) => {
+      setPendingTopUps(reqs.filter((r) => r.status === "pending"));
+    });
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -75,6 +82,43 @@ export default function DropshipLedgerPage() {
           Download
         </button>
       </div>
+
+      {/* Pending top-up requests */}
+      {pendingTopUps.length > 0 && (
+        <div className="bg-white border border-yellow-200 overflow-hidden">
+          <div className="px-6 py-3 border-b border-yellow-100 bg-yellow-50 flex items-center gap-2">
+            <Clock className="w-4 h-4 text-yellow-600" strokeWidth={1.5} />
+            <p className="text-xs tracking-widest text-yellow-700">PENDING TOP-UP REQUESTS</p>
+          </div>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100">
+                {["Date", "Reference", "Amount", "Method", "Status"].map((h) => (
+                  <th key={h} className="px-4 py-3 text-left text-xs tracking-widest text-gray-500 font-normal">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {pendingTopUps.map((req) => (
+                <tr key={req.id}>
+                  <td className="px-4 py-3 text-gray-600 text-xs">
+                    {new Date(req.createdAt).toLocaleDateString("en-GB")}
+                  </td>
+                  <td className="px-4 py-3 text-gray-600 font-mono text-xs">{req.referenceNumber ?? "—"}</td>
+                  <td className="px-4 py-3 font-medium text-green-600">+£{req.amount.toFixed(2)}</td>
+                  <td className="px-4 py-3 text-gray-600 text-xs capitalize">{req.method.replace("-", " ")}</td>
+                  <td className="px-4 py-3">
+                    <span className="text-xs px-2 py-0.5 font-medium bg-yellow-100 text-yellow-700">PENDING</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="px-6 py-3 text-xs text-yellow-700 bg-yellow-50 border-t border-yellow-100">
+            Awaiting admin verification. Balance updates once confirmed.
+          </p>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="bg-white border border-gray-200 p-4 flex flex-col sm:flex-row gap-3 items-end">

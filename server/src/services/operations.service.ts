@@ -649,19 +649,29 @@ export async function listPendingTopUps(filters: { page?: number; limit?: number
   const limit = Math.min(100, Math.max(1, filters.limit ?? 20));
   const skip = (page - 1) * limit;
 
-  const where = { status: 'pending' };
-
   const [topUps, total] = await Promise.all([
     prisma.topUpRequest.findMany({
-      where,
       orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
     }),
-    prisma.topUpRequest.count({ where }),
+    prisma.topUpRequest.count(),
   ]);
 
-  return { topUps, total, page, limit };
+  // Enrich with user info
+  const userIds = [...new Set(topUps.map((t) => t.userId))];
+  const users = await prisma.user.findMany({
+    where: { id: { in: userIds } },
+    select: { id: true, companyName: true, email: true },
+  });
+  const userMap = Object.fromEntries(users.map((u) => [u.id, u]));
+
+  const enriched = topUps.map((t) => ({
+    ...t,
+    user: userMap[t.userId] ?? null,
+  }));
+
+  return { topUps: enriched, total, page, limit };
 }
 
 export async function confirmTopUpAdmin(topUpId: string, adminId: string, adminName: string) {

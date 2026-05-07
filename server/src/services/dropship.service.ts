@@ -151,6 +151,27 @@ export async function getStatement(userId: string, startDate: string, endDate: s
   });
 }
 
+export async function getUserTopUpRequests(
+  userId: string,
+  filters: { page?: number; limit?: number } = {}
+) {
+  const page = Math.max(1, filters.page ?? 1);
+  const limit = Math.min(50, Math.max(1, filters.limit ?? 20));
+  const skip = (page - 1) * limit;
+
+  const [topUps, total] = await Promise.all([
+    prisma.topUpRequest.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.topUpRequest.count({ where: { userId } }),
+  ]);
+
+  return { topUps, total, page, limit };
+}
+
 export async function checkThreshold(userId: string) {
   const balance = await prisma.dropshipBalance.findUnique({ where: { userId } });
   if (!balance) return;

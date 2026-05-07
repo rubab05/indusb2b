@@ -3,6 +3,7 @@ import {
   Transaction,
   TransactionType,
   TopUpRequest,
+  TopUpRequestRecord,
   BalanceThreshold,
   BalanceHistoryPoint,
 } from '../types/commerce';
@@ -12,6 +13,28 @@ interface TransactionFilters {
   type?: TransactionType;
   startDate?: string;
   endDate?: string;
+}
+
+interface RawTopUpRequest {
+  id: string;
+  amount: string | number;
+  method: string;
+  reference: string | null;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+function normalizeTopUpRequest(raw: RawTopUpRequest): TopUpRequestRecord {
+  return {
+    id: raw.id,
+    amount: toNum(raw.amount),
+    method: raw.method as TopUpRequestRecord['method'],
+    referenceNumber: raw.reference,
+    status: raw.status as TopUpRequestRecord['status'],
+    createdAt: raw.createdAt,
+    updatedAt: raw.updatedAt,
+  };
 }
 
 // Raw backend shapes
@@ -67,7 +90,7 @@ export const dropshipService = {
   },
 
   async getTransactions(filters?: TransactionFilters): Promise<Transaction[]> {
-    const params: Record<string, string> = {};
+    const params: Record<string, string> = { limit: '200' };
     if (filters?.type) params.type = filters.type;
     if (filters?.startDate) params.startDate = filters.startDate;
     if (filters?.endDate) params.endDate = filters.endDate;
@@ -81,7 +104,13 @@ export const dropshipService = {
   },
 
   async submitTopUp(request: TopUpRequest): Promise<{ referenceNumber: string }> {
-    return api.post<{ referenceNumber: string }>('/dropship/topup', request);
+    const raw = await api.post<{ referenceNumber: string }>('/dropship/topup', request);
+    return raw;
+  },
+
+  async getTopUpRequests(): Promise<TopUpRequestRecord[]> {
+    const raw = await api.get<RawTopUpRequest[]>('/dropship/topups', { limit: '100' });
+    return raw.map(normalizeTopUpRequest);
   },
 
   async getBalanceThreshold(): Promise<BalanceThreshold> {

@@ -69,12 +69,34 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const topUp = await dropshipService.submitTopUp(req.user!.id, req.body);
-      res.status(201).json(apiSuccess(topUp));
+      res.status(201).json(apiSuccess({
+        id: topUp.id,
+        referenceNumber: topUp.reference,
+        amount: topUp.amount,
+        method: topUp.method,
+        status: topUp.status,
+        createdAt: topUp.createdAt,
+      }));
     } catch (err) {
       next(err);
     }
   }
 );
+
+// GET /api/dropship/topups
+router.get('/topups', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const pageStr = qs(req.query.page);
+    const limitStr = qs(req.query.limit);
+    const result = await dropshipService.getUserTopUpRequests(req.user!.id, {
+      page: pageStr ? parseInt(pageStr) : undefined,
+      limit: limitStr ? parseInt(limitStr) : undefined,
+    });
+    res.json(apiPaginated(result.topUps, result.total, result.page, result.limit));
+  } catch (err) {
+    next(err);
+  }
+});
 
 // GET /api/dropship/balance-history
 router.get(

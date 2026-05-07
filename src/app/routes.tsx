@@ -60,6 +60,7 @@ import OpsDashboardPage from "./pages/admin/OpsDashboardPage";
 import AdminReturnsPage from "./pages/admin/ReturnsPage";
 import ActivityLogPage from "./pages/admin/ActivityLogPage";
 import AdminSupportPage from "./pages/admin/AdminSupportPage";
+import AdminTopUpsPage from "./pages/admin/AdminTopUpsPage";
 
 // Redirect /categories/:slug → /category/:slug
 function CategorySlugRedirect() {
@@ -206,6 +207,7 @@ export const router = createBrowserRouter([
       { path: "operations/returns", Component: AdminReturnsPage },
       { path: "operations/logs", Component: ActivityLogPage },
       { path: "operations/support", Component: AdminSupportPage },
+      { path: "operations/topups", Component: AdminTopUpsPage },
     ],
   },
 
