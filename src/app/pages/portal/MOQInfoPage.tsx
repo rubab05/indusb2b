@@ -1,6 +1,16 @@
-import { MOQ_RULES, BULK_DISCOUNTS } from "../../../services/pricing.service";
+import { useEffect, useState } from "react";
+import { pricingService, MOQ_RULES, BULK_DISCOUNTS } from "../../../services/pricing.service";
+import { MOQRule, BulkDiscount } from "../../../types/commerce";
 
 export default function MOQInfoPage() {
+  const [moqRules, setMoqRules] = useState<MOQRule[]>(MOQ_RULES);
+  const [bulkDiscounts, setBulkDiscounts] = useState<BulkDiscount[]>(BULK_DISCOUNTS);
+
+  useEffect(() => {
+    pricingService.getMOQRules().then(setMoqRules).catch(() => {});
+    pricingService.getBulkDiscounts().then(setBulkDiscounts).catch(() => {});
+  }, []);
+
   return (
     <div className="space-y-10 max-w-4xl">
       <div>
@@ -33,7 +43,7 @@ export default function MOQInfoPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-            {MOQ_RULES.map((rule) => (
+            {moqRules.map((rule) => (
               <tr key={rule.category} className="hover:bg-gray-50">
                 <td className="px-6 py-4 font-medium text-gray-900">{rule.category}</td>
                 <td className="px-6 py-4 text-gray-900">{rule.moq}</td>
@@ -51,7 +61,7 @@ export default function MOQInfoPage() {
           <p className="text-xs tracking-widests text-gray-500">BULK DISCOUNT TIERS</p>
         </div>
         <div className="grid sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
-          {BULK_DISCOUNTS.map((tier) => (
+          {bulkDiscounts.map((tier) => (
             <div key={tier.tierLabel} className="p-6 text-center">
               <p className="text-xs tracking-widests text-gray-500 mb-2">{tier.tierLabel.toUpperCase()}</p>
               <p className="text-2xl font-light text-gray-900 mb-1">

@@ -1,4 +1,5 @@
 import { Decimal } from '@prisma/client/runtime/library';
+import PDFDocument from 'pdfkit';
 import { prisma } from '../config/database.js';
 import { ApiError } from '../utils/api-error.js';
 import type { CreateOrderInput, QuoteRequestInput } from '../validators/commerce.validators.js';
@@ -269,11 +270,112 @@ export async function getInvoiceById(userId: string, invoiceId: string) {
   return invoice;
 }
 
-export async function generateInvoicePDF(_invoiceId: string): Promise<Buffer> {
-  // Placeholder — returns a minimal PDF-like buffer
-  // Replace with a real PDF library (pdfkit, puppeteer) in production
-  const placeholder = `%PDF-1.4 INVOICE PLACEHOLDER`;
-  return Buffer.from(placeholder, 'utf-8');
+export async function generateInvoicePDF(invoiceId: string): Promise<Buffer> {
+  const invoice = await prisma.invoice.findUnique({
+    where: { id: invoiceId },
+    include: {
+      order: {
+        include: {
+          items: true,
+          user: { select: { companyName: true, email: true } },
+        },
+      },
+    },
+  });
+  if (!invoice) throw ApiError.notFound('Invoice not found');
+
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({ margin: 50, size: 'A4' });
+    const chunks: Buffer[] = [];
+    doc.on('data', (chunk: Buffer) => chunks.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(chunks)));
+    doc.on('error', reject);
+
+    const grey = '#555555';
+    const dark = '#111111';
+    const accent = '#F5C518';
+
+    // Header bar
+    doc.rect(50, 40, 495, 4).fill(accent);
+    doc.moveDown(0.5);
+
+    // Company name + Invoice label
+    doc.fontSize(22).fillColor(dark).font('Helvetica-Bold').text('HOMATZ', 50, 60);
+    doc.fontSize(10).fillColor(grey).font('Helvetica').text('B2B Wholesale & Dropshipping', 50, 86);
+
+    doc.fontSize(20).fillColor(dark).font('Helvetica-Bold').text('INVOICE', 400, 60, { align: 'right' });
+
+    // Invoice meta
+    doc.fontSize(9).fillColor(grey).font('Helvetica');
+    const issuedDate = new Date(invoice.issuedDate).toLocaleDateString('en-GB');
+    const dueDate = new Date(invoice.dueDate).toLocaleDateString('en-GB');
+    doc.text(`Invoice #: ${invoice.invoiceNumber}`, 400, 88, { align: 'right' });
+    doc.text(`Order #: ${invoice.order.orderNumber}`, 400, 100, { align: 'right' });
+    doc.text(`Issued: ${issuedDate}`, 400, 112, { align: 'right' });
+    doc.text(`Due: ${dueDate}`, 400, 124, { align: 'right' });
+
+    // Divider
+    doc.moveTo(50, 145).lineTo(545, 145).strokeColor('#DDDDDD').lineWidth(1).stroke();
+
+    // Bill To
+    doc.fontSize(9).fillColor(grey).font('Helvetica-Bold').text('BILL TO', 50, 158);
+    doc.fontSize(10).fillColor(dark).font('Helvetica-Bold').text(invoice.order.user.companyName, 50, 172);
+    doc.fontSize(9).fillColor(grey).font('Helvetica').text(invoice.order.user.email, 50, 186);
+
+    // Status badge
+    const statusLabel = invoice.status.toUpperCase();
+    doc.roundedRect(400, 158, 80, 22, 3).fill(
+      invoice.status === 'paid' ? '#D1FAE5' : invoice.status === 'overdue' ? '#FEE2E2' : '#FEF9C3'
+    );
+    doc.fontSize(9).fillColor(
+      invoice.status === 'paid' ? '#065F46' : invoice.status === 'overdue' ? '#991B1B' : '#92400E'
+    ).font('Helvetica-Bold').text(statusLabel, 400, 164, { width: 80, align: 'center' });
+
+    // Items table header
+    const tableTop = 220;
+    doc.rect(50, tableTop, 495, 22).fill('#F3F4F6');
+    doc.fontSize(8).fillColor(grey).font('Helvetica-Bold');
+    doc.text('ITEM', 58, tableTop + 7);
+    doc.text('SKU', 250, tableTop + 7);
+    doc.text('QTY', 330, tableTop + 7, { width: 50, align: 'right' });
+    doc.text('UNIT PRICE', 390, tableTop + 7, { width: 70, align: 'right' });
+    doc.text('TOTAL', 468, tableTop + 7, { width: 70, align: 'right' });
+
+    // Items rows
+    let y = tableTop + 28;
+    for (const item of invoice.order.items) {
+      doc.fontSize(9).fillColor(dark).font('Helvetica');
+      doc.text(item.productName, 58, y, { width: 185 });
+      doc.text(item.sku, 250, y, { width: 75 });
+      doc.text(String(item.quantity), 330, y, { width: 50, align: 'right' });
+      doc.text(`£${Number(item.unitPrice).toFixed(2)}`, 390, y, { width: 70, align: 'right' });
+      doc.text(`£${Number(item.lineTotal).toFixed(2)}`, 468, y, { width: 70, align: 'right' });
+      doc.moveTo(50, y + 18).lineTo(545, y + 18).strokeColor('#F3F4F6').lineWidth(0.5).stroke();
+      y += 22;
+    }
+
+    // Totals
+    y += 10;
+    doc.moveTo(350, y).lineTo(545, y).strokeColor('#DDDDDD').lineWidth(1).stroke();
+    y += 8;
+    doc.fontSize(9).fillColor(grey).font('Helvetica').text('Subtotal', 350, y, { width: 110, align: 'right' });
+    doc.fillColor(dark).text(`£${Number(invoice.order.subtotal).toFixed(2)}`, 468, y, { width: 70, align: 'right' });
+    y += 16;
+    doc.fillColor(grey).text('Shipping', 350, y, { width: 110, align: 'right' });
+    doc.fillColor(dark).text(`£${Number(invoice.order.shippingCost).toFixed(2)}`, 468, y, { width: 70, align: 'right' });
+    y += 16;
+    doc.rect(350, y, 195, 24).fill('#111111');
+    doc.fontSize(10).fillColor('#FFFFFF').font('Helvetica-Bold')
+      .text('TOTAL', 358, y + 7, { width: 100, align: 'left' })
+      .text(`£${Number(invoice.amount).toFixed(2)}`, 468, y + 7, { width: 70, align: 'right' });
+
+    // Footer
+    doc.fontSize(8).fillColor(grey).font('Helvetica')
+      .text('Thank you for your business. Payment is due by the date shown above.', 50, 740, { align: 'center', width: 495 });
+    doc.rect(50, 756, 495, 2).fill(accent);
+
+    doc.end();
+  });
 }
 
 // ─── Tracking ───────────────────────────────────────────
@@ -364,5 +466,36 @@ export async function getQuoteRequests(userId: string) {
   return prisma.quoteRequest.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' },
+  });
+}
+
+export async function getAllQuoteRequests() {
+  const quotes = await prisma.quoteRequest.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
+  // Attach partner email/company by joining against User
+  const userIds = [...new Set(quotes.map((q) => q.userId))];
+  const users = await prisma.user.findMany({
+    where: { id: { in: userIds } },
+    select: { id: true, email: true, companyName: true },
+  });
+  const userMap = Object.fromEntries(users.map((u) => [u.id, u]));
+  return quotes.map((q) => ({ ...q, partner: userMap[q.userId] ?? null }));
+}
+
+export async function respondToQuoteRequest(
+  quoteId: string,
+  adminId: string,
+  adminName: string,
+  responseText: string,
+) {
+  return prisma.quoteRequest.update({
+    where: { id: quoteId },
+    data: {
+      adminResponse: responseText,
+      respondedAt: new Date(),
+      respondedBy: adminName,
+      status: 'responded',
+    },
   });
 }

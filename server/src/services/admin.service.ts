@@ -13,6 +13,8 @@ import type {
   CreateVendorInput,
   UpdateVendorInput,
   UpdateBrandConfigInput,
+  CreatePriceListItemInput,
+  UpdatePriceListItemInput,
 } from '../validators/admin.validators.js';
 
 // ─── Activity Log Helper ─────────────────────────────────
@@ -506,6 +508,105 @@ export async function deleteBulkDiscountTier(tierId: string, adminId: string, ad
   });
 }
 
+// ─── Price List Items ─────────────────────────────────────
+
+export async function listPriceListItems() {
+  return prisma.priceListItem.findMany({
+    include: {
+      productFamily: {
+        include: { category: { select: { name: true, slug: true } } },
+      },
+    },
+    orderBy: { productFamily: { name: 'asc' } },
+  });
+}
+
+export async function createPriceListItem(
+  data: CreatePriceListItemInput,
+  adminId: string,
+  adminName: string
+) {
+  let productFamilyId = data.productFamilyId;
+
+  if (!productFamilyId && data.productSlug) {
+    const family = await prisma.productFamily.findUnique({ where: { slug: data.productSlug } });
+    if (!family) throw ApiError.notFound(`Product not found: ${data.productSlug}`);
+    productFamilyId = family.id;
+  }
+
+  if (!productFamilyId) throw ApiError.badRequest('productFamilyId or productSlug is required');
+
+  const item = await prisma.priceListItem.create({
+    data: {
+      productFamilyId,
+      moq: data.moq,
+      unitPrice: data.unitPrice,
+      stockStatus: data.stockStatus ?? 'In Stock',
+      bulkTiers: data.bulkTiers ?? [],
+    },
+    include: { productFamily: { include: { category: true } } },
+  });
+
+  await logActivity({
+    userId: adminId,
+    userName: adminName,
+    actionType: 'PRICING_CHANGE',
+    description: `Created price list entry for ${data.productSlug ?? productFamilyId} at £${data.unitPrice}`,
+    entityType: 'PriceListItem',
+    entityId: item.id,
+  });
+
+  return item;
+}
+
+export async function updatePriceListItem(
+  itemId: string,
+  data: UpdatePriceListItemInput,
+  adminId: string,
+  adminName: string
+) {
+  const existing = await prisma.priceListItem.findUnique({ where: { id: itemId } });
+  if (!existing) throw ApiError.notFound('Price list entry not found');
+
+  const updated = await prisma.priceListItem.update({
+    where: { id: itemId },
+    data: {
+      ...(data.moq !== undefined && { moq: data.moq }),
+      ...(data.unitPrice !== undefined && { unitPrice: data.unitPrice }),
+      ...(data.stockStatus !== undefined && { stockStatus: data.stockStatus }),
+      ...(data.bulkTiers !== undefined && { bulkTiers: data.bulkTiers }),
+    },
+    include: { productFamily: { include: { category: true } } },
+  });
+
+  await logActivity({
+    userId: adminId,
+    userName: adminName,
+    actionType: 'PRICING_CHANGE',
+    description: `Updated price list entry ${itemId}`,
+    entityType: 'PriceListItem',
+    entityId: itemId,
+  });
+
+  return updated;
+}
+
+export async function deletePriceListItem(itemId: string, adminId: string, adminName: string) {
+  const existing = await prisma.priceListItem.findUnique({ where: { id: itemId } });
+  if (!existing) throw ApiError.notFound('Price list entry not found');
+
+  await prisma.priceListItem.delete({ where: { id: itemId } });
+
+  await logActivity({
+    userId: adminId,
+    userName: adminName,
+    actionType: 'PRICING_CHANGE',
+    description: `Deleted price list entry ${itemId}`,
+    entityType: 'PriceListItem',
+    entityId: itemId,
+  });
+}
+
 // ─── Vendors ─────────────────────────────────────────────
 
 export async function listVendors(filters: { status?: string; page?: number; limit?: number }) {
@@ -544,7 +645,21 @@ export async function createVendor(
   adminId: string,
   adminName: string
 ) {
-  const vendor = await prisma.vendor.create({ data });
+  const { mappedProductFamilySlugs, ...vendorData } = data;
+  const vendor = await prisma.vendor.create({ data: vendorData });
+
+  if (mappedProductFamilySlugs && mappedProductFamilySlugs.length > 0) {
+    const families = await prisma.productFamily.findMany({
+      where: { slug: { in: mappedProductFamilySlugs } },
+      select: { id: true },
+    });
+    if (families.length > 0) {
+      await prisma.vendorProductMapping.createMany({
+        data: families.map((f) => ({ vendorId: vendor.id, productFamilyId: f.id })),
+        skipDuplicates: true,
+      });
+    }
+  }
 
   await logActivity({
     userId: adminId,
@@ -564,10 +679,27 @@ export async function updateVendor(
   adminId: string,
   adminName: string
 ) {
+  const { mappedProductFamilySlugs, ...vendorData } = data;
   const existing = await prisma.vendor.findUnique({ where: { id: vendorId } });
   if (!existing) throw ApiError.notFound('Vendor not found');
 
-  const updated = await prisma.vendor.update({ where: { id: vendorId }, data });
+  const updated = await prisma.vendor.update({ where: { id: vendorId }, data: vendorData });
+
+  if (mappedProductFamilySlugs !== undefined) {
+    await prisma.vendorProductMapping.deleteMany({ where: { vendorId } });
+    if (mappedProductFamilySlugs.length > 0) {
+      const families = await prisma.productFamily.findMany({
+        where: { slug: { in: mappedProductFamilySlugs } },
+        select: { id: true },
+      });
+      if (families.length > 0) {
+        await prisma.vendorProductMapping.createMany({
+          data: families.map((f) => ({ vendorId, productFamilyId: f.id })),
+          skipDuplicates: true,
+        });
+      }
+    }
+  }
 
   await logActivity({
     userId: adminId,

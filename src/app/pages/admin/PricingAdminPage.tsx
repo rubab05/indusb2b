@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
-import { pricingAdminService, PricingRule, MOQRuleAdmin, BulkDiscountTier } from "../../../services/pricing-admin.service";
+import { pricingAdminService, PricingRule, MOQRuleAdmin, BulkDiscountTier, PriceListItemAdmin } from "../../../services/pricing-admin.service";
 import { adminService } from "../../../services/admin.service";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { StockStatus } from "../../../types/commerce";
+
+const STOCK_STYLES: Record<StockStatus, string> = {
+  "In Stock": "text-green-700",
+  "Low Stock": "text-yellow-700",
+  "Out of Stock": "text-red-500",
+};
 
 // Ordered list of categories for display
 // const CATEGORIES = [
@@ -21,7 +28,7 @@ const CATEGORIES = [
   { slug: "toys-and-games", name: "Toys & Games" },
 ];
 
-type ProductOptions = {
+type ProductOption = {
   slug: string;
   name: string;
   categorySlug: string;
@@ -620,9 +627,291 @@ function BulkDiscountsTab() {
   );
 }
 
+// ─── Price List Tab ───────────────────────────────────────────────────────────
+
+function PriceListDialog({
+  item,
+  products,
+  onSave,
+  onClose,
+}: {
+  item: PriceListItemAdmin | null;
+  products: ProductOption[];
+  onSave: (item: PriceListItemAdmin) => Promise<void>;
+  onClose: () => void;
+}) {
+  const [form, setForm] = useState<PriceListItemAdmin>(
+    item ?? { productSlug: "", productName: "", sku: "", category: "", moq: 1, unitPrice: 0, stockStatus: "In Stock", bulkTiers: [] },
+  );
+  const [saving, setSaving] = useState(false);
+
+  function handleProductChange(slug: string) {
+    const prod = products.find((p) => p.slug === slug);
+    if (prod) {
+      setForm((prev) => ({
+        ...prev,
+        productSlug: prod.slug,
+        productName: prod.name,
+        sku: prod.slug.toUpperCase().replace(/-/g, ""),
+        category: prod.categorySlug,
+      }));
+    }
+  }
+
+  function addTier() {
+    setForm((prev) => ({ ...prev, bulkTiers: [...prev.bulkTiers, { label: "", minQty: 1, pricePerUnit: 0 }] }));
+  }
+
+  function removeTier(index: number) {
+    setForm((prev) => ({ ...prev, bulkTiers: prev.bulkTiers.filter((_, i) => i !== index) }));
+  }
+
+  function updateTier(index: number, field: string, value: string | number) {
+    setForm((prev) => ({
+      ...prev,
+      bulkTiers: prev.bulkTiers.map((t, i) => (i === index ? { ...t, [field]: value } : t)),
+    }));
+  }
+
+  async function handleSubmit() {
+    if (!form.productSlug || form.unitPrice <= 0) return;
+    setSaving(true);
+    await onSave(form);
+    setSaving(false);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative bg-white border border-gray-200 p-8 max-w-lg w-full mx-4 shadow-xl z-10 space-y-4 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-lg font-medium text-gray-900">{item ? "Edit Price Entry" : "Add Price Entry"}</h2>
+
+        <div>
+          <label className="block text-xs tracking-wide text-gray-500 mb-1">Product *</label>
+          <select
+            value={form.productSlug}
+            onChange={(e) => handleProductChange(e.target.value)}
+            disabled={!!item}
+            className="w-full border border-gray-200 text-sm px-3 py-2 focus:outline-none focus:border-gray-400 disabled:bg-gray-50 disabled:text-gray-400"
+          >
+            <option value="">Select product</option>
+            {products.map((p) => (
+              <option key={p.slug} value={p.slug}>{p.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs tracking-wide text-gray-500 mb-1">SKU</label>
+          <input
+            type="text"
+            value={form.sku}
+            onChange={(e) => setForm({ ...form, sku: e.target.value })}
+            className="w-full border border-gray-200 text-sm px-3 py-2 focus:outline-none focus:border-gray-400"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-xs tracking-wide text-gray-500 mb-1">Unit Price (£) *</label>
+            <input
+              type="number"
+              min={0}
+              step={0.01}
+              value={form.unitPrice}
+              onChange={(e) => setForm({ ...form, unitPrice: Number(e.target.value) })}
+              className="w-full border border-gray-200 text-sm px-3 py-2 focus:outline-none focus:border-gray-400"
+            />
+          </div>
+          <div>
+            <label className="block text-xs tracking-wide text-gray-500 mb-1">MOQ</label>
+            <input
+              type="number"
+              min={1}
+              value={form.moq}
+              onChange={(e) => setForm({ ...form, moq: Number(e.target.value) })}
+              className="w-full border border-gray-200 text-sm px-3 py-2 focus:outline-none focus:border-gray-400"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs tracking-wide text-gray-500 mb-1">Stock Status</label>
+          <select
+            value={form.stockStatus}
+            onChange={(e) => setForm({ ...form, stockStatus: e.target.value as StockStatus })}
+            className="w-full border border-gray-200 text-sm px-3 py-2 focus:outline-none focus:border-gray-400"
+          >
+            <option value="In Stock">In Stock</option>
+            <option value="Low Stock">Low Stock</option>
+            <option value="Out of Stock">Out of Stock</option>
+          </select>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-xs tracking-wide text-gray-500">BULK TIERS</label>
+            <button type="button" onClick={addTier} className="flex items-center gap-1 text-xs text-gray-600 hover:text-gray-900 transition-colors">
+              <Plus className="w-3 h-3" strokeWidth={1.5} /> Add Tier
+            </button>
+          </div>
+          {form.bulkTiers.length > 0 && (
+            <div className="space-y-2">
+              <div className="grid grid-cols-[1fr_5rem_5rem_1.5rem] gap-2 text-xs text-gray-400 px-1">
+                <span>Label</span><span>Min Qty</span><span>£/unit</span><span />
+              </div>
+              {form.bulkTiers.map((tier, i) => (
+                <div key={i} className="grid grid-cols-[1fr_5rem_5rem_1.5rem] gap-2 items-center">
+                  <input
+                    placeholder="e.g. Bronze"
+                    value={tier.label}
+                    onChange={(e) => updateTier(i, "label", e.target.value)}
+                    className="border border-gray-200 text-xs px-2 py-1.5 focus:outline-none focus:border-gray-400"
+                  />
+                  <input
+                    type="number"
+                    min={1}
+                    value={tier.minQty}
+                    onChange={(e) => updateTier(i, "minQty", Number(e.target.value))}
+                    className="border border-gray-200 text-xs px-2 py-1.5 focus:outline-none focus:border-gray-400"
+                  />
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={tier.pricePerUnit}
+                    onChange={(e) => updateTier(i, "pricePerUnit", Number(e.target.value))}
+                    className="border border-gray-200 text-xs px-2 py-1.5 focus:outline-none focus:border-gray-400"
+                  />
+                  <button type="button" onClick={() => removeTier(i)} className="text-gray-300 hover:text-red-500 transition-colors">
+                    <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex gap-3 pt-2">
+          <button onClick={onClose} className="flex-1 py-2.5 border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors">Cancel</button>
+          <button
+            onClick={handleSubmit}
+            disabled={saving || !form.productSlug || form.unitPrice <= 0}
+            className="flex-1 py-2.5 bg-gray-900 text-white text-sm hover:bg-gray-800 transition-colors disabled:opacity-50"
+          >
+            {saving ? "Saving..." : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PriceListTab() {
+  const [items, setItems] = useState<PriceListItemAdmin[]>([]);
+  const [products, setProducts] = useState<ProductOption[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editItem, setEditItem] = useState<PriceListItemAdmin | null | "new">(null);
+
+  async function load() {
+    setLoading(true);
+    const [itemsData, productsData] = await Promise.all([
+      pricingAdminService.getPriceListAdmin(),
+      adminService.getProducts(),
+    ]);
+    setItems(itemsData);
+    setProducts(productsData.map((p) => ({ slug: p.slug, name: p.name, categorySlug: p.categorySlug })));
+    setLoading(false);
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function handleSave(item: PriceListItemAdmin) {
+    await pricingAdminService.savePriceListItem(item);
+    toast.success("Price entry saved");
+    setEditItem(null);
+    load();
+  }
+
+  async function handleDelete(id: string) {
+    await pricingAdminService.deletePriceListItem(id);
+    toast.success("Price entry deleted");
+    load();
+  }
+
+  if (loading) return <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-10 bg-gray-100 animate-pulse rounded" />)}</div>;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <button
+          onClick={() => setEditItem("new")}
+          className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm hover:bg-gray-800 transition-colors"
+        >
+          <Plus className="w-4 h-4" strokeWidth={1.5} />
+          Add Entry
+        </button>
+      </div>
+      <div className="bg-white border border-gray-200 overflow-x-auto">
+        {items.length === 0 ? (
+          <div className="py-12 text-center text-sm text-gray-400">No price entries yet. Add a product to get started.</div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100 bg-gray-50">
+                {["Product", "SKU", "MOQ", "Unit Price", "Bulk Tiers", "Stock", ""].map((h) => (
+                  <th key={h} className="px-4 py-3 text-left text-xs tracking-widests text-gray-500 font-normal whitespace-nowrap">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {items.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-4 py-3 text-gray-900 font-medium">{item.productName}</td>
+                  <td className="px-4 py-3 text-gray-500 font-mono text-xs">{item.sku}</td>
+                  <td className="px-4 py-3 text-gray-700">{item.moq}</td>
+                  <td className="px-4 py-3 text-gray-900">£{item.unitPrice.toFixed(2)}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-1">
+                      {item.bulkTiers.map((t) => (
+                        <span key={t.label} className="text-xs bg-yellow-50 border border-yellow-200 text-yellow-800 px-1.5 py-0.5">
+                          {t.label}: £{t.pricePerUnit.toFixed(2)}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className={`px-4 py-3 text-xs font-medium ${STOCK_STYLES[item.stockStatus]}`}>{item.stockStatus}</td>
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex items-center gap-2 justify-end">
+                      <button onClick={() => setEditItem(item)} className="p-1 text-gray-400 hover:text-gray-900 transition-colors">
+                        <Pencil className="w-4 h-4" strokeWidth={1.5} />
+                      </button>
+                      <button onClick={() => item.id && handleDelete(item.id)} className="p-1 text-gray-400 hover:text-red-600 transition-colors">
+                        <Trash2 className="w-4 h-4" strokeWidth={1.5} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+      {editItem !== null && (
+        <PriceListDialog
+          item={editItem === "new" ? null : editItem}
+          products={products}
+          onSave={handleSave}
+          onClose={() => setEditItem(null)}
+        />
+      )}
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-type Tab = "visibility" | "moq" | "bulk";
+type Tab = "visibility" | "moq" | "bulk" | "pricelist";
 
 export default function PricingAdminPage() {
   const [activeTab, setActiveTab] = useState<Tab>("visibility");
@@ -631,6 +920,7 @@ export default function PricingAdminPage() {
     { key: "visibility", label: "Visibility" },
     { key: "moq", label: "MOQ Rules" },
     { key: "bulk", label: "Bulk Discounts" },
+    { key: "pricelist", label: "Price List" },
   ];
 
   return (
@@ -663,6 +953,7 @@ export default function PricingAdminPage() {
       {activeTab === "visibility" && <VisibilityTab />}
       {activeTab === "moq" && <MOQTab />}
       {activeTab === "bulk" && <BulkDiscountsTab />}
+      {activeTab === "pricelist" && <PriceListTab />}
     </div>
   );
 }

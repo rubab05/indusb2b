@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { vendorsService, Vendor } from "../../../services/vendors.service";
+import { ApiError } from "../../../lib/api-client";
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { toast } from "sonner";
 
@@ -107,12 +108,23 @@ function VendorDialog({
     },
   );
   const [saving, setSaving] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   async function handleSubmit() {
     if (!form.name || !form.contactEmail) return;
     setSaving(true);
-    await onSave(form);
-    setSaving(false);
+    setFieldErrors({});
+    try {
+      await onSave(form);
+    } catch (err) {
+      if (err instanceof ApiError && err.details && typeof err.details === "object") {
+        setFieldErrors(err.details as Record<string, string>);
+      } else {
+        toast.error("Failed to save vendor");
+      }
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -127,18 +139,20 @@ function VendorDialog({
             <input
               type="text"
               value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full border border-gray-200 text-sm px-3 py-2 focus:outline-none focus:border-gray-400"
+              onChange={(e) => { setForm({ ...form, name: e.target.value }); setFieldErrors((p) => ({ ...p, name: "" })); }}
+              className={`w-full border text-sm px-3 py-2 focus:outline-none focus:border-gray-400 ${fieldErrors.name ? "border-red-400" : "border-gray-200"}`}
             />
+            {fieldErrors.name && <p className="text-xs text-red-500 mt-1">{fieldErrors.name}</p>}
           </div>
           <div>
             <label className="block text-xs tracking-wide text-gray-500 mb-1">Contact Email *</label>
             <input
               type="email"
               value={form.contactEmail}
-              onChange={(e) => setForm({ ...form, contactEmail: e.target.value })}
-              className="w-full border border-gray-200 text-sm px-3 py-2 focus:outline-none focus:border-gray-400"
+              onChange={(e) => { setForm({ ...form, contactEmail: e.target.value }); setFieldErrors((p) => ({ ...p, contactEmail: "" })); }}
+              className={`w-full border text-sm px-3 py-2 focus:outline-none focus:border-gray-400 ${fieldErrors.contactEmail ? "border-red-400" : "border-gray-200"}`}
             />
+            {fieldErrors.contactEmail && <p className="text-xs text-red-500 mt-1">{fieldErrors.contactEmail}</p>}
           </div>
           <div>
             <label className="block text-xs tracking-wide text-gray-500 mb-1">Contact Phone</label>
@@ -255,7 +269,7 @@ export default function VendorsPage() {
     await vendorsService.saveVendor(vendor);
     toast.success(vendor.id ? "Vendor updated" : "Vendor added");
     setEditVendor(null);
-    load();
+    await load();
   }
 
   async function handleDelete() {

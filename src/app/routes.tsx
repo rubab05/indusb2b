@@ -30,7 +30,6 @@ import AccountSettingsPage from "./pages/portal/AccountSettingsPage";
 import PriceListPage from "./pages/portal/PriceListPage";
 import MOQInfoPage from "./pages/portal/MOQInfoPage";
 import BulkOrderPage from "./pages/portal/BulkOrderPage";
-import QuickOrderPage from "./pages/portal/QuickOrderPage";
 import QuoteRequestPage from "./pages/portal/QuoteRequestPage";
 import AuthGuard from "./components/guards/AuthGuard";
 import WholesaleGuard from "./components/guards/WholesaleGuard";
@@ -62,6 +61,8 @@ import AdminReturnsPage from "./pages/admin/ReturnsPage";
 import ActivityLogPage from "./pages/admin/ActivityLogPage";
 import AdminSupportPage from "./pages/admin/AdminSupportPage";
 import AdminTopUpsPage from "./pages/admin/AdminTopUpsPage";
+import QuoteRequestsAdminPage from "./pages/admin/QuoteRequestsAdminPage";
+import MyQuotesPage from "./pages/portal/MyQuotesPage";
 
 // Redirect /categories/:slug → /category/:slug
 function CategorySlugRedirect() {
@@ -147,12 +148,12 @@ export const router = createBrowserRouter([
         element: <WholesaleGuard><BulkOrderPage /></WholesaleGuard>,
       },
       {
-        path: "orders/quick",
-        element: <WholesaleGuard><QuickOrderPage /></WholesaleGuard>,
-      },
-      {
         path: "quote-request",
         element: <WholesaleGuard><QuoteRequestPage /></WholesaleGuard>,
+      },
+      {
+        path: "my-quotes",
+        element: <WholesaleGuard><MyQuotesPage /></WholesaleGuard>,
       },
       // Dropship-only routes
       {
@@ -213,6 +214,7 @@ export const router = createBrowserRouter([
       { path: "operations/logs", Component: ActivityLogPage },
       { path: "operations/support", Component: AdminSupportPage },
       { path: "operations/topups", Component: AdminTopUpsPage },
+      { path: "operations/quotes", Component: QuoteRequestsAdminPage },
     ],
   },
 

@@ -15,6 +15,7 @@ const ALLOWED_MIME_TYPES = new Set([
   'image/gif',
   'image/webp',
   'image/svg+xml',
+  'application/pdf',
 ]);
 
 // ─── Multer Config ───────────────────────────────────────
@@ -41,7 +42,7 @@ function fileFilter(
     cb(
       new ApiError(
         400,
-        `Only image files are allowed (jpeg, png, gif, webp, svg). Received: ${file.mimetype}`
+        `Only image files and PDFs are allowed (jpeg, png, gif, webp, svg, pdf). Received: ${file.mimetype}`
       )
     );
   }

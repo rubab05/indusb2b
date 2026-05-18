@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useForm, useFieldArray } from "react-hook-form";
 import { adminService } from "../../../services/admin.service";
 import { CategoryContent, ProductFamilyContent } from "../../../lib/content-types";
 import { toast } from "sonner";
-import { Plus, Trash2, ArrowLeft, ExternalLink } from "lucide-react";
+import { Plus, Trash2, ArrowLeft, ExternalLink, Upload, Loader2, FileCheck, X } from "lucide-react";
 
 interface FormValues {
   name: string;
@@ -12,6 +12,7 @@ interface FormValues {
   categorySlug: string;
   description: string;
   summary: string;
+  specSheetUrl: string;
   seoTitle: string;
   seoDescription: string;
   features: Array<{ value: string }>;
@@ -39,10 +40,33 @@ export default function ProductEditPage() {
   const [loading, setLoading] = useState(!isNew);
   const [autoSlug, setAutoSlug] = useState(isNew);
   const [categories, setCategories] = useState<CategoryContent[]>([]);
+  const [specUploading, setSpecUploading] = useState(false);
+  const specFileRef = useRef<HTMLInputElement>(null);
+
+  async function handleSpecSheetUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      toast.error("Only PDF files are accepted");
+      return;
+    }
+    setSpecUploading(true);
+    try {
+      const media = await adminService.uploadMedia(file);
+      setValue("specSheetUrl", media.url, { shouldDirty: true });
+      toast.success("Spec sheet uploaded");
+    } catch {
+      toast.error("Upload failed — please try again");
+    } finally {
+      setSpecUploading(false);
+      if (specFileRef.current) specFileRef.current.value = "";
+    }
+  }
 
   const { register, control, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<FormValues>({
     defaultValues: {
       name: "", slug: "", categorySlug: "", description: "", summary: "",
+      specSheetUrl: "",
       seoTitle: "", seoDescription: "",
       features: [], useCases: [], gallery: [], specifications: [],
       variants: [], relatedProducts: [], relatedCategories: [],
@@ -80,6 +104,7 @@ export default function ProductEditPage() {
           categorySlug: prod.categorySlug,
           description: prod.description,
           summary: prod.summary,
+          specSheetUrl: prod.specSheetUrl ?? "",
           seoTitle: prod.seoTitle ?? "",
           seoDescription: prod.seoDescription ?? "",
           features: prod.features.map((f) => ({ value: f })),
@@ -105,6 +130,7 @@ export default function ProductEditPage() {
       name: data.name,
       description: data.description,
       summary: data.summary,
+      specSheetUrl: data.specSheetUrl || undefined,
       seoTitle: data.seoTitle || undefined,
       seoDescription: data.seoDescription || undefined,
       gallery: data.gallery.map((g) => ({ src: g.src, alt: g.alt })),
@@ -181,6 +207,54 @@ export default function ProductEditPage() {
             <div>
               <label className="block text-xs text-gray-500 mb-1.5">Summary</label>
               <textarea {...register("summary")} rows={3} className="w-full px-4 py-3 text-sm border border-gray-200 focus:outline-none focus:border-gray-400 resize-none transition-colors" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1.5">Spec Sheet</label>
+              <div className="space-y-2">
+                {/* Upload button row */}
+                <div className="flex items-center gap-2">
+                  <input
+                    ref={specFileRef}
+                    type="file"
+                    accept="application/pdf"
+                    className="hidden"
+                    onChange={handleSpecSheetUpload}
+                  />
+                  <button
+                    type="button"
+                    disabled={specUploading}
+                    onClick={() => specFileRef.current?.click()}
+                    className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 text-gray-700 hover:border-gray-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {specUploading ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" strokeWidth={1.5} />
+                    ) : (
+                      <Upload className="w-3.5 h-3.5" strokeWidth={1.5} />
+                    )}
+                    {specUploading ? "Uploading…" : "Upload PDF"}
+                  </button>
+                  {watch("specSheetUrl") && (
+                    <div className="flex items-center gap-1.5 flex-1 min-w-0 px-3 py-2 bg-green-50 border border-green-200 text-green-800 text-xs">
+                      <FileCheck className="w-3.5 h-3.5 shrink-0" strokeWidth={1.5} />
+                      <span className="truncate">{watch("specSheetUrl")}</span>
+                      <button
+                        type="button"
+                        onClick={() => setValue("specSheetUrl", "", { shouldDirty: true })}
+                        className="shrink-0 ml-auto text-green-600 hover:text-red-500 transition-colors"
+                      >
+                        <X className="w-3 h-3" strokeWidth={2} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {/* Manual URL fallback */}
+                <input
+                  {...register("specSheetUrl")}
+                  placeholder="Or paste a URL to an existing PDF"
+                  className="w-full px-4 py-2.5 text-sm border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors text-gray-500"
+                />
+              </div>
+              <p className="text-xs text-gray-400 mt-1">Upload a PDF or paste a URL. Enables the "Download Spec Sheet" button on the product page.</p>
             </div>
           </div>
         )}

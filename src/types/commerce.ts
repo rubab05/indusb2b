@@ -37,12 +37,23 @@ export interface OrderLineInput {
   qty: number;
 }
 
+export type QuoteStatus = 'pending' | 'responded';
+
 export interface QuoteRequest {
   id: string;
   referenceNumber: string;
-  lines: Array<{ productName: string; sku: string; qty: number }>;
-  specialRequirements: string;
-  submittedDate: string;
+  userId: string;
+  lines: Array<{ productName?: string; sku: string; quantity?: number; qty?: number }>;
+  specialRequirements: string | null;
+  status: QuoteStatus;
+  adminResponse: string | null;
+  respondedAt: string | null;
+  respondedBy: string | null;
+  createdAt: string;
+}
+
+export interface AdminQuoteRequest extends QuoteRequest {
+  partner: { id: string; email: string; companyName: string } | null;
 }
 
 export interface DropshipBalance {

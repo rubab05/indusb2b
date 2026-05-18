@@ -153,6 +153,7 @@ export type ProductFamilyContent = {
   specifications?: SpecRow[];
   relatedProducts?: LinkCard[];
   relatedCategories?: LinkCard[];
+  specSheetUrl?: string;
   support?: {
     title: string;
     description: string;

@@ -46,6 +46,34 @@ export const createBulkDiscountTierSchema = z.object({
 
 export const updateBulkDiscountTierSchema = createBulkDiscountTierSchema.partial();
 
+// ─── Price List Items ─────────────────────────────────────
+
+const bulkTierSchema = z.object({
+  label: z.string(),
+  minQty: z.number().int().positive(),
+  pricePerUnit: z.number().nonnegative(),
+});
+
+export const createPriceListItemSchema = z
+  .object({
+    productSlug: z.string().optional(),
+    productFamilyId: z.string().optional(),
+    moq: z.number().int().positive().default(1),
+    unitPrice: z.number().nonnegative(),
+    stockStatus: z.enum(['In Stock', 'Low Stock', 'Out of Stock']).default('In Stock'),
+    bulkTiers: z.array(bulkTierSchema).optional(),
+  })
+  .refine((d) => d.productSlug || d.productFamilyId, {
+    message: 'Either productSlug or productFamilyId is required',
+  });
+
+export const updatePriceListItemSchema = z.object({
+  moq: z.number().int().positive().optional(),
+  unitPrice: z.number().nonnegative().optional(),
+  stockStatus: z.enum(['In Stock', 'Low Stock', 'Out of Stock']).optional(),
+  bulkTiers: z.array(bulkTierSchema).optional(),
+});
+
 // ─── Vendors ─────────────────────────────────────────────
 
 export const createVendorSchema = z.object({
@@ -55,6 +83,7 @@ export const createVendorSchema = z.object({
   address: z.string().optional(),
   notes: z.string().optional(),
   status: z.enum(['active', 'inactive']).default('active'),
+  mappedProductFamilySlugs: z.array(z.string()).optional(),
 });
 
 export const updateVendorSchema = createVendorSchema.partial();
@@ -105,10 +134,10 @@ export const bulkUpdateOrderStatusSchema = z.object({
 // ─── Returns ─────────────────────────────────────────────
 
 export const createReturnSchema = z.object({
-  orderId: z.string().min(1),
+  orderNumber: z.string().min(1),
   partnerName: z.string().min(1),
   reason: z.enum(['DAMAGED', 'WRONG_ITEM', 'MISSING_ITEM', 'QUALITY_ISSUE', 'OTHER']),
-  description: z.string().min(10),
+  description: z.string().min(1),
 });
 
 export const updateReturnStatusSchema = z.object({
@@ -180,3 +209,5 @@ export type AssignTicketInput = z.infer<typeof assignTicketSchema>;
 export type AddTicketInternalNoteInput = z.infer<typeof addTicketInternalNoteSchema>;
 export type SetTicketPriorityInput = z.infer<typeof setTicketPrioritySchema>;
 export type AdminReplyTicketInput = z.infer<typeof adminReplyTicketSchema>;
+export type CreatePriceListItemInput = z.infer<typeof createPriceListItemSchema>;
+export type UpdatePriceListItemInput = z.infer<typeof updatePriceListItemSchema>;

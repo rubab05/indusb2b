@@ -420,14 +420,17 @@ model ActivityLog {
 }
 
 model QuoteRequest {
-  id                  String   @id @default(cuid())
-  referenceNumber     String   @unique
+  id                  String    @id @default(cuid())
+  referenceNumber     String    @unique
   userId              String
   lines               Json
   specialRequirements String?
-  status              String   @default("pending")
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  status              String    @default("pending")
+  adminResponse       String?
+  respondedAt         DateTime?
+  respondedBy         String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 }
 
 enum AccountType {

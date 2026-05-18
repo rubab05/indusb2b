@@ -211,10 +211,23 @@ export default function ProductPage() {
                   <LogIn className="w-4 h-4" />
                   LOGIN TO VIEW PRICING
                 </Link>
-                <Link to="/contact" className="w-full px-8 py-4 border-2 border-gray-200 text-gray-900 hover:border-gray-400 transition-colors text-sm tracking-wide flex items-center justify-center gap-2">
-                  <Download className="w-4 h-4" />
-                  DOWNLOAD SPEC SHEET
-                </Link>
+                {product.specSheetUrl ? (
+                  <a
+                    href={product.specSheetUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download
+                    className="w-full px-8 py-4 border-2 border-gray-200 text-gray-900 hover:border-gray-400 transition-colors text-sm tracking-wide flex items-center justify-center gap-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    DOWNLOAD SPEC SHEET
+                  </a>
+                ) : (
+                  <Link to="/contact" className="w-full px-8 py-4 border-2 border-gray-200 text-gray-400 hover:border-gray-300 transition-colors text-sm tracking-wide flex items-center justify-center gap-2 cursor-pointer">
+                    <Download className="w-4 h-4" />
+                    REQUEST SPEC SHEET
+                  </Link>
+                )}
               </div>
 
               {/* B2B Pricing Notice */}

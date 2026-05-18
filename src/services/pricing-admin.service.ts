@@ -1,4 +1,18 @@
 import { api } from '../lib/api-client';
+import { StockStatus } from '../types/commerce';
+
+export interface PriceListItemAdmin {
+  id?: string;
+  productFamilyId?: string;
+  productSlug: string;
+  productName: string;
+  sku: string;
+  category: string;
+  moq: number;
+  unitPrice: number;
+  stockStatus: StockStatus;
+  bulkTiers: Array<{ label: string; minQty: number; pricePerUnit: number }>;
+}
 
 export interface PricingRule {
   id?: string;
@@ -127,6 +141,59 @@ async function deleteBulkDiscountTier(id: string): Promise<void> {
   await api.delete(`/admin/pricing/tiers/${id}`);
 }
 
+// ---------- Price List CRUD ----------
+
+function normalizePriceListItemAdmin(item: any): PriceListItemAdmin {
+  const rawCategory = item.category ?? item.productFamily?.category?.name ?? '';
+  const category =
+    rawCategory !== null && typeof rawCategory === 'object'
+      ? (rawCategory.name ?? '')
+      : rawCategory;
+
+  return {
+    id: item.id,
+    productFamilyId: item.productFamilyId ?? item.productFamily?.id,
+    productSlug: item.productSlug ?? item.productFamily?.slug ?? '',
+    productName: item.productName ?? item.productFamily?.name ?? '',
+    sku: item.sku ?? item.productSlug ?? '',
+    category,
+    moq: Number(item.moq ?? 0),
+    unitPrice: Number(item.unitPrice ?? 0),
+    stockStatus: (item.stockStatus ?? 'In Stock') as StockStatus,
+    bulkTiers: Array.isArray(item.bulkTiers)
+      ? item.bulkTiers.map((t: any) => ({
+          label: t.label ?? '',
+          minQty: Number(t.minQty ?? 0),
+          pricePerUnit: Number(t.pricePerUnit ?? 0),
+        }))
+      : [],
+  };
+}
+
+async function getPriceListAdmin(): Promise<PriceListItemAdmin[]> {
+  // Try admin endpoint first; fall back to the public price-list endpoint (same data, different access level)
+  try {
+    const data = await api.get<any[]>('/admin/pricing/price-list');
+    if (Array.isArray(data) && data.length > 0) {
+      return data.map(normalizePriceListItemAdmin);
+    }
+  } catch { /* fall through */ }
+  const data = await api.get<any[]>('/pricing/price-list');
+  return Array.isArray(data) ? data.map(normalizePriceListItemAdmin) : [];
+}
+
+async function savePriceListItem(item: PriceListItemAdmin): Promise<PriceListItemAdmin> {
+  const saved =
+    item.id && !item.id.startsWith('price-new')
+      ? await api.put<any>(`/admin/pricing/price-list/${item.id}`, item)
+      : await api.post<any>('/admin/pricing/price-list', item);
+  return normalizePriceListItemAdmin(saved);
+}
+
+async function deletePriceListItem(id: string): Promise<void> {
+  await api.delete(`/admin/pricing/price-list/${id}`);
+}
+
 export const pricingAdminService = {
   getPricingRules,
   savePricingRules,
@@ -136,4 +203,7 @@ export const pricingAdminService = {
   getBulkDiscountTiers,
   saveBulkDiscountTier,
   deleteBulkDiscountTier,
+  getPriceListAdmin,
+  savePriceListItem,
+  deletePriceListItem,
 };

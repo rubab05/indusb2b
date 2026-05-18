@@ -41,12 +41,21 @@ async function getVendorById(id: string): Promise<Vendor | null> {
 }
 
 async function saveVendor(data: Vendor): Promise<Vendor> {
-  let saved: any;
+  const payload = {
+    name: data.name,
+    contactEmail: data.contactEmail,
+    contactPhone: data.contactPhone,
+    address: data.address,
+    notes: data.notes,
+    status: data.status,
+    mappedProductFamilySlugs: data.mappedProductFamilies,
+  };
 
+  let saved: any;
   if (data.id && !data.id.startsWith('v-new')) {
-    saved = await api.put<any>(`/admin/vendors/${data.id}`, data);
+    saved = await api.put<any>(`/admin/vendors/${data.id}`, payload);
   } else {
-    saved = await api.post<any>('/admin/vendors', data);
+    saved = await api.post<any>('/admin/vendors', payload);
   }
 
   return normalizeVendor(saved);

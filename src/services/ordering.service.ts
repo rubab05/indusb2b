@@ -60,4 +60,9 @@ export const orderingService = {
   }): Promise<QuoteRequest> {
     return api.post<QuoteRequest>('/pricing/quote-request', data);
   },
+
+  async getMyQuotes(): Promise<QuoteRequest[]> {
+    const data = await api.get<QuoteRequest[]>('/pricing/quote-requests');
+    return Array.isArray(data) ? data : [];
+  },
 };

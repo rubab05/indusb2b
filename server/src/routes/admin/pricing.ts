@@ -8,6 +8,8 @@ import {
   updateMOQRuleSchema,
   createBulkDiscountTierSchema,
   updateBulkDiscountTierSchema,
+  createPriceListItemSchema,
+  updatePriceListItemSchema,
 } from '../../validators/admin.validators.js';
 import * as adminService from '../../services/admin.service.js';
 import { apiSuccess } from '../../utils/api-response.js';
@@ -157,6 +159,55 @@ router.delete('/tiers/:id', async (req: Request, res: Response, next: NextFuncti
   try {
     const admin = req.user!;
     await adminService.deleteBulkDiscountTier(req.params['id'] as string, admin.id, admin.companyName);
+    res.json(apiSuccess(null));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ─── Price List Items ─────────────────────────────────────
+
+router.get('/price-list', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const items = await adminService.listPriceListItems();
+    res.json(apiSuccess(items));
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post(
+  '/price-list',
+  validate(createPriceListItemSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const admin = req.user!;
+      const item = await adminService.createPriceListItem(req.body, admin.id, admin.companyName);
+      res.status(201).json(apiSuccess(item));
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.put(
+  '/price-list/:id',
+  validate(updatePriceListItemSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const admin = req.user!;
+      const item = await adminService.updatePriceListItem(req.params['id'] as string, req.body, admin.id, admin.companyName);
+      res.json(apiSuccess(item));
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.delete('/price-list/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const admin = req.user!;
+    await adminService.deletePriceListItem(req.params['id'] as string, admin.id, admin.companyName);
     res.json(apiSuccess(null));
   } catch (err) {
     next(err);

@@ -80,10 +80,34 @@ export const pricingService = {
   },
 
   async getMOQRules(): Promise<MOQRule[]> {
-    return api.get<MOQRule[]>('/pricing/moq-rules');
+    try {
+      const data = await api.get<any[]>('/pricing/moq-rules');
+      if (!Array.isArray(data) || data.length === 0) return MOQ_RULES;
+      return data.map((rule: any) => ({
+        category:
+          rule.category !== null && typeof rule.category === 'object'
+            ? (rule.category.name ?? '')
+            : (rule.category ?? ''),
+        moq: toNumber(rule.moq ?? rule.minQuantity),
+        unit: rule.unit ?? 'units',
+        notes: rule.notes ?? '',
+      }));
+    } catch {
+      return MOQ_RULES;
+    }
   },
 
   async getBulkDiscounts(): Promise<BulkDiscount[]> {
-    return api.get<BulkDiscount[]>('/pricing/bulk-discounts');
+    try {
+      const data = await api.get<any[]>('/pricing/bulk-discounts');
+      if (!Array.isArray(data) || data.length === 0) return BULK_DISCOUNTS;
+      return data.map((tier: any) => ({
+        tierLabel: tier.tierLabel ?? tier.tierName ?? '',
+        minSpend: tier.minSpend ?? (tier.minQty != null ? `£${tier.minQty}` : '£0'),
+        discountPercent: toNumber(tier.discountPercent),
+      }));
+    } catch {
+      return BULK_DISCOUNTS;
+    }
   },
 };

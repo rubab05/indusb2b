@@ -256,6 +256,7 @@ function normalizeProduct(raw: any): ProductFamilyContent {
     relatedProducts: Array.isArray(meta.relatedProducts) ? meta.relatedProducts : undefined,
     relatedCategories: Array.isArray(meta.relatedCategories) ? meta.relatedCategories : undefined,
     support,
+    specSheetUrl: meta.specSheetUrl ?? raw.specSheetUrl ?? undefined,
   };
 }
 
@@ -291,6 +292,7 @@ function productToDbPayload(data: ProductFamilyContent) {
     supportTitle: data.support?.title ?? '',
     supportCtas: data.support?.ctas ?? [],
     description: data.description,
+    specSheetUrl: data.specSheetUrl ?? '',
   };
 
   return {

@@ -248,14 +248,14 @@ export async function createReturn(
   adminId: string,
   adminName: string
 ) {
-  const order = await prisma.order.findUnique({ where: { id: data.orderId } });
+  const order = await prisma.order.findUnique({ where: { orderNumber: data.orderNumber } });
   if (!order) throw ApiError.notFound('Order not found');
 
   const returnNumber = generateReturnNumber();
   const ret = await prisma.returnRequest.create({
     data: {
       returnNumber,
-      orderId: data.orderId,
+      orderId: order.id,
       partnerName: data.partnerName,
       reason: data.reason,
       description: data.description,

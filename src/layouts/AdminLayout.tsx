@@ -28,6 +28,7 @@ import {
   RotateCcw,
   LifeBuoy,
   Wallet,
+  FileQuestion,
 } from "lucide-react";
 
 interface NavSection {
@@ -75,6 +76,7 @@ const NAV_SECTIONS: NavSection[] = [
       { label: "Activity Log", to: "/admin/operations/logs", icon: Activity },
       { label: "Support", to: "/admin/operations/support", icon: LifeBuoy },
       { label: "Top-Up Requests", to: "/admin/operations/topups", icon: Wallet },
+      { label: "Quote Requests", to: "/admin/operations/quotes", icon: FileQuestion },
     ],
   },
 ];

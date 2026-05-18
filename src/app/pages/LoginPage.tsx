@@ -20,6 +20,7 @@ export default function LoginPage() {
     if (user.approvalStatus === ApprovalStatus.REJECTED || user.approvalStatus === ApprovalStatus.SUSPENDED) {
       return <Navigate to="/apply/restricted" replace />;
     }
+    if (user.role === "ADMIN") return <Navigate to="/admin/categories" replace />;
     return <Navigate to="/dashboard" replace />;
   }
 
