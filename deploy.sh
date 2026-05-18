@@ -21,9 +21,13 @@ echo "Installing backend dependencies..."
 cd server
 npm install
 
-echo "Generating Prisma client and applying migrations..."
+echo "Generating Prisma client and syncing schema..."
 npx prisma generate
-npx prisma migrate deploy
+if [ -d prisma/migrations ] && [ "$(ls -A prisma/migrations 2>/dev/null)" ]; then
+  npx prisma migrate deploy
+else
+  npx prisma db push --accept-data-loss
+fi
 
 echo "Building backend..."
 npm run build
