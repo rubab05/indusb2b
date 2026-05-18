@@ -11,7 +11,7 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
-    <nav className="flex items-center gap-2 text-sm text-gray-600">
+    <nav className="flex flex-wrap items-center gap-1 md:gap-2 text-sm text-gray-600">
       {items.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
           {item.href ? (

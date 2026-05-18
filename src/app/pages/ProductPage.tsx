@@ -61,7 +61,7 @@ export default function ProductPage() {
     return (
       <div className="min-h-screen bg-white">
         <Header />
-        <div className="max-w-[1400px] mx-auto px-8 py-32 text-center text-gray-400 text-sm">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-16 md:py-32 text-center text-gray-400 text-sm">
           Loading…
         </div>
         <Footer />
@@ -100,7 +100,7 @@ export default function ProductPage() {
 
       {/* Breadcrumbs */}
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-[1400px] mx-auto px-8 py-6">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-4 md:py-6">
           <Breadcrumbs
             items={[
               { label: "Home", href: "/" },
@@ -113,9 +113,9 @@ export default function ProductPage() {
       </div>
 
       {/* Product Hero */}
-      <section className="py-16 bg-white">
-        <div className="max-w-[1400px] mx-auto px-8">
-          <div className="grid lg:grid-cols-2 gap-16">
+      <section className="py-8 md:py-16 bg-white">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-16">
             {/* Left: Image Gallery */}
             <div>
               <ProductImageGallery images={galleryImages} />
@@ -123,25 +123,25 @@ export default function ProductPage() {
 
             {/* Right: Product Info */}
             <div>
-              <div className="text-xs tracking-widest text-gray-500 mb-4">
+              <div className="text-xs tracking-widest text-gray-500 mb-3 md:mb-4">
                 {categorySlug.toUpperCase().replace(/-/g, " ")}
               </div>
-              <h1 className="text-5xl mb-6 tracking-tight">{product.name}</h1>
-              <p className="text-lg text-gray-600 leading-relaxed mb-10">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl mb-4 md:mb-6 tracking-tight">{product.name}</h1>
+              <p className="text-base md:text-lg text-gray-600 leading-relaxed mb-6 md:mb-10">
                 {product.description}
               </p>
 
               {/* Selectors */}
-              <div className="space-y-6 mb-10">
+              <div className="space-y-5 md:space-y-6 mb-6 md:mb-10">
                 {selectorSizes.length > 0 && (
                   <div>
                     <label className="block text-sm mb-3 text-gray-900">Select Size</label>
-                    <div className="flex gap-3 flex-wrap">
+                    <div className="flex gap-2 md:gap-3 flex-wrap">
                       {selectorSizes.map((size) => (
                         <button
                           key={size}
                           onClick={() => setSelectedSize(size)}
-                          className={`px-6 py-3 border-2 text-sm tracking-wide transition-colors ${
+                          className={`px-4 md:px-6 py-2 md:py-3 border-2 text-sm tracking-wide transition-colors ${
                             selectedSize === size
                               ? "border-gray-900 bg-gray-900 text-white"
                               : "border-gray-200 hover:border-gray-400"
@@ -157,12 +157,12 @@ export default function ProductPage() {
                 {selectorCapacities.length > 0 && (
                   <div>
                     <label className="block text-sm mb-3 text-gray-900">Select Capacity</label>
-                    <div className="flex gap-3 flex-wrap">
+                    <div className="flex gap-2 md:gap-3 flex-wrap">
                       {selectorCapacities.map((capacity) => (
                         <button
                           key={capacity}
                           onClick={() => setSelectedCapacity(capacity)}
-                          className={`px-6 py-3 border-2 text-sm tracking-wide transition-colors ${
+                          className={`px-4 md:px-6 py-2 md:py-3 border-2 text-sm tracking-wide transition-colors ${
                             selectedCapacity === capacity
                               ? "border-gray-900 bg-gray-900 text-white"
                               : "border-gray-200 hover:border-gray-400"
@@ -178,12 +178,12 @@ export default function ProductPage() {
                 {selectorFinishes.length > 0 && (
                   <div>
                     <label className="block text-sm mb-3 text-gray-900">Select Colour / Finish</label>
-                    <div className="flex gap-3 flex-wrap">
+                    <div className="flex gap-2 md:gap-3 flex-wrap">
                       {selectorFinishes.map((finish) => (
                         <button
                           key={finish}
                           onClick={() => setSelectedFinish(finish)}
-                          className={`px-6 py-3 border-2 text-sm tracking-wide transition-colors ${
+                          className={`px-4 md:px-6 py-2 md:py-3 border-2 text-sm tracking-wide transition-colors ${
                             selectedFinish === finish
                               ? "border-gray-900 bg-gray-900 text-white"
                               : "border-gray-200 hover:border-gray-400"
@@ -198,7 +198,7 @@ export default function ProductPage() {
               </div>
 
               {/* CTAs */}
-              <div className="space-y-4 mb-6">
+              <div className="space-y-3 md:space-y-4 mb-6">
                 <Link to="/contact" className="w-full px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide flex items-center justify-center gap-2">
                   <FileText className="w-4 h-4" />
                   REQUEST QUOTE
@@ -231,14 +231,14 @@ export default function ProductPage() {
               </div>
 
               {/* B2B Pricing Notice */}
-              <div className="bg-yellow-50 border border-yellow-200 p-4 mb-6">
+              <div className="bg-yellow-50 border border-yellow-200 p-4 mb-4 md:mb-6">
                 <p className="text-sm text-gray-800 leading-relaxed">
                   <strong>Trade pricing available after account approval.</strong> Apply for wholesale or dropship access to view partner-specific pricing.
                 </p>
               </div>
 
               {/* MOQ & Bulk Notice */}
-              <div className="bg-gray-50 border border-gray-200 p-4 mb-10">
+              <div className="bg-gray-50 border border-gray-200 p-4 mb-6 md:mb-10">
                 <p className="text-sm text-gray-700 leading-relaxed">
                   MOQ rules may apply by product or category. Contact our B2B team for bulk ordering and volume discount information.
                 </p>
@@ -249,18 +249,18 @@ export default function ProductPage() {
       </section>
 
       {/* Product Description */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-[1400px] mx-auto px-8">
-          <div className="grid lg:grid-cols-2 gap-16">
+      <section className="py-12 md:py-24 bg-gray-50">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-16">
             {/* Overview */}
             <div>
-              <h2 className="text-3xl mb-6 tracking-tight">Overview</h2>
+              <h2 className="text-xl md:text-2xl lg:text-3xl mb-4 md:mb-6 tracking-tight">Overview</h2>
               <p className="text-base text-gray-600 leading-relaxed">{product.summary}</p>
             </div>
 
             {/* Key Features */}
             <div>
-              <h2 className="text-3xl mb-6 tracking-tight">Key Features</h2>
+              <h2 className="text-xl md:text-2xl lg:text-3xl mb-4 md:mb-6 tracking-tight">Key Features</h2>
               <ul className="space-y-3">
                 {product.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
@@ -274,7 +274,7 @@ export default function ProductPage() {
             {/* Use Cases */}
             {(product.useCases ?? []).length > 0 && (
               <div>
-                <h2 className="text-3xl mb-6 tracking-tight">Use Cases</h2>
+                <h2 className="text-xl md:text-2xl lg:text-3xl mb-4 md:mb-6 tracking-tight">Use Cases</h2>
                 <p className="text-base text-gray-600 leading-relaxed mb-4">
                   Perfect for a wide range of everyday cooking needs:
                 </p>
@@ -290,7 +290,7 @@ export default function ProductPage() {
 
             {/* Why It Works for Retail */}
             <div>
-              <h2 className="text-3xl mb-6 tracking-tight">Why It Works for Retail</h2>
+              <h2 className="text-xl md:text-2xl lg:text-3xl mb-4 md:mb-6 tracking-tight">Why It Works for Retail</h2>
               <p className="text-base text-gray-600 leading-relaxed">
                 A practical product line with broad household relevance, easy merchandising, and strong
                 compatibility with larger ranges in the same category.
@@ -302,9 +302,9 @@ export default function ProductPage() {
 
       {/* Specification Table */}
       {specs.length > 0 && (
-        <section className="py-24 bg-white">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <h2 className="text-4xl mb-12 tracking-tight">Specifications & Size Guide</h2>
+        <section className="py-12 md:py-24 bg-white">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-12 tracking-tight">Specifications & Size Guide</h2>
             <SpecTable specs={specs} />
           </div>
         </section>
@@ -312,10 +312,10 @@ export default function ProductPage() {
 
       {/* Related Variants */}
       {(product.variants ?? []).length > 0 && (
-        <section className="py-24 bg-gray-50">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <h2 className="text-4xl mb-12 tracking-tight">Variants & Options</h2>
-            <div className="grid md:grid-cols-3 gap-8">
+        <section className="py-12 md:py-24 bg-gray-50">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-12 tracking-tight">Variants & Options</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
               {(product.variants ?? []).map((variant) => {
                 const spec = (product.specifications ?? []).find(
                   (s) => s.variant === variant.title
@@ -337,12 +337,12 @@ export default function ProductPage() {
 
       {/* Commonly Bought With */}
       {(product.relatedProducts ?? []).length > 0 && (
-        <section className="py-24 bg-white">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <h2 className="text-4xl mb-12 tracking-tight">Commonly Bought With</h2>
+        <section className="py-12 md:py-24 bg-white">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-12 tracking-tight">Commonly Bought With</h2>
             <ProductCarousel slidesToShow={5}>
               {(product.relatedProducts ?? []).map((related) => (
-                <div key={related.title} className="px-4">
+                <div key={related.title} className="px-2 md:px-4">
                   <ProductCard
                     name={related.title}
                     imageUrl={related.image ?? ""}
@@ -356,23 +356,23 @@ export default function ProductPage() {
       )}
 
       {/* Enquiry Form */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-8">
+      <section className="py-12 md:py-24 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 md:px-8">
           <EnquiryForm />
         </div>
       </section>
 
       {/* Support Block */}
       {product.support && (
-        <section className="py-16 bg-white">
-          <div className="max-w-4xl mx-auto px-8">
-            <div className="bg-gray-50 border border-gray-200 p-10 text-center">
-              <MessageCircle className="w-12 h-12 mx-auto mb-6 text-gray-900" strokeWidth={1.5} />
-              <h2 className="text-2xl mb-4 tracking-tight">{product.support.title}</h2>
-              <p className="text-base text-gray-600 mb-8 leading-relaxed">
+        <section className="py-10 md:py-16 bg-white">
+          <div className="max-w-4xl mx-auto px-4 md:px-8">
+            <div className="bg-gray-50 border border-gray-200 p-6 md:p-10 text-center">
+              <MessageCircle className="w-12 h-12 mx-auto mb-4 md:mb-6 text-gray-900" strokeWidth={1.5} />
+              <h2 className="text-xl md:text-2xl mb-3 md:mb-4 tracking-tight">{product.support.title}</h2>
+              <p className="text-base text-gray-600 mb-6 md:mb-8 leading-relaxed">
                 {product.support.description}
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex flex-wrap justify-center gap-3 md:gap-4">
                 {(product.support.ctas ?? []).map((cta) => (
                   <Link
                     key={cta.label}
@@ -394,10 +394,10 @@ export default function ProductPage() {
 
       {/* Related Categories */}
       {(product.relatedCategories ?? []).length > 0 && (
-        <section className="py-24 bg-gray-50">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <h2 className="text-4xl mb-12 tracking-tight">Related Categories</h2>
-            <div className="grid md:grid-cols-3 gap-6">
+        <section className="py-12 md:py-24 bg-gray-50">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-12 tracking-tight">Related Categories</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {(product.relatedCategories ?? []).map((rel) => (
                 <CategoryCard
                   key={rel.title}

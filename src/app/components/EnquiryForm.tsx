@@ -10,6 +10,7 @@ export function EnquiryForm({ productName }: Props) {
     name: "",
     company: "",
     email: "",
+    product: productName ?? "",
     quantity: "",
     message: "",
   });
@@ -44,7 +45,7 @@ export function EnquiryForm({ productName }: Props) {
         name: form.name,
         company: form.company,
         email: form.email,
-        product: productName || undefined,
+        product: form.product || undefined,
         quantity: form.quantity || undefined,
         message: form.message || undefined,
       });
@@ -61,7 +62,7 @@ export function EnquiryForm({ productName }: Props) {
 
   if (submitted) {
     return (
-      <div className="bg-gray-50 border border-gray-200 p-12 text-center space-y-4">
+      <div className="bg-gray-50 border border-gray-200 p-6 md:p-12 text-center space-y-4">
         <div className="w-12 h-12 bg-green-50 border-2 border-green-500 flex items-center justify-center mx-auto">
           <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -76,8 +77,8 @@ export function EnquiryForm({ productName }: Props) {
   }
 
   return (
-    <div className="bg-gray-50 border border-gray-200 p-12">
-      <h2 className="text-3xl mb-3 tracking-tight">Need Higher Quantity or Trade Pricing?</h2>
+    <div className="bg-gray-50 border border-gray-200 p-6 md:p-12">
+      <h2 className="text-2xl md:text-3xl mb-3 tracking-tight">Need Higher Quantity or Trade Pricing?</h2>
       <p className="text-sm text-gray-600 mb-10">
         Complete the form below and our trade team will get back to you within 24 hours.
       </p>
@@ -131,9 +132,10 @@ export function EnquiryForm({ productName }: Props) {
             <input
               type="text"
               id="enq-product"
-              value={productName ?? ""}
-              readOnly
-              className="w-full px-4 py-3 border border-gray-300 bg-gray-100 focus:outline-none"
+              value={form.product}
+              readOnly={!!productName}
+              onChange={(e) => set("product", e.target.value)}
+              className={`w-full px-4 py-3 border border-gray-300 focus:outline-none focus:border-gray-900 transition-colors${productName ? " bg-gray-100" : ""}`}
             />
           </div>
         </div>

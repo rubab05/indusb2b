@@ -9,14 +9,14 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
   const [selectedImage, setSelectedImage] = useState(0);
 
   return (
-    <div className="flex gap-6">
-      {/* Thumbnail Column */}
-      <div className="flex flex-col gap-4 w-24">
+    <div className="flex flex-col-reverse gap-3 md:flex-row md:gap-6">
+      {/* Thumbnail strip — horizontal row on mobile, vertical column on md+ */}
+      <div className="flex flex-row gap-2 md:flex-col md:gap-4 md:w-24">
         {images.map((image, index) => (
           <button
             key={index}
             onClick={() => setSelectedImage(index)}
-            className={`aspect-square border-2 overflow-hidden transition-colors ${
+            className={`aspect-square border-2 overflow-hidden transition-colors flex-shrink-0 w-16 md:w-full ${
               selectedImage === index ? 'border-gray-900' : 'border-gray-200 hover:border-gray-400'
             }`}
           >

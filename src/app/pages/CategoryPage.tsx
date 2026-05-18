@@ -52,7 +52,7 @@ export default function CategoryPage() {
     return (
       <div className="min-h-screen bg-white">
         <Header />
-        <div className="max-w-[1400px] mx-auto px-8 py-32 text-center text-gray-400 text-sm">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-16 md:py-32 text-center text-gray-400 text-sm">
           Loading…
         </div>
         <Footer />
@@ -71,7 +71,7 @@ export default function CategoryPage() {
 
       {/* Breadcrumbs */}
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-[1400px] mx-auto px-8 py-6">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-4 md:py-6">
           <Breadcrumbs
             items={[
               { label: "Home", href: "/" },
@@ -83,23 +83,23 @@ export default function CategoryPage() {
       </div>
 
       {/* Category Hero */}
-      <section className="py-20 bg-white">
-        <div className="max-w-[1400px] mx-auto px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <section className="py-10 md:py-20 bg-white">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
             {/* Left: Text */}
             <div>
-              <div className="text-xs tracking-widest text-gray-500 mb-4">
+              <div className="text-xs tracking-widest text-gray-500 mb-3 md:mb-4">
                 {category.name.toUpperCase()}
               </div>
-              <h1 className="text-5xl mb-8 tracking-tight leading-tight">{category.name}</h1>
-              <p className="text-lg text-gray-600 leading-relaxed mb-10">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl mb-6 md:mb-8 tracking-tight leading-tight">{category.name}</h1>
+              <p className="text-base md:text-lg text-gray-600 leading-relaxed mb-6 md:mb-10">
                 {category.description}
               </p>
-              <div className="flex gap-4">
-                <Link to="/contact" className="px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                <Link to="/contact" className="px-8 py-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm tracking-wide text-center">
                   REQUEST CATEGORY CATALOGUE
                 </Link>
-                <Link to="/contact" className="px-8 py-4 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-sm tracking-wide">
+                <Link to="/contact" className="px-8 py-4 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-sm tracking-wide text-center">
                   ENQUIRE ABOUT THIS RANGE
                 </Link>
               </div>
@@ -107,8 +107,8 @@ export default function CategoryPage() {
 
             {/* Right: Product Collage — up to 4 hero images in a 2×2 grid */}
             {heroImages.length > 0 && (
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3 md:gap-4">
+                <div className="space-y-3 md:space-y-4">
                   {heroImages[0] && (
                     <div className="aspect-square overflow-hidden bg-gray-50">
                       <ImageWithFallback src={heroImages[0].src} alt={heroImages[0].alt} className="w-full h-full object-cover" />
@@ -120,7 +120,7 @@ export default function CategoryPage() {
                     </div>
                   )}
                 </div>
-                <div className="space-y-4 pt-8">
+                <div className="space-y-3 md:space-y-4 pt-6 md:pt-8">
                   {heroImages[2] && (
                     <div className="aspect-square overflow-hidden bg-gray-50">
                       <ImageWithFallback src={heroImages[2].src} alt={heroImages[2].alt} className="w-full h-full object-cover" />
@@ -139,8 +139,8 @@ export default function CategoryPage() {
       </section>
 
       {/* Intro Strip */}
-      <section className="py-8 bg-gray-50 border-y border-gray-100">
-        <div className="max-w-[1400px] mx-auto px-8 text-center">
+      <section className="py-6 md:py-8 bg-gray-50 border-y border-gray-100">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 text-center">
           <p className="text-sm text-gray-600 leading-relaxed">
             {category.description.split('.')[0]}.
           </p>
@@ -148,10 +148,10 @@ export default function CategoryPage() {
       </section>
 
       {/* Trade Utility Strip */}
-      <section className="py-12 bg-white border-b border-gray-100">
-        <div className="max-w-[1400px] mx-auto px-8">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+      <section className="py-6 md:py-12 bg-white border-b border-gray-100">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+          <div className="flex flex-wrap items-center justify-between gap-3 md:gap-4">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3">
               <div className="px-4 py-2 bg-yellow-500 text-gray-900 text-xs tracking-wide">
                 PRICING VISIBLE AFTER APPROVAL
               </div>
@@ -159,16 +159,16 @@ export default function CategoryPage() {
                 MOQ & BULK ORDERING AVAILABLE
               </div>
             </div>
-            <div className="flex gap-3">
-              <Link to="/contact" className="px-6 py-3 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-xs tracking-wide flex items-center gap-2">
+            <div className="flex flex-wrap gap-2 md:gap-3">
+              <Link to="/contact" className="px-4 md:px-6 py-2 md:py-3 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-xs tracking-wide flex items-center gap-2">
                 <Download className="w-4 h-4" />
-                REQUEST CATEGORY PRICE LIST
+                REQUEST PRICE LIST
               </Link>
-              <Link to="/contact" className="px-6 py-3 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-xs tracking-wide flex items-center gap-2">
+              <Link to="/contact" className="px-4 md:px-6 py-2 md:py-3 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-xs tracking-wide flex items-center gap-2">
                 <HelpCircle className="w-4 h-4" />
                 ASK ABOUT MOQ
               </Link>
-              <Link to="/apply" className="px-6 py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-xs tracking-wide flex items-center gap-2">
+              <Link to="/apply" className="px-4 md:px-6 py-2 md:py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-xs tracking-wide flex items-center gap-2">
                 <FileText className="w-4 h-4" />
                 APPLY FOR TRADE ACCESS
               </Link>
@@ -179,12 +179,12 @@ export default function CategoryPage() {
 
       {/* Featured Product Families */}
       {category.featuredFamilies.length > 0 && (
-        <section className="py-24 bg-gray-50">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <h2 className="text-4xl mb-16 tracking-tight">Featured Product Families</h2>
+        <section className="py-12 md:py-24 bg-gray-50">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-16 tracking-tight">Featured Product Families</h2>
             <ProductCarousel slidesToShow={3}>
               {category.featuredFamilies.map((item) => (
-                <div key={item.title} className="px-4">
+                <div key={item.title} className="px-2 md:px-4">
                   <FeaturedProductCard
                     title={item.title}
                     imageUrl={item.image ?? ""}
@@ -201,13 +201,13 @@ export default function CategoryPage() {
 
       {/* Category Benefits */}
       {(category.benefits ?? []).length > 0 && (
-        <section className="py-24 bg-white">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <h2 className="text-4xl mb-16 tracking-tight">Category Benefits</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <section className="py-12 md:py-24 bg-white">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-16 tracking-tight">Category Benefits</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
               {(category.benefits ?? []).map((benefit) => (
-                <div key={benefit.title} className="border border-gray-100 p-8">
-                  <CheckCircle2 className="w-10 h-10 text-gray-900 mb-6" strokeWidth={1.5} />
+                <div key={benefit.title} className="border border-gray-100 p-6 md:p-8">
+                  <CheckCircle2 className="w-10 h-10 text-gray-900 mb-4 md:mb-6" strokeWidth={1.5} />
                   <h3 className="text-lg mb-3 tracking-tight">{benefit.title}</h3>
                   <p className="text-sm text-gray-600 leading-relaxed">{benefit.description}</p>
                 </div>
@@ -218,12 +218,12 @@ export default function CategoryPage() {
       )}
 
             {liveProducts.length > 0 && (
-        <section className="py-24 bg-gray-50">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <h2 className="text-4xl mb-16 tracking-tight">Products in This Category</h2>
+        <section className="py-12 md:py-24 bg-gray-50">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-16 tracking-tight">Products in This Category</h2>
             <ProductCarousel slidesToShow={5}>
               {liveProducts.map((item) => (
-                <div key={item.slug} className="px-4">
+                <div key={item.slug} className="px-2 md:px-4">
                   <ProductCard
                     name={item.name}
                     imageUrl={item.gallery?.[0]?.src ?? ""}
@@ -238,12 +238,12 @@ export default function CategoryPage() {
 
       {/* Best Sellers */}
       {(category.bestSellers ?? []).length > 0 && (
-        <section className="py-24 bg-gray-50">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <h2 className="text-4xl mb-16 tracking-tight">Best Sellers in Category</h2>
+        <section className="py-12 md:py-24 bg-gray-50">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-16 tracking-tight">Best Sellers in Category</h2>
             <ProductCarousel slidesToShow={5}>
               {(category.bestSellers ?? []).map((item) => (
-                <div key={item.title} className="px-4">
+                <div key={item.title} className="px-2 md:px-4">
                   <ProductCard
                     name={item.title}
                     imageUrl={item.image ?? ""}
@@ -258,10 +258,10 @@ export default function CategoryPage() {
 
       {/* Trade CTA Strip */}
       {ctaSection && ctaSection.type === "ctaStrip" && (
-        <section className="py-20 bg-gray-900 text-white">
-          <div className="max-w-[1400px] mx-auto px-8 text-center">
-            <h2 className="text-4xl mb-8 tracking-tight">{ctaSection.title}</h2>
-            <div className="flex flex-wrap justify-center gap-4">
+        <section className="py-12 md:py-20 bg-gray-900 text-white">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8 text-center">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-6 md:mb-8 tracking-tight">{ctaSection.title}</h2>
+            <div className="flex flex-wrap justify-center gap-3 md:gap-4">
               {ctaSection.ctas.map((cta) => (
                 <Link
                   key={cta.label}
@@ -282,10 +282,10 @@ export default function CategoryPage() {
 
       {/* Related Categories */}
       {(category.relatedCategories ?? []).length > 0 && (
-        <section className="py-24 bg-white">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <h2 className="text-4xl mb-16 tracking-tight">Related Categories</h2>
-            <div className="grid md:grid-cols-3 gap-6">
+        <section className="py-12 md:py-24 bg-white">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-16 tracking-tight">Related Categories</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {(category.relatedCategories ?? []).map((rel) => (
                 <CategoryCard
                   key={rel.title}

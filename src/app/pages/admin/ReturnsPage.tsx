@@ -55,15 +55,21 @@ function CreateReturnDialog({
     e.preventDefault();
     if (!form.orderNumber.trim() || !form.description.trim()) return;
     setSaving(true);
-    const created = await operationsService.createReturn({
-      orderNumber: form.orderNumber.trim(),
-      partnerName: form.partnerName.trim() || "Unknown Partner",
-      reason: form.reason,
-      description: form.description.trim(),
-    });
-    onCreated(created);
-    toast.success(`Return ${created.returnNumber} created`);
-    setSaving(false);
+    try {
+      const created = await operationsService.createReturn({
+        orderNumber: form.orderNumber.trim(),
+        partnerName: form.partnerName.trim() || "Unknown Partner",
+        reason: form.reason,
+        description: form.description.trim(),
+      });
+      onCreated(created);
+      toast.success(`Return ${created.returnNumber} created`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to create return";
+      toast.error(msg);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
