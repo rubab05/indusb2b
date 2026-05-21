@@ -42,7 +42,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function logout() {
-    await authService.logout();
+    try {
+      await authService.logout();
+    } catch {
+      // server rejection is fine — clear local state regardless
+    }
     localStorage.removeItem(TOKEN_KEY);
     setUser(null);
   }

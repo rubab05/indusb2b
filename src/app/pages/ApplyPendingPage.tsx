@@ -1,9 +1,13 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { ContentPage } from "../components/ContentPage";
 import { Clock, Mail, CheckCircle2 } from "lucide-react";
 import { brandConfig } from "../../config/brand.config";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function ApplyPendingPage() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <ContentPage
       title="Application Received"
@@ -45,6 +49,16 @@ export default function ApplyPendingPage() {
             >
               CONTACT OUR TRADE TEAM
             </Link>
+            <p className="text-sm text-gray-500 pt-4">
+              Need to sign in as a different account?{" "}
+              <button
+                type="button"
+                onClick={async () => { await logout(); navigate("/login"); }}
+                className="underline text-gray-700 hover:text-gray-900"
+              >
+                Sign out
+              </button>
+            </p>
           </div>
         </div>
       </section>

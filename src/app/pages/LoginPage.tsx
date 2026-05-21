@@ -7,24 +7,30 @@ import { ApprovalStatus } from "../../types/auth";
 import { brandConfig } from "../../config/brand.config";
 
 export default function LoginPage() {
-  const { login, isAuthenticated, user, loading } = useAuth();
+  const { login, logout, isAuthenticated, user, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Already logged in — redirect based on status
+  // Already logged in — redirect approved/admin users, but let pending/restricted stay so they can switch accounts
   if (!loading && isAuthenticated && user) {
-    if (user.approvalStatus === ApprovalStatus.PENDING) return <Navigate to="/apply/pending" replace />;
-    if (user.approvalStatus === ApprovalStatus.REJECTED || user.approvalStatus === ApprovalStatus.SUSPENDED) {
-      return <Navigate to="/apply/restricted" replace />;
-    }
     if (user.role === "ADMIN") return <Navigate to="/admin/categories" replace />;
-    return <Navigate to="/dashboard" replace />;
+    if (user.approvalStatus === ApprovalStatus.APPROVED) return <Navigate to="/dashboard" replace />;
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const blockedEmail =
+    !loading &&
+    isAuthenticated &&
+    user &&
+    (user.approvalStatus === ApprovalStatus.PENDING ||
+      user.approvalStatus === ApprovalStatus.REJECTED ||
+      user.approvalStatus === ApprovalStatus.SUSPENDED)
+      ? user.email
+      : null;
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setSubmitting(true);
@@ -49,6 +55,19 @@ export default function LoginPage() {
             <h1 className="text-4xl tracking-tight">Sign In</h1>
             <p className="text-sm text-gray-600 mt-3">Access your {brandConfig.brandName} trade account</p>
           </div>
+
+          {blockedEmail && (
+            <div className="mb-6 px-4 py-3 bg-yellow-50 border border-yellow-200 text-sm text-yellow-800 flex items-center justify-between gap-4">
+              <span>Signed in as <strong>{blockedEmail}</strong> (pending/restricted).</span>
+              <button
+                type="button"
+                onClick={() => logout()}
+                className="underline whitespace-nowrap hover:text-yellow-900"
+              >
+                Sign out
+              </button>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6 bg-white border border-gray-200 p-10">
             {error && (
